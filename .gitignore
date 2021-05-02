@@ -3,7 +3,6 @@
 /public/storage
 /storage/*.key
 <<<<<<< HEAD
-/vendor
 =======
 >>>>>>> b7bf7f0... bt
 /.idea
