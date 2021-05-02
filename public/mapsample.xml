@@ -1,0 +1,11 @@
+<markers>
+	<marker id="1" name="Láng hạ" address="Cây xăng , Láng hạ" lat="21.0227387" lng="105.8194541" type="off"/>
+	<marker id="2" name="Hàng đào" address="Số 20, đường hàng đào" lat="21.036500" lng="105.849550" type="on"/>
+	<marker id="3" name="Hàng chuối" address="Số 12, đường hàng chuối" lat="21.031700" lng="105.850670" type="off"/>
+	<marker id="4" name="Phố huế" address="Số 111, đường phố huế" lat="21.0160099" lng="105.8496528" type="off"/>
+	<marker id="5" name="Bà triệu" address="Ngõ 15, đường bà triệu" lat="21.0129682" lng="105.8459058" type="on"/>
+	<marker id="6" name="Đặng văn ngữ" address="Số 106D1, đặng văn ngữ" lat="21.0121" lng="105.8299183" type="off"/>
+	<marker id="7" name="Khâm thiên" address="Số 15, khâm thiên" lat="21.018641" lng="105.8341053" type="off"/>
+	<marker id="8" name="Kim mã" address="Số 121, Kim mã" lat="21.031709" lng="105.8230933" type="on"/>
+	<marker id="9" name="Hàng Bài" address="Số 32, hàng bài" lat="21.0194292" lng="105.8493697" type="off"/>
+</markers>
