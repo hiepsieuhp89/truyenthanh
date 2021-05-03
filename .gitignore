@@ -1,12 +1,6 @@
-/node_modules
-/public/hot
-/public/storage
-/storage/*.key
 <<<<<<< HEAD
 =======
 >>>>>>> b7bf7f0... bt
-/.idea
-/.vagrant
 Homestead.json
 Homestead.yaml
 npm-debug.log
