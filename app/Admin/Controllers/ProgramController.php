@@ -522,7 +522,7 @@ class ProgramController extends AdminController
 
             foreach($deviceCode as $device){
 
-                $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'."https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3".'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
+                $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
             }
 
         } else {
