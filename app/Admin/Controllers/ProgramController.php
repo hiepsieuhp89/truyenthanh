@@ -293,7 +293,9 @@ class ProgramController extends AdminController
                 // gui lenh
                 // $this->setPlayFM($form->model()->type, '123456789ABCDEF', $form->model()->digiChannel);
                 $songPath = "";
-                if ($form->model()->type == 1) {// nếu phát file phương tiện
+
+                // nếu phát file phương tiện
+                if ($form->model()->type == 1) {
 
                     $songPath = env("APP_URL").'/uploads/'.$form->model()->fileVoice;  
 
@@ -301,27 +303,41 @@ class ProgramController extends AdminController
                         $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else { // nếu phát theo lịch
                         // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
+
                         // set schedule
                         $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath);    
                     } 
 
-                } else if ($form->model()->type == 2) {
+                }
+                // nếu phát đài FM
+                if ($form->model()->type == 2) {
+
                     $songPath = $form->model()->digiChannel;
                     if ($form->model()->mode == 4) {
+
+                        // play online
                         $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else {
+
+                        // play schedule
                         $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath);
                     }
-                } else if ($form->model()->type == 3) {
+                }
+
+                // nếu phát tiếp sóng
+                if ($form->model()->type == 3) {
                     $songPath = $form->model()->radioChannel;
                     if ($form->model()->mode == 4) {
                         $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else {
                         $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath);
                     }
-                } else if ($form->model()->type == 4) {
+                }
+
+                // nếu phát file văn bản
+                if ($form->model()->type == 4) {
                     $docModel = Document::findOrFail($form->model()->document_Id);
-                    $songPath = "http://truyenthanh.org.vn:8888/".$docModel->fileVoice;
+                    $songPath = env('APP_URL').$docModel->fileVoice;
 
                     // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                     if ($form->model()->mode == 4) {
@@ -398,22 +414,33 @@ class ProgramController extends AdminController
     protected function setPlaySchedule($type, $deviceCode, $startDate, $endDate, $startTime, $songName) 
     {
         $curl = curl_init();
-
         // $dataRequest = '{"DataType":'.$type.',"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"'.$data.'\\\":\\\"6\\\",\\\"PacketType\\\":17}\"}]}"}';
         // if ($type == 2 || $type == 3) {
         //     $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\":\\\\\"'.$data.'\\\\\",\\\\\"PacketType\\\\\":11}\"}]}"}';
         // } else {
-        
-        $dataRequest = "";
-        if ($type == 1 || $type == 4) {
-            $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"23:59:13\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"}]}"}';
+        $devices = explode(',',$deviceCode);   
+
+        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
+        if ($type == 1 || $type == 4) { // nếu là file phương tiện
+
+            foreach($devices as $device){
+
+                $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\"PacketType\\\":2,\\\"Data\\\":\\\"{\\\\\\\"PlayList\\\\\\\":[{\\\\\\\"SongName\\\\\\\":\\\\\\\"'.$songName.'\\\\\\\",\\\\\\\"TimeStart\\\\\\\":\\\\\\\"'.$startTime.'\\\\\\\",\\\\\\\"DateStart\\\\\\\":\\\\\\\"'.$startDate.'\\\\\\\",\\\\\\\"DateStop\\\\\\\":\\\\\\\"'.$endDate.'\\\\\\\",\\\\\\\"PlayType\\\\\\\":1,\\\\\\\"PlayRepeatType\\\\\\\":1},';
+            }
+            // nếu là đài FM hoặc tiếp sóng
         } else {
+            
             // $endTime = $this->addMinutesToTime($startTime, 5);
             // Log::info('Start time ' .$startTime);
             // Log::info('End time ' .$endTime);
-            $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"23:59:13\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":3,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"}]}"}';
-        }
 
+            foreach($devices as $device){
+
+                $dataRequest .= '{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":3,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+            }
+
+        }
+        $dataRequest .= ']}"}';
         $request = base64_encode($dataRequest);
 
         // echo "request " . $request;
@@ -439,6 +466,7 @@ class ProgramController extends AdminController
         ));
         
         $response = curl_exec($curl);
+
         $err = curl_error($curl);
         
         curl_close($curl);
@@ -494,7 +522,7 @@ class ProgramController extends AdminController
 
             foreach($deviceCode as $device){
 
-                $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
+                $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'."https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3".'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
             }
 
         } else {

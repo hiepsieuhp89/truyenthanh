@@ -15,70 +15,53 @@ class BatchPlayAll extends BatchAction
     }
     public function handle(Collection $collection)
     {
+        // copy the data model for each row
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
+
         foreach ($collection as $model) {
-          $dataRequest .= '{\"DeviceID\":\"'.$model->deviceCode.'\",\"CommandSend\":\"{\\\"Data\\\":\\\"Play music\\\",\\\"PacketType\\\":7}'.',';
+
+            // if program is a media file
+            if($model->type == 1){
+
+                $songName = $model->fileVoice;
+
+                $devices = $model->devices;
+
+                foreach($devices as $device){
+                  $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
+                }
+            }
+            else{
+              $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
+            }
         }
-        $dataRequest .= '\"}]}"}';
+        $dataRequest .= ']}"}';
 
-        $curl = curl_init();
-        
-          $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"Data\\\":\\\"Play music\\\",\\\"PacketType\\\":7}\"}]}"}';
-         
-          $request = base64_encode($dataRequest);
+                $request = base64_encode($dataRequest);
 
-          $urlRequest = "http://103.130.213.161:906/".$request;
+                $urlRequest = "http://103.130.213.161:906/".$request;
 
-              Log::info($urlRequest);
+                // Log::info('Phat ngay ' . $urlRequest);
 
-          curl_setopt_array($curl, array(
-                CURLOPT_URL => $urlRequest,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_TIMEOUT => 10,
-                CURLOPT_FOLLOWLOCATION => false,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-              ));
+                // curl_setopt_array($curl, array(
+                //   CURLOPT_URL => $urlRequest,
+                //   CURLOPT_RETURNTRANSFER => true,
+                //   CURLOPT_ENCODING => "",
+                //   CURLOPT_MAXREDIRS => 10,
+                //   CURLOPT_CONNECTTIMEOUT => 20,
+                //   CURLOPT_TIMEOUT => 30,
+                //   CURLOPT_FOLLOWLOCATION => false,
+                //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //   CURLOPT_CUSTOMREQUEST => "GET",
+                // ));
+                
+                // $response = curl_exec($curl);
 
-              $response = curl_exec($curl);
-              $err = curl_error($curl);
-              
-              curl_close($curl);
-        
-        return $this->response()->success(trans('admin.play_all_succeeded'))->refresh();
-    }
-	protected function Play($deviceCode) 
-	{
-		$curl = curl_init();
-        
-        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"Data\\\":\\\"Play music\\\",\\\"PacketType\\\":7}\"}]}"}';
-       
-        $request = base64_encode($dataRequest);
+                // $err = curl_error($curl);
+                
+                // curl_close($curl);
 
-        $urlRequest = "http://103.130.213.161:906/".$request;
-
-        Log::info($urlRequest);
-
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => $urlRequest,
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_CONNECTTIMEOUT => 10,
-          CURLOPT_TIMEOUT => 10,
-          CURLOPT_FOLLOWLOCATION => false,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => "GET",
-        ));
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        
-        curl_close($curl);
-
-        //return $response;
+        // return a success message of "copy success" and refresh the page
+        return $this->response()->success($dataRequest)->refresh();
     }
 }

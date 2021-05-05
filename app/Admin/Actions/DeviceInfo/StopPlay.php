@@ -12,9 +12,9 @@ class StopPlay extends RowAction
 
     public function handle(Model $model)
     {
-        $this->stopPlay($model->deviceCode);
+        $stt = $this->stopPlay($model->deviceCode);
 
-        return $this->response()->success('Success message.')->refresh();
+        return $this->response()->success($stt)->refresh();
     }
 
     public function display($stop)
@@ -26,9 +26,9 @@ class StopPlay extends RowAction
     {
         $curl = curl_init();
         
-        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"Data\\\":\\\"Stop play music\\\",\\\"PacketType\\\":7}\"}]}"}';
+        $dataRequest = 
 
-        //$dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"Stop play music\\\\\",\\\\\"PacketType\\\\\":7}\"}]}"}';
+        '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"Stop play music\\\\\\",\\\\\"PacketType\\\\\":7}\"}]}"}';
        
         $request = base64_encode($dataRequest);
 
@@ -53,7 +53,7 @@ class StopPlay extends RowAction
         
         curl_close($curl);
 
-        // return $response;
+        return $dataRequest;
     }   
 
 }

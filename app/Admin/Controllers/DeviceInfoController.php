@@ -9,6 +9,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\Log;
 use App\Admin\Actions\DeviceInfo\StopPlay;
+
 use App\Admin\Actions\DeviceInfo\RelayFirst;
 use App\Admin\Actions\DeviceInfo\RelaySecond;
 
@@ -47,7 +48,9 @@ class DeviceInfoController extends AdminController
         $grid->column('device.name', __('Tên'))->label()->style('font-size:16px;'); 
         $grid->column('deviceCode', __('DeviceCode'));
         $grid->column('Dừng phát')->action(StopPlay::class);
+
         $grid->column('relay1', 'Relay 1')->action(RelayFirst::class);
+
         $states = [
             'on' => ['value' => 1, 'text' => 'Bật', 'color' => 'primary'],
             'off' => ['value' => 2, 'text' => 'Tắt', 'color' => 'default'],
