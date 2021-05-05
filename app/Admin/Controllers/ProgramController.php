@@ -422,9 +422,8 @@ class ProgramController extends AdminController
 
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
         if ($type == 1 || $type == 4) { // nếu là file phương tiện
-
             foreach($devices as $device){
-                $dataRequest .= '{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                $dataRequest .= '{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\"TimeStop\\\\\\\":\\\\\\\"0:00:00\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
 
                 // $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\"PacketType\\\":2,\\\"Data\\\":\\\"{\\\\\\\"PlayList\\\\\\\":[{\\\\\\\"SongName\\\\\\\":\\\\\\\"'.$songName.'\\\\\\\",\\\\\\\"TimeStart\\\\\\\":\\\\\\\"'.$startTime.'\\\\\\\",\\\\\\\"DateStart\\\\\\\":\\\\\\\"'.$startDate.'\\\\\\\",\\\\\\\"DateStop\\\\\\\":\\\\\\\"'.$endDate.'\\\\\\\",\\\\\\\"PlayType\\\\\\\":1,\\\\\\\"PlayRepeatType\\\\\\\":1},';
             }
@@ -437,7 +436,7 @@ class ProgramController extends AdminController
 
             foreach($devices as $device){
 
-                $dataRequest .= '{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":3,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                $dataRequest .= '{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":3,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
 
             }
 
@@ -445,7 +444,7 @@ class ProgramController extends AdminController
 
         $dataRequest .= ']}"}';
         $request = base64_encode($dataRequest);
-        //dd($dataRequest);
+        dd($dataRequest);
         // echo "request " . $request;
         $urlRequest = "http://103.130.213.161:906/".$request;
 
