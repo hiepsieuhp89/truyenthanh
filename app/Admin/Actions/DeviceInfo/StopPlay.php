@@ -12,9 +12,9 @@ class StopPlay extends RowAction
 
     public function handle(Model $model)
     {
-        $stt = $this->stopPlay($model->deviceCode);
+        $this->stopPlay($model->deviceCode);
 
-        return $this->response()->success($stt)->refresh();
+        return $this->response()->success('Dừng phát thành công')->refresh();
     }
 
     public function display($stop)
@@ -53,7 +53,7 @@ class StopPlay extends RowAction
         
         curl_close($curl);
 
-        return $dataRequest;
+        //return $dataRequest;
     }   
 
 }
