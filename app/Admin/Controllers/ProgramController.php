@@ -85,8 +85,8 @@ class ProgramController extends AdminController
         });
 
         $states = [
-            'on' => ['value' => 2, 'text' => 'Chưa duyệt', 'color' => 'danger'],
-            'off' => ['value' => 1, 'text' => 'Đã duyệt', 'color' => 'success'],
+            'off' => ['value' => 1, 'text' => 'Chưa duyệt', 'color' => 'danger'],
+            'on' => ['value' => 2, 'text' => 'Đã duyệt', 'color' => 'success'],
         ];
         $grid->column('status', __('Trạng thái'))->switch($states);
 
@@ -275,11 +275,11 @@ class ProgramController extends AdminController
         $form->listbox('devices', trans('Danh sách loa'))->options(Device::all()->pluck('name', 'deviceCode'))->rules('required',['required'=>"Cần nhập giá trị"]);
 
         $states = [
-            'on' => ['value' => 2, 'text' => 'Chưa duyệt', 'color' => 'danger'],
-            'off' => ['value' => 1, 'text' => 'Đã duyệt', 'color' => 'success'],
+            'off' => ['value' => 1, 'text' => 'Chưa duyệt', 'color' => 'danger'],
+            'on' => ['value' => 2, 'text' => 'Đã duyệt', 'color' => 'success'],
         ];
 
-        //$form->switch('status','Phê duyệt')->states($states)->default(2)->disable();
+        $form->switch('status','Phê duyệt')->states($states)->default(2);
 
         Log::info('User ID name ' . Admin::user()->id);
         $form->model()->creatorId = Admin::user()->id;
@@ -293,15 +293,18 @@ class ProgramController extends AdminController
                 // gui lenh
                 // $this->setPlayFM($form->model()->type, '123456789ABCDEF', $form->model()->digiChannel);
                 $songPath = "";
-                if ($form->model()->type == 1) {
-                    $songPath = "http://truyenthanh.org.vn:8888/uploads/".$form->model()->fileVoice;    
-                    if ($form->model()->mode == 4) {
+                if ($form->model()->type == 1) {// nếu phát file phương tiện
+
+                    $songPath = env("APP_URL").'/uploads/'.$form->model()->fileVoice;  
+
+                    if ($form->model()->mode == 4) { // nếu phát ngay
                         $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
-                    } else {
+                    } else { // nếu phát theo lịch
                         // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                         // set schedule
                         $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath);    
                     } 
+
                 } else if ($form->model()->type == 2) {
                     $songPath = $form->model()->digiChannel;
                     if ($form->model()->mode == 4) {
@@ -482,11 +485,24 @@ class ProgramController extends AdminController
     {
         $curl = curl_init();
         $dataRequest = "";
-        if ($type == 1 || $type == 4) {
-            $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"2020-08-04\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"2020-08-04\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"17:30:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"}]}"}';
+        $deviceCode = explode(",",$deviceCode);
+
+        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
+
+        if ($type == 1 || $type == 4) { // nếu phát ngay file pt
+
+
+            foreach($deviceCode as $device){
+
+                $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
+            }
+
         } else {
+
             $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"'.$songName.'\\\\\",\\\\\"PacketType\\\\\":11}\"}]}"}';
         }
+
+        $dataRequest .= ']}"}';
 
         $request = base64_encode($dataRequest);
 
