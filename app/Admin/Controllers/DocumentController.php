@@ -139,7 +139,7 @@ class DocumentController extends AdminController
             "key" => "5b6f8cf8b4e23b56658f1ed8bf770543",
             "time" => "1620265374558",
             "voice" => "hn_female_ngochuyen_news_48k-thg",
-            "rate" => 1,
+            "rate" => 0.9,
             "user_id" => "1633",
             CURLOPT_HTTPHEADER => array(
               "Content-Type: application/x-www-form-urlencoded"
