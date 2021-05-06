@@ -98,7 +98,7 @@ class ProgramController extends AdminController
                                                         
         $grid->column('document.fileVoice', 'File')->display(function ($fileVoiceDocs) {
             if ($this->type == 4) { // type voice
-                return "<audio controls><source src='".env("APP_URL").$fileVoiceDocs."' type='audio/wav'></audio>";
+                return "<audio controls><source src='".env("APP_URL").'/'.$fileVoiceDocs."' type='audio/wav'></audio>";
             } 
             if ($this->type == 1) { // type media mp3
                 return "<audio controls><source src='".config('filesystems.disks.upload.url').$this->fileVoice."' type='audio/wav'></audio>";
