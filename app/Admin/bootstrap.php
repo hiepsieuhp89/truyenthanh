@@ -19,7 +19,7 @@
  */
 Use Encore\Admin\Admin;
 
-Admin::favicon('images/icon-s.png');
+Admin::favicon(env("APP_URL").'/images/icon-s.png');
 Admin::style('.w-100{width:100%;} .h-100{height:100%;} .h-400px{height:400px;} .p-0{padding:0;}');
 Admin::js(env('APP_URL').'/js/custom.js');
 
