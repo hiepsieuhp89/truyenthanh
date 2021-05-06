@@ -16,7 +16,7 @@ class HomeController extends Controller
 {
     public function index(Content $content)
     {
-        return $content->title('Mạng lưới phát thanh kỹ thuật số')->row(Dashboard::map());
+        return $content->title('Mạng lưới phát thanh kỹ thuật số')->row(view('allDevicesMap'));
     }
     public function changeLanguage(Request $req){
         Session::put('lan', $req->lang);
