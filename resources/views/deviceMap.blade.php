@@ -5,8 +5,8 @@
         zoom: 20,
         mapTypeId: 'roadmap'
     });
-    const image = '{{ env("APP_URL")."/images/icon_map.png" }}';
-    const image_off = '{{ env("APP_URL")."/images/icon_map_off.png" }}';
+    const image = '/images/icon_map.png';
+    const image_off = '/images/icon_map_off.png';
 
     var customImg = {
         1: { // Trạng thái bật
@@ -20,7 +20,7 @@
     var infoWindow = new google.maps.InfoWindow;
 
         // Change this depending on the name of your PHP or XML file
-        downloadUrl('{{env('APP_URL').'/admin/xml/map'}}', function(data) {
+        downloadUrl('/admin/xml/map', function(data) {
 
             var xml = data.responseXML;
             var markers = xml.documentElement.getElementsByTagName('marker');
