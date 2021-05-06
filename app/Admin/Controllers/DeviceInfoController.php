@@ -20,7 +20,7 @@ class DeviceInfoController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\DeviceInfo';
+    protected $title = 'Giám sát thiết bị';
 
     /**
      * Make a grid builder.
@@ -40,8 +40,11 @@ class DeviceInfoController extends AdminController
 
         $grid->filter(function($filter){
             $filter->expand();
-            $filter->disableIdFilter();            
+            $filter->disableIdFilter();
+            $filter->like('name', trans('Tên thiết bị'));
             $filter->like('deviceCode', trans('Mã thiết bị'));
+            // $menuModel = new Area();
+            // $filter->equal('areaId', trans('Cụm loa'))->select($menuModel::selectOptions());
         });
 
         $grid->column('id', __('Id'));

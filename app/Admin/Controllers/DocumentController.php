@@ -16,7 +16,7 @@ class DocumentController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Document';
+    protected $title = 'Phát văn bản';
 
     /**
      * Make a grid builder.

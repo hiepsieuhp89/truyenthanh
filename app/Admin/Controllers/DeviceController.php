@@ -53,9 +53,10 @@ class DeviceController extends AdminController
         });
         $grid->batchActions(function ($batch) {
             $batch->add(new BatchPlayMedia());
+            $batch->disableDelete();
         });
         $grid->filter(function($filter){
-            //$filter->expand();
+            $filter->expand();
             $filter->disableIdFilter();
             $filter->like('name', trans('Tên thiết bị'));
             $filter->like('deviceCode', trans('Mã thiết bị'));
