@@ -41,7 +41,7 @@ class DocumentController extends AdminController
         $grid->column('id', trans('entity.id'));
         $grid->column('name', trans('Tên bài')); 
         $grid->column('fileVoice', 'File')->display(function ($fileVoice) {
-            return "<audio controls><source src='/$fileVoice' type='audio/mpeg'></audio>";
+            return "<audio controls><source src='".env('APP_URL')."/$fileVoice' type='audio/mpeg'></audio>";
         });
         $grid->column('created_at', trans('entity.created_at'));
         $grid->column('updated_at', trans('entity.updated_at'));
@@ -123,8 +123,7 @@ class DocumentController extends AdminController
     protected function createVoice($content, $fileVoice) 
     {
         $curl = curl_init();
-        // $fileVoice  = md5($fileName).".wav";
-        Log::info(" Create file  " . $fileVoice);
+
         curl_setopt_array($curl, array(
           CURLOPT_URL => "https://tts.mobifone.ai/api/tts",
           CURLOPT_RETURNTRANSFER => true,
@@ -136,23 +135,23 @@ class DocumentController extends AdminController
           CURLOPT_CUSTOMREQUEST => "POST",
           CURLOPT_POSTFIELDS => http_build_query(array(
             "input_text" => $content,
-            "audio_type" => "mp3",
-            "app_id" => env("APP_ID","0a7ffab8a3e323713780f6f9"),
-            "key" => env("MOBIFONE_TEXT_2_SPEECH_KEY","8cf61e5fef154dc3dc9f089fff4763a9"),
-            "time" => "1608213189865",
-            "voice" => "hn_female_ngochuyen_news_48k-d",
-            "rate" => "1",
-            "user_id" => env("MOBIFONE_TEXT_2_SPEECH_USER_ID","1633"),
-             CURLOPT_HTTPHEADER => array("Content-Type: application/x-www-form-urlencoded"),
-            ))
+            "app_id" => "3d8acb12742eea52a36253f8",
+            "key" => "5b6f8cf8b4e23b56658f1ed8bf770543",
+            "time" => "1620265374558",
+            "voice" => "hn_female_ngochuyen_news_48k-thg",
+            "rate" => 1,
+            "user_id" => "1633",
+            CURLOPT_HTTPHEADER => array(
+              "Content-Type: application/x-www-form-urlencoded"
+            ),
+          ))
         ));
-        
         $response = curl_exec($curl);
-        dd($response);
+
         $err = curl_error($curl);
-        
+
         curl_close($curl);
-        
+
         if ($err) {
         //   echo "cURL Error #:" . $err;
           Log::error("cURL Error #:" . $err);
