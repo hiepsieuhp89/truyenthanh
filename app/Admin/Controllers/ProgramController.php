@@ -337,7 +337,7 @@ class ProgramController extends AdminController
                 // nếu phát file văn bản
                 if ($form->model()->type == 4) {
                     $docModel = Document::findOrFail($form->model()->document_Id);
-                    $songPath = env('APP_URL').$docModel->fileVoice;
+                    $songPath = env('APP_URL').'/'.$docModel->fileVoice;
 
                     // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                     if ($form->model()->mode == 4) {
