@@ -141,6 +141,7 @@ class UserController extends AdminController
             $form->areaId = $this->findArea($form->areaId, $form->areaId);
 
             if ($form->password && $form->model()->password != $form->password) {
+
                 $form->password = Hash::make($form->password);
             }
         });
@@ -155,9 +156,9 @@ class UserController extends AdminController
        
             foreach($child_areas as $ca){
 
-                $result = $result.','.$ca->id;
+                $result .= ','.$ca->id;
 
-                $this->findArea($ca->id, $result);
+                $result = $this->findArea($ca->id, $result);
 
             }
 
