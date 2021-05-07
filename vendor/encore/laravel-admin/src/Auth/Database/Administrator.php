@@ -2,6 +2,8 @@
 
 namespace Encore\Admin\Auth\Database;
 
+use App\Area;
+
 use Encore\Admin\Traits\DefaultDatetimeFormat;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -89,4 +91,14 @@ class Administrator extends Model implements AuthenticatableContract
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'permission_id');
     }
+    /**
+     * A User manages an Area
+     *
+     * @return BelongsToOne
+     */
+    public function area()
+    {
+        return $this->belongsTo(Area::class,'areaId');
+    }
 }
+

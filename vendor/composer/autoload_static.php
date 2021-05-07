@@ -123,6 +123,7 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'E' => 
         array (
             'Encore\\Chartjs\\' => 15,
+            'Encore\\Admin\\Latlong\\' => 21,
             'Encore\\Admin\\' => 13,
             'Egulias\\EmailValidator\\' => 23,
         ),
@@ -369,6 +370,10 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         array (
             0 => __DIR__ . '/..' . '/laravel-admin-ext/chartjs/src',
         ),
+        'Encore\\Admin\\Latlong\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src',
+        ),
         'Encore\\Admin\\' => 
         array (
             0 => __DIR__ . '/..' . '/encore/laravel-admin/src',
@@ -453,6 +458,8 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'App\\Admin\\Actions\\DeviceInfo\\RelayFirst' => __DIR__ . '/../..' . '/app/Admin/Actions/DeviceInfo/RelayFirst.php',
         'App\\Admin\\Actions\\DeviceInfo\\RelaySecond' => __DIR__ . '/../..' . '/app/Admin/Actions/DeviceInfo/RelaySecond.php',
         'App\\Admin\\Actions\\DeviceInfo\\StopPlay' => __DIR__ . '/../..' . '/app/Admin/Actions/DeviceInfo/StopPlay.php',
+        'App\\Admin\\Actions\\Device\\BatchPlayMedia' => __DIR__ . '/../..' . '/app/Admin/Actions/Device/BatchPlayMedia.php',
+        'App\\Admin\\Actions\\Device\\PlayMedia' => __DIR__ . '/../..' . '/app/Admin/Actions/Device/PlayMedia.php',
         'App\\Admin\\Actions\\Post\\BatchPlayAll' => __DIR__ . '/../..' . '/app/Admin/Actions/Post/BatchPlayAll.php',
         'App\\Admin\\Controllers\\AreaController' => __DIR__ . '/../..' . '/app/Admin/Controllers/AreaController.php',
         'App\\Admin\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Admin/Controllers/AuthController.php',
@@ -463,6 +470,7 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'App\\Admin\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Admin/Controllers/HomeController.php',
         'App\\Admin\\Controllers\\ProgramController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ProgramController.php',
         'App\\Admin\\Extensions\\StopPlay' => __DIR__ . '/../..' . '/app/Admin/Extensions/StopPlay.php',
+        'App\\Admin_role' => __DIR__ . '/../..' . '/app/Admin_role.php',
         'App\\Area' => __DIR__ . '/../..' . '/app/Area.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Device' => __DIR__ . '/../..' . '/app/Device.php',
@@ -1341,6 +1349,15 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'Encore\\Admin\\Grid\\Tools\\QuickSearch' => __DIR__ . '/..' . '/encore/laravel-admin/src/Grid/Tools/QuickSearch.php',
         'Encore\\Admin\\Grid\\Tools\\Selector' => __DIR__ . '/..' . '/encore/laravel-admin/src/Grid/Tools/Selector.php',
         'Encore\\Admin\\Grid\\Tools\\TotalRow' => __DIR__ . '/..' . '/encore/laravel-admin/src/Grid/Tools/TotalRow.php',
+        'Encore\\Admin\\Latlong\\Extension' => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src/Extension.php',
+        'Encore\\Admin\\Latlong\\Latlong' => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src/Latlong.php',
+        'Encore\\Admin\\Latlong\\LatlongServiceProvider' => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src/LatlongServiceProvider.php',
+        'Encore\\Admin\\Latlong\\Map\\AbstractMap' => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src/Map/AbstractMap.php',
+        'Encore\\Admin\\Latlong\\Map\\Amap' => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src/Map/Amap.php',
+        'Encore\\Admin\\Latlong\\Map\\Baidu' => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src/Map/Baidu.php',
+        'Encore\\Admin\\Latlong\\Map\\Google' => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src/Map/Google.php',
+        'Encore\\Admin\\Latlong\\Map\\Tencent' => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src/Map/Tencent.php',
+        'Encore\\Admin\\Latlong\\Map\\Yandex' => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src/Map/Yandex.php',
         'Encore\\Admin\\Layout\\Buildable' => __DIR__ . '/..' . '/encore/laravel-admin/src/Layout/Buildable.php',
         'Encore\\Admin\\Layout\\Column' => __DIR__ . '/..' . '/encore/laravel-admin/src/Layout/Column.php',
         'Encore\\Admin\\Layout\\Content' => __DIR__ . '/..' . '/encore/laravel-admin/src/Layout/Content.php',

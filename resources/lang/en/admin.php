@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'area'                  => 'Khu vực',
     'program'               => 'Chương trình',
     'device'                => 'Thiết bị',
     'play_all'              => 'Phát tất cả',

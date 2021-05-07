@@ -137,6 +137,16 @@ class Grid
     protected $renderingCallbacks = [];
 
     /**
+     * @var filtered query status
+     */
+    protected $isfiltered = false;
+
+    /**
+     * @var query is raw to filter
+     */
+    protected $query = "";
+
+    /**
      * Options for grid.
      *
      * @var array
@@ -174,8 +184,14 @@ class Grid
      */
     public function __construct(Eloquent $model, Closure $builder = null)
     {
+        $this->isFiltered = false;
+
+        $this->query = "";
+
         $this->model = new Model($model, $this);
+
         $this->keyName = $model->getKeyName();
+
         $this->builder = $builder;
 
         $this->initialize();
@@ -192,9 +208,9 @@ class Grid
 
         $this->columns = Collection::make();
         $this->rows = Collection::make();
-
         $this->initTools()
             ->initFilter();
+
     }
 
     /**
@@ -558,7 +574,11 @@ class Grid
 
         $this->applyQuery();
 
-        $collection = $this->applyFilter(false);
+        if(!$this->isfiltered)
+            $collection = $this->applyFilter(false);
+
+        else
+            $collection = $this->model()->getOriginalModel()->whereRaw($this->query)->with('area')->take(20)->get();
 
         $this->addDefaultColumns();
 
@@ -568,15 +588,27 @@ class Grid
 
         $this->columns->map(function (Column $column) use (&$data) {
             $data = $column->fill($data);
-
+            //dd($data);
             $this->columnNames[] = $column->getName();
         });
 
         $this->buildRows($data, $collection);
 
         $this->builded = true;
-    }
 
+        
+    }
+    /**
+     * Filter the record
+     *
+     * @return void
+     */
+    public function filterRecord($query){
+
+        $this->isfiltered = true;
+
+        $this->query = $query;
+    }
     /**
      * Build the grid rows.
      *
@@ -924,6 +956,7 @@ class Grid
      */
     public function render()
     {
+
         $this->handleExportRequest(true);
 
         try {
@@ -933,8 +966,8 @@ class Grid
         }
 
         $this->callRenderingCallback();
-
         return Admin::component($this->view, $this->variables());
+
 
         return view($this->view, $this->variables());
     }

@@ -6,6 +6,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\Hash;
+use App\Area;
 
 class UserController extends AdminController
 {
@@ -32,7 +33,17 @@ class UserController extends AdminController
         $grid->column('username', trans('admin.username'));
         $grid->column('name', trans('admin.name'));
         $grid->column('roles', trans('admin.roles'))->pluck('name')->label();
+
+        $grid->column('areaId', trans('admin.area'))->display(function($value){
+
+            $area = Area::where('id',explode(',',$value)[0])->first();
+
+            return $area? $area->title : "";
+
+        })->label(' label-primary')->style('font-size:16px;');   
+
         $grid->column('created_at', trans('admin.created_at'));
+
         $grid->column('updated_at', trans('admin.updated_at'));
 
         $grid->actions(function (Grid\Displayers\Actions $actions) {
@@ -78,7 +89,7 @@ class UserController extends AdminController
             $roleModel = config('admin.database.roles_model');
             return $roleModel::findOrFail($r[0]->id)->permissions->pluck('name');
         })->label();
-
+        $show->field('area.title', trans('admin.area'));
         $show->field('created_at', trans('admin.created_at'));
         $show->field('updated_at', trans('admin.updated_at'));
 
@@ -118,7 +129,7 @@ class UserController extends AdminController
 
         $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'));
 
-
+        $form->select('areaId', trans('admin.area'))->options(Area::selectOptions());
 
         // $form->multipleSelect('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
 
@@ -126,11 +137,32 @@ class UserController extends AdminController
         $form->display('updated_at', trans('admin.updated_at'));
 
         $form->saving(function (Form $form) {
+
+            $form->areaId = $this->findArea($form->areaId, $form->areaId);
+
             if ($form->password && $form->model()->password != $form->password) {
                 $form->password = Hash::make($form->password);
             }
         });
 
         return $form;
+    }
+    public function findArea($id, $result){
+
+        $child_areas = Area::where('parent_id', $id)->get();
+
+        if($child_areas !== NULL){
+       
+            foreach($child_areas as $ca){
+
+                $result = $result.','.$ca->id;
+
+                $this->findArea($ca->id, $result);
+
+            }
+
+        }
+
+        return $result;
     }
 }

@@ -78,7 +78,7 @@ class Column implements Buildable
         }
 
         ob_start();
-
+        
         $row->build();
 
         $contents = ob_get_contents();

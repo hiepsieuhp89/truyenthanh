@@ -2,9 +2,12 @@
 
 namespace App\Admin\Controllers;
 
+use Request;
+
 use App\Device;
 use App\DeviceInfo;
 use App\Area;
+
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Controllers\Dashboard;
 use App\Admin\Actions\Device\PlayMedia;
@@ -13,6 +16,7 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class DeviceController extends AdminController
 {
@@ -22,6 +26,7 @@ class DeviceController extends AdminController
      * @var string
      */
     protected $title = 'Thiết bị';
+    public $path = '/admin/devices';
 
     /**
      * Make a grid builder.
@@ -34,42 +39,76 @@ class DeviceController extends AdminController
     }
     public function index(Content $content)
     {
-        return $content
-            ->title($this->title())
-            ->description($this->description['index'] ?? trans('admin.list'))
-            ->body($this->grid());
+        if(Request::get('_scope_') == 'auth')
+            return $content
+                ->title($this->title())
+                ->description($this->description['index'] ?? trans('admin.list'))
+                ->body($this->grid());
+
+        return redirect()->intended($this->path.'?_scope_=auth');
     }
     protected function grid()
     {
-        $grid = new Grid(new Device);
+        //dd((new Device)->where('areaId',7));
+        $grid = new Grid((new Device));
+
         //$grid->disableCreateButton();       
         //$grid->disablePagination();        
         //$grid->disableBatchActions();    
         //$grid->disableExport();    
-        //$grid->disableColumnSelector();   
+        //$grid->disableColumnSelector();  
+
+        //$grid->filterRecord('`areaId` = 7');
 
         $grid->actions(function ($actions) {
+            
             $actions->add(new PlayMedia);
+
+            if (!Admin::user()->can('*')) {
+
+                $actions->disableDelete();
+            }
         });
         $grid->batchActions(function ($batch) {
+
             $batch->add(new BatchPlayMedia());
-            $batch->disableDelete();
+
+            if (!Admin::user()->can('*')) {
+
+                $batch->disableDelete();
+
+            }
         });
         $grid->filter(function($filter){
+
+            $filter->scope('auth',trans('Thiết bị'))->wherein('areaId',explode(',',Admin::user()->areaId));
+
             $filter->expand();
+
             $filter->disableIdFilter();
+
             $filter->like('name', trans('Tên thiết bị'));
+
             $filter->like('deviceCode', trans('Mã thiết bị'));
+
+            $filter->like('area.title', trans('Khu vực'));
+
             // $menuModel = new Area();
             // $filter->equal('areaId', trans('Cụm loa'))->select($menuModel::selectOptions());
         });
 
         $grid->column('id', trans('entity.id'));
+
         $grid->column('name', trans('Tên thiết bị'))->label()->style('font-size:16px;');  
+
         $grid->column('deviceCode', trans('Mã thiết bị')); 
+
         $grid->column('area.title', trans('Cụm loa'))->label(' label-primary')->style('font-size:16px;');   
-        $grid->column('address', trans('Địa chỉ'))->label(' label-default')->style('font-size:16px;');  
-        $grid->column('lat', trans('Tọa độ lat'))->label(' label-info')->style('font-size:16px;')->hide();   
+
+        $grid->column('address', trans('Địa chỉ'))->label(' label-default')->style('font-size:16px;');
+
+        $grid->column('lat', trans('Tọa độ lat'))->label(' label-info')->style('font-size:16px;')->hide();  
+
         $grid->column('lon', trans('Tọa độ lon'))->label(' label-info')->style('font-size:16px;')->hide();   
 
         // $grid->column('payment_fee', trans('entity.gateway.payment_fee') . ' (%)');
@@ -78,7 +117,9 @@ class DeviceController extends AdminController
         // $grid->column('charge_back_fee', trans('entity.gateway.charge_back_fee') . ' (VNĐ)');
         // $grid->column('rolling_reserve_days', trans('entity.gateway.rolling_reserve_days'));
         // $grid->column('rolling_reserve_percent', trans('entity.gateway.rolling_reserve_percent') . ' (%)');
+
         $grid->column('created_at', trans('entity.created_at'));
+
         $grid->column('updated_at', trans('entity.updated_at'));
         
         // $grid->actions(function (Grid\Displayers\Actions $actions) {
@@ -145,6 +186,7 @@ class DeviceController extends AdminController
         $form->text('address', trans('Địa chỉ'))->rules('required');
         $form->text('lat', trans('Tọa độ Lat'))->rules('required');
         $form->text('lon', trans('Tọa độ Lon'))->rules('required');
+        //$form->latlong('lat', 'lon', 'Position');
 
         // $form->disableReset();
         // $form->saved(function (Form $form) {

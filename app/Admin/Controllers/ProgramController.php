@@ -1,22 +1,24 @@
 <?php
 
 namespace App\Admin\Controllers;
+
+use Request;
+use Helper;
 use DB;
+
 use App\Program;
 use App\Area;
 use App\Device;
 use App\DeviceInfo;
 use App\Document;
-use App\Admin\Actions\Post\BatchPlayAll;    
-use Helper;
 
+use App\Admin\Actions\Post\BatchPlayAll;    
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 Use Encore\Admin\Widgets\Table;
-
 use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
 
@@ -28,35 +30,84 @@ class ProgramController extends AdminController
      * @var string
      */
     public $title = '';
+
+    public $path = '/admin/programs';
+
     function __construct(){
       $this->title = trans('admin.program');
     }
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
+
     public function index(Content $content)
     {
         // ->body(view('admin.chartjs',[
         //         'programs' => Program::select(DB::raw('type, COUNT(type) as types'))->groupby('type')->get()
         //         ]))
-        return $content
-            ->title($this->title())
-            ->description($this->description['index'] ?? trans('admin.list'))
-            ->body($this->grid());
+        if(Request::get('_scope_') == 'auth')
+            return $content
+                ->title($this->title())
+                ->description($this->description['index'] ?? trans('admin.list'))
+                ->body($this->grid());
+
+        return redirect()->intended($this->path.'?_scope_=auth');
     }
+
+    public function show($id, Content $content)
+    {
+        $program = Program::where('id',$id)->first();
+
+        if($program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id)
+            return $content
+                ->title($this->title())
+                ->description($this->description['show'] ?? trans('admin.show'))
+                ->body($this->detail($id));
+
+        return redirect()->intended($this->path);
+    }
+
+    public function edit($id, Content $content)
+    {
+        $program = Program::where('id',$id)->first();
+
+        if($program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id)
+            return $content
+                ->title($this->title())
+                ->description($this->description['edit'] ?? trans('admin.edit'))
+                ->body($this->form()->edit($id));
+
+        return redirect()->intended($this->path);
+    }
+
+    /**
+     * Make a grid builder.
+     *
+     * @return Grid
+     */
     protected function grid()
     {
 
         $grid = new Grid(new Program);   
+
+        $grid->actions(function ($actions) {
+            if (!Admin::user()->can('*')) {
+                $actions->disableDelete();
+            }
+        });
         $grid->batchActions(function ($batch) {
             $batch->add(new BatchPlayAll());
+            if (!Admin::user()->can('*')) {
+                $batch->disableDelete();
+            }
         });      
         $grid->filter(function($filter){
             //$filter->expand();
             //$filter->disableIdFilter();
+
+            $filter->scope('auth',trans('Chương trình'))
+                ->where('creatorId',Admin::user()->id)
+                ->orwhere('approvedId',Admin::user()->id);
+
             $filter->like('name', 'Tên chương trình');
+
         });
 
         $grid->quickSearch(function ($model, $query) {
@@ -272,7 +323,11 @@ class ProgramController extends AdminController
 
         $form->divider(trans('Chọn loa phát'));
 
-        $form->listbox('devices', trans('Danh sách loa'))->options(Device::all()->pluck('name', 'deviceCode'))->rules('required',['required'=>"Cần nhập giá trị"]);
+        $form->listbox('devices', trans('Danh sách loa'))
+
+            ->options(Device::WHEREIN('areaId',explode(',',Admin::user()->areaId))->PLUCK('name', 'deviceCode'))
+
+            ->rules('required',['required'=>"Cần nhập giá trị"]);
 
         $states = [
             'off' => ['value' => 1, 'text' => 'Chưa duyệt', 'color' => 'danger'],
@@ -282,10 +337,12 @@ class ProgramController extends AdminController
         $form->switch('status','Phê duyệt')->states($states)->default(2);
 
         Log::info('User ID name ' . Admin::user()->id);
+
         $form->model()->creatorId = Admin::user()->id;
 
         $form->saving(function ($form) {
              $form->model()->creatorId = Admin::user()->id;
+             $form->model()->approvedId = Admin::user()->id;
         });
 
         $form->saved(function ($form) {
@@ -300,7 +357,9 @@ class ProgramController extends AdminController
                     $songPath = env("APP_URL").'/uploads/'.$form->model()->fileVoice;  
 
                     if ($form->model()->mode == 4) { // nếu phát ngay
-                        $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
+
+                        $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath); 
+
                     } else { // nếu phát theo lịch
                         // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
 
@@ -313,6 +372,7 @@ class ProgramController extends AdminController
                 if ($form->model()->type == 2) {
 
                     $songPath = $form->model()->digiChannel;
+
                     if ($form->model()->mode == 4) {
 
                         // play online
@@ -326,7 +386,9 @@ class ProgramController extends AdminController
 
                 // nếu phát tiếp sóng
                 if ($form->model()->type == 3) {
+
                     $songPath = $form->model()->radioChannel;
+
                     if ($form->model()->mode == 4) {
                         $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else {
@@ -337,6 +399,7 @@ class ProgramController extends AdminController
                 // nếu phát file văn bản
                 if ($form->model()->type == 4) {
                     $docModel = Document::findOrFail($form->model()->document_Id);
+
                     $songPath = env('APP_URL').'/'.$docModel->fileVoice;
 
                     // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);

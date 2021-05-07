@@ -517,7 +517,7 @@ class Filter implements Renderable
             $this->conditions(),
             $this->scopeConditions()
         );
-
+        
         return $this->model->addConditions($conditions)->buildData($toArray);
     }
 

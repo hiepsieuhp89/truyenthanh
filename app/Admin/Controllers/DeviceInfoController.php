@@ -32,8 +32,13 @@ class DeviceInfoController extends AdminController
         $grid = new Grid(new DeviceInfo);
 
         $grid->disableCreateButton();      
-        $grid->disableBatchActions();    
-        
+        $grid->disableBatchActions();   
+         
+        $grid->actions(function ($actions) {
+            if (!(new Admin)->user()->can('*')) {
+                $actions->disableDelete();
+            }
+        });
         // lấy thông tin thiết bị
         // $deviceStatus = $this->getDeviceStatus();
         // Log::info("device list " . $deviceStatus);
@@ -43,6 +48,7 @@ class DeviceInfoController extends AdminController
             $filter->disableIdFilter();
             $filter->like('name', trans('Tên thiết bị'));
             $filter->like('deviceCode', trans('Mã thiết bị'));
+            $filter->like('device.area.title', trans('Khu vực'));
             // $menuModel = new Area();
             // $filter->equal('areaId', trans('Cụm loa'))->select($menuModel::selectOptions());
         });

@@ -212,6 +212,7 @@ class Content implements Renderable
         ob_start();
 
         foreach ($this->rows as $row) {
+
             $row->build();
         }
 

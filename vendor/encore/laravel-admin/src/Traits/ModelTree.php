@@ -239,7 +239,6 @@ trait ModelTree
     public static function selectOptions(\Closure $closure = null, $rootText = 'Lựa chọn')
     {
         $options = (new static())->withQuery($closure)->buildSelectOptions();
-
         return collect($options)->prepend($rootText, 0)->all();
     }
 
