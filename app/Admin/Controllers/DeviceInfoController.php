@@ -2,16 +2,22 @@
 
 namespace App\Admin\Controllers;
 
+use Request;
+
+use App\Device;
 use App\DeviceInfo;
+use App\Area;
+
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Layout\Content;
 use Illuminate\Support\Facades\Log;
 use App\Admin\Actions\DeviceInfo\StopPlay;
-
 use App\Admin\Actions\DeviceInfo\RelayFirst;
 use App\Admin\Actions\DeviceInfo\RelaySecond;
+use Encore\Admin\Facades\Admin;
 
 class DeviceInfoController extends AdminController
 {
@@ -21,7 +27,18 @@ class DeviceInfoController extends AdminController
      * @var string
      */
     protected $title = 'Giám sát thiết bị';
+    public $path = '/admin/devicedata';
 
+    public function index(Content $content)
+    {
+        if(Request::get('_scope_') == 'auth')
+            return $content
+                ->title($this->title())
+                ->description($this->description['index'] ?? trans('admin.list'))
+                ->body($this->grid());
+
+        return redirect()->intended($this->path.'?_scope_=auth');
+    }
     /**
      * Make a grid builder.
      *
@@ -31,7 +48,8 @@ class DeviceInfoController extends AdminController
     {
         $grid = new Grid(new DeviceInfo);
 
-        $grid->disableCreateButton();      
+        $grid->disableCreateButton(); 
+
         $grid->disableBatchActions();   
          
         $grid->actions(function ($actions) {
@@ -44,10 +62,20 @@ class DeviceInfoController extends AdminController
         // Log::info("device list " . $deviceStatus);
 
         $grid->filter(function($filter){
+
+            $filter->scope('auth',trans('Giám sát thiết bị'))->whereHas('device', function ($query) {
+
+                $query->wherein('areaId',explode(',',Admin::user()->areaId));
+            });
+
             $filter->expand();
+
             $filter->disableIdFilter();
+
             $filter->like('name', trans('Tên thiết bị'));
+
             $filter->like('deviceCode', trans('Mã thiết bị'));
+
             $filter->like('device.area.title', trans('Khu vực'));
             // $menuModel = new Area();
             // $filter->equal('areaId', trans('Cụm loa'))->select($menuModel::selectOptions());
