@@ -42,13 +42,21 @@ class ProgramController extends AdminController
         // ->body(view('admin.chartjs',[
         //         'programs' => Program::select(DB::raw('type, COUNT(type) as types'))->groupby('type')->get()
         //         ]))
-        if(Request::get('_scope_') == 'auth')
+
+        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth'){
+
             return $content
+
                 ->title($this->title())
+
                 ->description($this->description['index'] ?? trans('admin.list'))
+                
                 ->body($this->grid());
+           
+        }
 
         return redirect()->intended($this->path.'?_scope_=auth');
+        
     }
 
     public function show($id, Content $content)
