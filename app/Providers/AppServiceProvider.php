@@ -6,6 +6,8 @@ use App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Session;
 
+use Encore\Admin\Config\Config;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -15,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Config::load();
     }
 
     /**

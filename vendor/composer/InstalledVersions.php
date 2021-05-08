@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '4e2c0ac244e4aca3d83701aac559b31534c99788',
+    'reference' => '62399b6119036ac67786e0b4f9a77f4fd4d1cede',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -407,6 +407,15 @@ private static $installed = array (
       ),
       'reference' => '9f7a229a69d52506914b4bc61bfdb199d90c5547',
     ),
+    'jxlwqq/env-manager' => 
+    array (
+      'pretty_version' => '0.1.0',
+      'version' => '0.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'faeaf2f1d110dbfd88e715d71f289b128ceebda0',
+    ),
     'kodova/hamcrest-php' => 
     array (
       'replaced' => 
@@ -423,6 +432,24 @@ private static $installed = array (
       ),
       'reference' => '3a12f9907c9d4ba59cdd1c9033e67325a337469f',
     ),
+    'laravel-admin-ext/config' => 
+    array (
+      'pretty_version' => 'v1.1',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '5fe99f56758adfd8436ac5d02e83e72a6388dfc2',
+    ),
+    'laravel-admin-ext/file-browser' => 
+    array (
+      'pretty_version' => '0.0.2',
+      'version' => '0.0.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '609effc47d96146e97319ad95523487e951b44aa',
+    ),
     'laravel-admin-ext/latlong' => 
     array (
       'pretty_version' => 'v1.2.4',
@@ -431,6 +458,24 @@ private static $installed = array (
       array (
       ),
       'reference' => '5d9b6c0b7af07cd51542c62d902f2402be98b3f8',
+    ),
+    'laravel-admin-ext/media-manager' => 
+    array (
+      'pretty_version' => 'v1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '08ef816da82e543f7519d6b17aa34f1ef13adaab',
+    ),
+    'laravel-admin-ext/media-player' => 
+    array (
+      'pretty_version' => 'v1.1',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '398c10efd40a8f6b03fade0aa9cb0ddf1a72a75e',
     ),
     'laravel/framework' => 
     array (
@@ -448,7 +493,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '4e2c0ac244e4aca3d83701aac559b31534c99788',
+      'reference' => '62399b6119036ac67786e0b4f9a77f4fd4d1cede',
     ),
     'laravel/tinker' => 
     array (

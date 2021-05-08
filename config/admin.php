@@ -404,6 +404,10 @@ return [
         'chartjs' => [
             'enable' => true,
         ],
+        'env-manager' => [
+            // If the value is set to false, this extension will be disabled
+            'enable' => true
+        ],
         'latlong' => [
 
             // Whether to enable this extension, defaults to true

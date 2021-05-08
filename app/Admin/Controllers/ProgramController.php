@@ -15,10 +15,10 @@ use App\Document;
 use App\Admin\Actions\Post\BatchPlayAll;    
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Layout\Content;
-use Encore\Admin\Form;
+use Encore\Admin\Form; 
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-Use Encore\Admin\Widgets\Table;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
 
@@ -50,7 +50,7 @@ class ProgramController extends AdminController
                 ->title($this->title())
 
                 ->description($this->description['index'] ?? trans('admin.list'))
-                
+
                 ->body($this->grid());
            
         }
@@ -157,7 +157,7 @@ class ProgramController extends AdminController
                                                         
         $grid->column('document.fileVoice', 'File')->display(function ($fileVoiceDocs) {
             if ($this->type == 4) { // type voice
-                return "<audio controls><source src='".env("APP_URL").'/'.$fileVoiceDocs."' type='audio/wav'></audio>";
+                return "<audio controls><source src='".config('filesystems.disks.upload.url').$fileVoiceDocs."' type='audio/wav'></audio>";
             } 
             if ($this->type == 1) { // type media mp3
                 return "<audio controls><source src='".config('filesystems.disks.upload.url').$this->fileVoice."' type='audio/wav'></audio>";
@@ -291,6 +291,7 @@ class ProgramController extends AdminController
                             // 'previewFileType'=>'audio',
                             // 'initialPreviewFileType'=>'audio',
                         // ])->uniqueName();
+                        //$form->media('fileVoice', 'Chọn file')->path('files');
                         $form->file('fileVoice', 'Chọn file')->uniqueName();
 
                     })->when(2, function (Form $form) {
@@ -354,6 +355,8 @@ class ProgramController extends AdminController
         });
 
         $form->saved(function ($form) {
+
+            //neu duyet
             if ($form->model()->status == 2) {
                 // gui lenh
                 // $this->setPlayFM($form->model()->type, '123456789ABCDEF', $form->model()->digiChannel);
@@ -362,7 +365,7 @@ class ProgramController extends AdminController
                 // nếu phát file phương tiện
                 if ($form->model()->type == 1) {
 
-                    $songPath = env("APP_URL").'/uploads/'.$form->model()->fileVoice;  
+                    $songPath = config('filesystems.disks.upload.url').$form->model()->fileVoice;  
 
                     if ($form->model()->mode == 4) { // nếu phát ngay
 
@@ -421,6 +424,9 @@ class ProgramController extends AdminController
                 Log::info('Song name ' . $songPath);
  
                 // setPlaySchedule($type, $deviceCode, $data, $startDate, $endDate, $startTime, $endTime, $songName) 
+            }
+            //neu khong duyet
+            if ($form->model()->status == 1) {
 
             }
         });

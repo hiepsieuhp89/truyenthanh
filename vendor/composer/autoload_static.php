@@ -108,6 +108,7 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         ),
         'J' => 
         array (
+            'Jxlwqq\\EnvManager\\' => 18,
             'JakubOnderka\\PhpConsoleHighlighter\\' => 35,
             'JakubOnderka\\PhpConsoleColor\\' => 29,
         ),
@@ -122,8 +123,12 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         ),
         'E' => 
         array (
+            'Encore\\FileBrowser\\' => 19,
             'Encore\\Chartjs\\' => 15,
+            'Encore\\Admin\\Media\\' => 19,
+            'Encore\\Admin\\MediaPlayer\\' => 25,
             'Encore\\Admin\\Latlong\\' => 21,
+            'Encore\\Admin\\Config\\' => 20,
             'Encore\\Admin\\' => 13,
             'Egulias\\EmailValidator\\' => 23,
         ),
@@ -346,6 +351,10 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         array (
             0 => __DIR__ . '/..' . '/laravel/tinker/src',
         ),
+        'Jxlwqq\\EnvManager\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jxlwqq/env-manager/src',
+        ),
         'JakubOnderka\\PhpConsoleHighlighter\\' => 
         array (
             0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
@@ -366,13 +375,29 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         array (
             0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
         ),
+        'Encore\\FileBrowser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel-admin-ext/file-browser/src',
+        ),
         'Encore\\Chartjs\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel-admin-ext/chartjs/src',
         ),
+        'Encore\\Admin\\Media\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel-admin-ext/media-manager/src',
+        ),
+        'Encore\\Admin\\MediaPlayer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel-admin-ext/media-player/src',
+        ),
         'Encore\\Admin\\Latlong\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel-admin-ext/latlong/src',
+        ),
+        'Encore\\Admin\\Config\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel-admin-ext/config/src',
         ),
         'Encore\\Admin\\' => 
         array (
@@ -1110,6 +1135,10 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'Encore\\Admin\\Auth\\Database\\Permission' => __DIR__ . '/..' . '/encore/laravel-admin/src/Auth/Database/Permission.php',
         'Encore\\Admin\\Auth\\Database\\Role' => __DIR__ . '/..' . '/encore/laravel-admin/src/Auth/Database/Role.php',
         'Encore\\Admin\\Auth\\Permission' => __DIR__ . '/..' . '/encore/laravel-admin/src/Auth/Permission.php',
+        'Encore\\Admin\\Config\\Config' => __DIR__ . '/..' . '/laravel-admin-ext/config/src/Config.php',
+        'Encore\\Admin\\Config\\ConfigController' => __DIR__ . '/..' . '/laravel-admin-ext/config/src/ConfigController.php',
+        'Encore\\Admin\\Config\\ConfigModel' => __DIR__ . '/..' . '/laravel-admin-ext/config/src/ConfigModel.php',
+        'Encore\\Admin\\Config\\ConfigServiceProvider' => __DIR__ . '/..' . '/laravel-admin-ext/config/src/ConfigServiceProvider.php',
         'Encore\\Admin\\Console\\ActionCommand' => __DIR__ . '/..' . '/encore/laravel-admin/src/Console/ActionCommand.php',
         'Encore\\Admin\\Console\\AdminCommand' => __DIR__ . '/..' . '/encore/laravel-admin/src/Console/AdminCommand.php',
         'Encore\\Admin\\Console\\ConfigCommand' => __DIR__ . '/..' . '/encore/laravel-admin/src/Console/ConfigCommand.php',
@@ -1362,6 +1391,14 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'Encore\\Admin\\Layout\\Column' => __DIR__ . '/..' . '/encore/laravel-admin/src/Layout/Column.php',
         'Encore\\Admin\\Layout\\Content' => __DIR__ . '/..' . '/encore/laravel-admin/src/Layout/Content.php',
         'Encore\\Admin\\Layout\\Row' => __DIR__ . '/..' . '/encore/laravel-admin/src/Layout/Row.php',
+        'Encore\\Admin\\MediaPlayer\\MediaPlayer' => __DIR__ . '/..' . '/laravel-admin-ext/media-player/src/MediaPlayer.php',
+        'Encore\\Admin\\MediaPlayer\\MediaPlayerServiceProvider' => __DIR__ . '/..' . '/laravel-admin-ext/media-player/src/MediaPlayerServiceProvider.php',
+        'Encore\\Admin\\MediaPlayer\\PlayerColumn' => __DIR__ . '/..' . '/laravel-admin-ext/media-player/src/PlayerColumn.php',
+        'Encore\\Admin\\MediaPlayer\\PlayerField' => __DIR__ . '/..' . '/laravel-admin-ext/media-player/src/PlayerField.php',
+        'Encore\\Admin\\Media\\BootExtension' => __DIR__ . '/..' . '/laravel-admin-ext/media-manager/src/BootExtension.php',
+        'Encore\\Admin\\Media\\MediaController' => __DIR__ . '/..' . '/laravel-admin-ext/media-manager/src/MediaController.php',
+        'Encore\\Admin\\Media\\MediaManager' => __DIR__ . '/..' . '/laravel-admin-ext/media-manager/src/MediaManager.php',
+        'Encore\\Admin\\Media\\MediaServiceProvider' => __DIR__ . '/..' . '/laravel-admin-ext/media-manager/src/MediaServiceProvider.php',
         'Encore\\Admin\\Middleware\\Authenticate' => __DIR__ . '/..' . '/encore/laravel-admin/src/Middleware/Authenticate.php',
         'Encore\\Admin\\Middleware\\Bootstrap' => __DIR__ . '/..' . '/encore/laravel-admin/src/Middleware/Bootstrap.php',
         'Encore\\Admin\\Middleware\\LogOperation' => __DIR__ . '/..' . '/encore/laravel-admin/src/Middleware/LogOperation.php',
@@ -1401,6 +1438,9 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'Encore\\Admin\\Widgets\\Widget' => __DIR__ . '/..' . '/encore/laravel-admin/src/Widgets/Widget.php',
         'Encore\\Chartjs\\Chartjs' => __DIR__ . '/..' . '/laravel-admin-ext/chartjs/src/Chartjs.php',
         'Encore\\Chartjs\\ChartjsServiceProvider' => __DIR__ . '/..' . '/laravel-admin-ext/chartjs/src/ChartjsServiceProvider.php',
+        'Encore\\FileBrowser\\FileBrowser' => __DIR__ . '/..' . '/laravel-admin-ext/file-browser/src/FileBrowser.php',
+        'Encore\\FileBrowser\\FileBrowserField' => __DIR__ . '/..' . '/laravel-admin-ext/file-browser/src/FileBrowserField.php',
+        'Encore\\FileBrowser\\FileBrowserServiceProvider' => __DIR__ . '/..' . '/laravel-admin-ext/file-browser/src/FileBrowserServiceProvider.php',
         'Faker\\Calculator\\Ean' => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker/Calculator/Ean.php',
         'Faker\\Calculator\\Iban' => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker/Calculator/Iban.php',
         'Faker\\Calculator\\Inn' => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker/Calculator/Inn.php',
@@ -2773,6 +2813,10 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'JakubOnderka\\PhpConsoleColor\\InvalidStyleException' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/InvalidStyleException.php',
         'JakubOnderka\\PhpConsoleHighlighter\\Highlighter' => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src/Highlighter.php',
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
+        'Jxlwqq\\EnvManager\\Env' => __DIR__ . '/..' . '/jxlwqq/env-manager/src/Env.php',
+        'Jxlwqq\\EnvManager\\EnvManager' => __DIR__ . '/..' . '/jxlwqq/env-manager/src/EnvManager.php',
+        'Jxlwqq\\EnvManager\\EnvManagerServiceProvider' => __DIR__ . '/..' . '/jxlwqq/env-manager/src/EnvManagerServiceProvider.php',
+        'Jxlwqq\\EnvManager\\Http\\Controllers\\EnvManagerController' => __DIR__ . '/..' . '/jxlwqq/env-manager/src/Http/Controllers/EnvManagerController.php',
         'Laravel\\Tinker\\ClassAliasAutoloader' => __DIR__ . '/..' . '/laravel/tinker/src/ClassAliasAutoloader.php',
         'Laravel\\Tinker\\Console\\TinkerCommand' => __DIR__ . '/..' . '/laravel/tinker/src/Console/TinkerCommand.php',
         'Laravel\\Tinker\\TinkerCaster' => __DIR__ . '/..' . '/laravel/tinker/src/TinkerCaster.php',

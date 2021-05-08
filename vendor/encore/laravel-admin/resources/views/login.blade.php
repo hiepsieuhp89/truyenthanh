@@ -30,7 +30,7 @@
 <body class="hold-transition login-page" @if(config('admin.login_background_image'))style="background: url({{config('admin.login_background_image')}}) no-repeat;background-size: cover;"@endif>
 <div class="login-box">
   <div class="login-logo">
-    <a href="{{ admin_url('/') }}" style="color: white;text-shadow: 0 0 5px black;"><b>{{config('admin.name')}}</b></a>
+    <a href="{{ admin_url('/') }}" style="text-shadow: 0 0 5px black;color:white;"><b>{{config('admin.name')}}</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">

@@ -46,6 +46,10 @@ return [
         //     'driver' => 'local',
         //     'root' => storage_path('storage/admin'),
         // ],
+        'admin' =>[
+            'driver' => 'local',
+            'root' => public_path('public/admin'),
+        ],
 
         'local' => [
             'driver' => 'local',
@@ -54,7 +58,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('public'),
+            'root' => public_path('uploads'),
             'url' => env('APP_URL').'/program',
             'visibility' => 'public',
         ],
@@ -70,8 +74,8 @@ return [
         'upload' => [
             'driver' =>'local',
             'root' => public_path('uploads'),
-            'visibility' =>'public',
             'url' => env('APP_URL').'/uploads/',
+            'visibility' =>'public',
         ],
 
         's3' => [
