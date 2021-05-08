@@ -41,7 +41,7 @@ class DocumentController extends AdminController
         $grid->column('id', trans('entity.id'));
         $grid->column('name', trans('Tên bài')); 
         $grid->column('fileVoice', 'File')->display(function ($fileVoice) {
-            return "<audio controls><source src='".env('APP_URL')."/$fileVoice' type='audio/mpeg'></audio>";
+            return "<audio controls><source src='".config('filesystems.disks.upload.url')."/$fileVoice' type='audio/mpeg'></audio>";
         });
         $grid->column('created_at', trans('entity.created_at'));
         $grid->column('updated_at', trans('entity.updated_at'));
