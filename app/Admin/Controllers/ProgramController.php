@@ -411,7 +411,7 @@ class ProgramController extends AdminController
                 if ($form->model()->type == 4) {
                     $docModel = Document::findOrFail($form->model()->document_Id);
 
-                    $songPath = env('APP_URL').'/'.$docModel->fileVoice;
+                    $songPath = config('filesystems.disks.upload.url').$docModel->fileVoice;
 
                     // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                     if ($form->model()->mode == 4) {
