@@ -39,13 +39,27 @@ class DeviceController extends AdminController
     }
     public function index(Content $content)
     {
-        if(Request::get('_scope_') == 'auth')
+        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth'){
+
             return $content
+
                 ->title($this->title())
+
                 ->description($this->description['index'] ?? trans('admin.list'))
+
                 ->body($this->grid());
+           
+        }
 
         return redirect()->intended($this->path.'?_scope_=auth');
+
+        // if(Request::get('_scope_') == 'auth')
+        //     return $content
+        //         ->title($this->title())
+        //         ->description($this->description['index'] ?? trans('admin.list'))
+        //         ->body($this->grid());
+
+        // return redirect()->intended($this->path.'?_scope_=auth');
     }
     protected function grid()
     {
