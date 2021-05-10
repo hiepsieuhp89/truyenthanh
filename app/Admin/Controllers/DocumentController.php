@@ -85,8 +85,7 @@ class DocumentController extends AdminController
         $grid->disableColumnSelector();   
 
         $grid->filter(function($filter){
-            $filter->scope('auth',trans('Tài liệu'))
-                ->where('creatorId',Admin::user()->id);
+            $filter->scope('auth',trans('Tài liệu'))->where('creatorId',Admin::user()->id);
             $filter->expand();
             $filter->disableIdFilter();
             $filter->like('name', trans('Tên bài'));

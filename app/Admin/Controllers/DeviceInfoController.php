@@ -87,9 +87,10 @@ class DeviceInfoController extends AdminController
                 });
 
             },trans('Tên thiết bị'));
+
             $filter->like('deviceCode', trans('Mã thiết bị'));
 
-            $filter->equal('areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
+            $filter->equal('device.areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
         $grid->column('id', __('Id'));
