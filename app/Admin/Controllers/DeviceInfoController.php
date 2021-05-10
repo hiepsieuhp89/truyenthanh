@@ -78,7 +78,15 @@ class DeviceInfoController extends AdminController
 
             $filter->disableIdFilter();
 
-            $filter->like('name', trans('Tên thiết bị'));
+            $filter->wherehas(function ($query) {
+
+                $query->whereHas('device', function ($query) {
+
+                    $query->where('name', 'like', "%{$this->input}%");
+
+                });
+
+            },trans('Tên thiết bị'));
 
             $filter->like('deviceCode', trans('Mã thiết bị'));
 
