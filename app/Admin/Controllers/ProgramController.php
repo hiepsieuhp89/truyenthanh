@@ -335,7 +335,7 @@ class ProgramController extends AdminController
         if(Admin::user()->can('*'))
             $device_auth = Device::PLUCK('name', 'deviceCode');
         else
-            $device_auth = Device::WHEREIN('areaId',explode(',',Admin::user()->areaId))->PLUCK('name', 'deviceCode')
+            $device_auth = Device::WHEREIN('areaId',explode(',',Admin::user()->areaId))->PLUCK('name', 'deviceCode');
         $form->listbox('devices', trans('Danh sách loa'))
 
             ->options($device_auth)
