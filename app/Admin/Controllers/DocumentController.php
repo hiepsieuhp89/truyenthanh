@@ -2,6 +2,10 @@
 
 namespace App\Admin\Controllers;
 
+use Request;
+use Helper;
+use DB;
+
 use App\Document;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
