@@ -178,9 +178,10 @@ class DeviceController extends AdminController
             return view('deviceMap')->render();
         })->badge()->style('font-size:16px;');
         */
-        $show->title('Vị trí')->as(function () use ($id) {
-            return view('deviceMap',['device'=>Device::findOrFail($id)])->render();
-        })->badge(' w-100 h-400px p-0');
+        $show->field('Vị trí')->latlong('lat', 'lon', $height = 500, $zoom = 16);
+        // $show->title('Vị trí')->as(function () use ($id) {
+        //     return view('deviceMap',['device'=>Device::findOrFail($id)])->render();
+        // })->badge(' w-100 h-400px p-0');
 
 
         $show->field('created_at', trans('entity.created_at'));
@@ -203,9 +204,8 @@ class DeviceController extends AdminController
         $form->text('deviceCode', trans('Mã thiết bị'))->creationRules(['required', "unique:devices"])
         ->updateRules(['required', "unique:devices,deviceCode,{{id}}"]);
         $form->text('address', trans('Địa chỉ'))->rules('required');
-        $form->text('lat', trans('Tọa độ Lat'))->rules('required');
-        $form->text('lon', trans('Tọa độ Lon'))->rules('required');
-        //$form->latlong('lat', 'lon', 'Position');
+
+        $form->latlong('lat', 'lon', 'Vị trí')->height(500)->default(['lat' => 20.955835 , 'lng' => 105.7563658 ]);
 
         // $form->disableReset();
         // $form->saved(function (Form $form) {
@@ -215,7 +215,7 @@ class DeviceController extends AdminController
         //     // $infoModel->deviceCode = $form->model()->deviceCode;
         //     DeviceInfo::updateOrCreate(['id' => $form->model()->id], ['deviceCode' => $form->model()->deviceCode]);
         // });
-
+        
         $form->saved(function (Form $form) {
             // $formInfo = new Form(new DeviceInfo);
             // $formInfo->model()->id = $form->model()->id;
