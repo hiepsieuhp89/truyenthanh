@@ -15,7 +15,7 @@
             </div>
 
             @if($provider != 'yandex')
-            <div class="col-md-3 col-md-offset-3">
+            <div class="col-md-12 col-md-offset-0">
                 <div class="input-group">
                     <input type="text" class="form-control" id="search-{{$id['lat'].$id['lng']}}">
                     <span class="input-group-btn">
