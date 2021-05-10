@@ -105,10 +105,10 @@ class DeviceController extends AdminController
 
             $filter->like('deviceCode', trans('Mã thiết bị'));
 
-            $filter->like('area.title', trans('Khu vực'));
+            //$filter->like('area.title', trans('Khu vực'));
 
             // $menuModel = new Area();
-            // $filter->equal('areaId', trans('Cụm loa'))->select($menuModel::selectOptions());
+            $filter->equal('areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
         $grid->column('id', trans('entity.id'));
