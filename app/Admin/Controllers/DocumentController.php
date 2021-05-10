@@ -19,6 +19,7 @@ class DocumentController extends AdminController
      * @var string
      */
     protected $title = 'Phát văn bản';
+    public $path = '/admin/docs';
 
     public function index(Content $content)
     {
