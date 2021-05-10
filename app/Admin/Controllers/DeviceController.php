@@ -123,7 +123,12 @@ class DeviceController extends AdminController
 
         $grid->column('lat', trans('Tọa độ lat'))->label(' label-info')->style('font-size:16px;')->hide();  
 
-        $grid->column('lon', trans('Tọa độ lon'))->label(' label-info')->style('font-size:16px;')->hide();   
+        $grid->column('lon', trans('Tọa độ lon'))->label(' label-info')->style('font-size:16px;')->hide();
+
+        $grid->column('status', trans('Trạng thái'))->display(function($value){
+            if($value == 1) return "Bật";
+            return "Tắt";
+        });    
 
         // $grid->column('payment_fee', trans('entity.gateway.payment_fee') . ' (%)');
         // $grid->column('transaction_fee', trans('entity.gateway.transaction_fee') . ' (VNĐ)');

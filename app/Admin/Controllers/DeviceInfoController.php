@@ -88,24 +88,29 @@ class DeviceInfoController extends AdminController
         });
 
         $grid->column('id', __('Id'));
+
         $grid->column('device.name', __('Tên'))->label()->style('font-size:16px;'); 
-        $grid->column('deviceCode', __('DeviceCode'));
+
+        $grid->column('deviceCode', __('Mã thiết bị'));
+
         $grid->column('Dừng phát')->action(StopPlay::class);
 
         $grid->column('relay1', 'Relay 1')->action(RelayFirst::class);
 
-        $states = [
-            'on' => ['value' => 1, 'text' => 'Bật', 'color' => 'primary'],
-            'off' => ['value' => 2, 'text' => 'Tắt', 'color' => 'default'],
-        ];
-        // $grid->column('status', 'Trạng thái')->switch($states);
-
         $grid->column('volume', __('Volume'))->editable('select', [1 => 'Mức 1', 2 => 'Mức 2', 3 => 'Mức 3', 4 => 'Mức 4', 5 => 'Mức 5', 6 => 'Mức 6', 7 => 'Mức 7', 8 => 'Mức 8', 9 => 'Mức 9', 10 => 'Mức 10', 11 => 'Mức 11', 12 => 'Mức 12', 13 => 'Mức 13', 14 => 'Mức 14', 15 => 'Mức 15']);
+        
         $grid->column('ip', __('IP'))->editable();
 
-        // $grid->column('version', __('Version'));
+        $states = [
+            'off' => ['value' => 0, 'text' => 'Tắt', 'color' => 'danger'],
+            'on' => ['value' => 1, 'text' => 'Bật', 'color' => 'primary'],
+        ];
+        $grid->column('status', 'Trạng thái')->switch($states);
+
         $grid->column('created_at', __('Created at'));
+
         $grid->column('updated_at', __('Updated at'));
+
         $grid->disableExport();
 
         $grid->actions(function ($actions) {
@@ -160,14 +165,21 @@ class DeviceInfoController extends AdminController
         $form = new Form(new DeviceInfo);
 
         $form->text('deviceCode');
-        $form->number('status', __('Status'));
+
+        $states = [
+            'off' => ['value' => 0, 'text' => 'Tắt', 'color' => 'danger'],
+            'on' => ['value' => 1, 'text' => 'Bật', 'color' => 'primary'],
+        ];
+
+        $form->switch('status','Trạng thái')->states($states)->default(0);
+
         $form->number('volume', __('Volume'))->default(5);
+
         $form->textarea('ip', __('Ip'));
         
         // $form->textarea('version', __('Version'));
         // $form->display('created_at', __('Created At'));
         // $form->display('updated_at', __('Updated At'));
-
         $form->saved(function ($form) {
             // $debug_export = var_export($form, true);
             // ob_start();
@@ -175,6 +187,12 @@ class DeviceInfoController extends AdminController
             // $debug_dump = ob_get_clean();
             // Log::info("device data " . $debug_dump);
             $this->setDeviceStatus(4,  $form->model()->deviceCode,  $form->model()->volume);
+
+            $device = Device::where('deviceCode',$form->model()->deviceCode)->first();
+            if($device !== NULL){
+              $device->status = $form->model()->status;
+              $device->save();
+            }
         });
 
         return $form;

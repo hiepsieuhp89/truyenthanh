@@ -333,9 +333,9 @@ class ProgramController extends AdminController
         $form->divider(trans('Chọn loa phát'));
 
         if(Admin::user()->can('*'))
-            $device_auth = Device::PLUCK('name', 'deviceCode');
+            $device_auth = Device::WHERE("status",1)->PLUCK('name', 'deviceCode');
         else
-            $device_auth = Device::WHEREIN('areaId',explode(',',Admin::user()->areaId))->PLUCK('name', 'deviceCode');
+            $device_auth = Device::WHERE("status",1)->WHEREIN('areaId',explode(',',Admin::user()->areaId))->PLUCK('name', 'deviceCode');
         $form->listbox('devices', trans('Danh sách loa'))
 
             ->options($device_auth)
