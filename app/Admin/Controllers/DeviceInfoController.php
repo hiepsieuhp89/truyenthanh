@@ -111,7 +111,7 @@ class DeviceInfoController extends AdminController
             'off' => ['value' => 0, 'text' => 'Tắt', 'color' => 'danger'],
             'on' => ['value' => 1, 'text' => 'Bật', 'color' => 'primary'],
         ];
-        $grid->column('status', 'Trạng thái')->switch($states);
+        $grid->column('status', 'Trạng thái')->style('height:30px;')->switch($states);
 
         $grid->column('created_at', __('Created at'));
 

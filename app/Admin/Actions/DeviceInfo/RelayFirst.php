@@ -16,9 +16,9 @@ class RelayFirst extends RowAction
        $model->relay1 = 1 - $model->relay1;
 
        if ($model->relay1 == 1) {
-           $this->setRelay($model->deviceCode,'relay1on');
+          $this->setRelay($model->deviceCode,'relay1on');
        } else {
-           $this->setRelay($model->deviceCode,'relay1off');
+          $this->setRelay($model->deviceCode,'relay1off');
        }
 
        $model->save();
@@ -31,7 +31,7 @@ class RelayFirst extends RowAction
     }
     public function display($relay)
     {
-        return ($relay == 1) ? "Tắt" : "Bật";
+        return ($relay == 0) ? "Tắt" : "Bật";
     }
 
     protected function setRelay($deviceCode, $status) 

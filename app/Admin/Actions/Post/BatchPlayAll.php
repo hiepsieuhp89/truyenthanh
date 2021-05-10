@@ -48,6 +48,7 @@ class BatchPlayAll extends BatchAction
 
                     }
                 }
+                
             }
             //neu la dai Fm hoac tiep song
             else{
