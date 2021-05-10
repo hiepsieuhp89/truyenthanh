@@ -76,7 +76,7 @@ class ProgramController extends AdminController
     {
         $program = Program::where('id',$id)->first();
 
-        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth' || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id){
+        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth' || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id)
             return $content
                 ->title($this->title())
                 ->description($this->description['edit'] ?? trans('admin.edit'))
