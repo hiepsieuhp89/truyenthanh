@@ -525,7 +525,7 @@ class ProgramController extends AdminController
 
         $dataRequest .= ']}"}';
         $request = base64_encode($dataRequest);
-        //dd($dataRequest);
+
         // echo "request " . $request;
         $urlRequest = "http://103.130.213.161:906/".$request;
 
@@ -602,10 +602,9 @@ class ProgramController extends AdminController
 
         if ($type == 1 || $type == 4) { // nếu phát ngay file pt
 
-
             foreach($deviceCode as $device){
 
-                $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
+                $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
             }
 
         } else {

@@ -89,7 +89,7 @@ class DeviceInfoController extends AdminController
 
         $grid->column('device.name', __('Tên'))->label()->style('font-size:16px;'); 
 
-        $grid->column('deviceCode', __('Mã thiết bị'));
+        $grid->column('deviceCode', __('Mã thiết bị'))->copyable();
 
         $grid->column('Dừng phát')->action(StopPlay::class);
 

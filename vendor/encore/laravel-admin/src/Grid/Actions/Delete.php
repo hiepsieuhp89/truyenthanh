@@ -32,6 +32,10 @@ class Delete extends RowAction
         try {
             DB::transaction(function () use ($model) {
                 $model->delete();
+                if(isset($model->fileVoice)){
+                    $file_path = config('filesystems.disks.upload.url').$model->fileVoice;
+                    unlink($file_path);
+                }
             });
         } catch (\Exception $exception) {
             return $this->response()->error("{$trans['failed']} : {$exception->getMessage()}");

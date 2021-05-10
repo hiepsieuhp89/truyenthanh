@@ -115,7 +115,7 @@ class DeviceController extends AdminController
 
         $grid->column('name', trans('Tên thiết bị'))->label()->style('font-size:16px;');  
 
-        $grid->column('deviceCode', trans('Mã thiết bị')); 
+        $grid->column('deviceCode', trans('Mã thiết bị'))->copyable(); 
 
         $grid->column('area.title', trans('Cụm loa'))->label(' label-primary')->style('font-size:16px;');   
 

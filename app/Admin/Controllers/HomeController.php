@@ -16,7 +16,11 @@ class HomeController extends Controller
 {
     public function index(Content $content)
     {
-        return $content->title('Mạng lưới phát thanh kỹ thuật số')->row(view('allDevicesMap'));
+        return $content->title('Mạng lưới phát thanh kỹ thuật số')->view('allDevicesMap');
+    }
+    protected function grid()
+    {
+    	return view('allDevicesMap');
     }
     public function changeLanguage(Request $req){
         Session::put('lan', $req->lang);
