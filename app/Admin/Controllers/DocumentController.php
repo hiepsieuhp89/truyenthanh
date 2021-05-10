@@ -7,7 +7,9 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Layout\Content;
 use Illuminate\Support\Facades\Log;
+use Encore\Admin\Facades\Admin;
 
 class DocumentController extends AdminController
 {
@@ -18,11 +20,57 @@ class DocumentController extends AdminController
      */
     protected $title = 'Phát văn bản';
 
+    public function index(Content $content)
+    {
+
+        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth'){
+
+            return $content
+
+                ->title($this->title())
+
+                ->description($this->description['index'] ?? trans('admin.list'))
+
+                ->body($this->grid());
+           
+        }
+
+        return redirect()->intended($this->path.'?_scope_=auth');
+        
+    }
+
+    public function show($id, Content $content)
+    {
+        $program = Program::where('id',$id)->first();
+
+        if($program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id)
+            return $content
+                ->title($this->title())
+                ->description($this->description['show'] ?? trans('admin.show'))
+                ->body($this->detail($id));
+
+        return redirect()->intended($this->path);
+    }
+
+    public function edit($id, Content $content)
+    {
+        $program = Program::where('id',$id)->first();
+
+        if($program->creatorId == Admin::user()->id)
+            return $content
+                ->title($this->title())
+                ->description($this->description['edit'] ?? trans('admin.edit'))
+                ->body($this->form()->edit($id));
+
+        return redirect()->intended($this->path);
+    }
+
     /**
      * Make a grid builder.
      *
      * @return Grid
      */
+
     protected function grid()
     {
         $grid = new Grid(new Document);       
@@ -32,6 +80,8 @@ class DocumentController extends AdminController
         $grid->disableColumnSelector();   
 
         $grid->filter(function($filter){
+            $filter->scope('auth',trans('Tài liệu'))
+                ->where('creatorId',Admin::user()->id);
             $filter->expand();
             $filter->disableIdFilter();
             $filter->like('name', trans('Tên bài'));
@@ -40,9 +90,11 @@ class DocumentController extends AdminController
 
         $grid->column('id', trans('entity.id'));
         $grid->column('name', trans('Tên bài')); 
+
         $grid->column('fileVoice', 'File')->display(function ($fileVoice) {
             return "<audio controls><source src='".config('filesystems.disks.upload.url')."/$fileVoice' type='audio/mpeg'></audio>";
         });
+        $grid->column('creator.name', trans('Người tạo')); 
         $grid->column('created_at', trans('entity.created_at'));
         $grid->column('updated_at', trans('entity.updated_at'));
         return $grid;
@@ -108,7 +160,9 @@ class DocumentController extends AdminController
         //     $form->model()->fileVoice = md5($form->model()->name).".mp3";
         //     // $this->createVoice($form->model()->content, $form->model()->fileVoice);
         // });
-
+        $form->saving(function (Form $form) {
+            $form->model()->creatorId = Admin::user()->id;
+        });
         $form->saved(function (Form $form) {
             Log::info("Saved - name  " . $form->model()->name);
 

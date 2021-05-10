@@ -13,8 +13,8 @@ class AddCreatorToDocument extends Migration
      */
     public function up()
     {
-        Schema::table('document', function (Blueprint $table) {
-            //
+        Schema::table('documents', function (Blueprint $table) {
+            $table->integer('creatorId'); // nguoi tao
         });
     }
 
@@ -25,7 +25,7 @@ class AddCreatorToDocument extends Migration
      */
     public function down()
     {
-        Schema::table('document', function (Blueprint $table) {
+        Schema::table('documents', function (Blueprint $table) {
             //
         });
     }

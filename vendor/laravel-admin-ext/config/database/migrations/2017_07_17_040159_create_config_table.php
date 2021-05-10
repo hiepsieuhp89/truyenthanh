@@ -13,17 +13,17 @@ class CreateConfigTable extends Migration
      */
     public function up()
     {
-        $connection = config('admin.database.connection') ?: config('database.default');
+        // $connection = config('admin.database.connection') ?: config('database.default');
 
-        $table = config('admin.extensions.config.table', 'admin_config');
+        // $table = config('admin.extensions.config.table', 'admin_config');
 
-        Schema::connection($connection)->create($table, function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
-            $table->string('value');
-            $table->text('description')->nullable();
-            $table->timestamps();
-        });
+        // Schema::connection($connection)->create($table, function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('name')->unique();
+        //     $table->string('value');
+        //     $table->text('description')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -33,10 +33,10 @@ class CreateConfigTable extends Migration
      */
     public function down()
     {
-        $connection = config('admin.database.connection') ?: config('database.default');
+        // $connection = config('admin.database.connection') ?: config('database.default');
 
-        $table = config('admin.extensions.config.table', 'admin_config');
+        // $table = config('admin.extensions.config.table', 'admin_config');
 
-        Schema::connection($connection)->dropIfExists($table);
+        // Schema::connection($connection)->dropIfExists($table);
     }
 }
