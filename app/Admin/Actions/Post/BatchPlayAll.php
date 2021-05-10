@@ -18,21 +18,40 @@ class BatchPlayAll extends BatchAction
         // copy the data model for each row
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        foreach ($collection as $model) {
+        foreach ($collection as $model) {// cho moi chuong trinh
+
+            $devices = $model->devices;// lay cac thiet bi cua chuong trinh
 
             // if program is a media file
             if($model->type == 1){
 
                 $songName = $model->fileVoice;
 
-                $devices = $model->devices;
+                if($model->mode == 4){ // phat ngay
 
-                foreach($devices as $device){
-                  $dataRequest .= '{\"DeviceID\":\"'.$device.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
+                    foreach($devices as $device){
+
+                      $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
+
+                    }
+                }
+
+                else{ // theo lich
+
+                    $startTime = $model->time ? $model->time : '00:00:00';
+                    $startDate = $model->startDate ? $model->startDate : '';
+                    $endDate = $model->endDate ? $model->endDate : '3000-05-10';
+
+                    foreach($devices as $device){
+
+                        $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+
+                    }
                 }
             }
+            //neu la dai Fm hoac tiep song
             else{
-              $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
+                $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
             }
         }
         $dataRequest .= ']}"}';
