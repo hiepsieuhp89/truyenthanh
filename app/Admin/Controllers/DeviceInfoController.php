@@ -78,7 +78,7 @@ class DeviceInfoController extends AdminController
 
             $filter->disableIdFilter();
 
-            $filter->wherehas(function ($query) {
+            $filter->where(function ($query) {
 
                 $query->whereHas('device', function ($query) {
 
@@ -87,7 +87,6 @@ class DeviceInfoController extends AdminController
                 });
 
             },trans('Tên thiết bị'));
-
             $filter->like('deviceCode', trans('Mã thiết bị'));
 
             $filter->equal('areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
