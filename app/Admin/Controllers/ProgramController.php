@@ -615,7 +615,6 @@ class ProgramController extends AdminController
         $dataRequest .= ']}"}';
 
         $request = base64_encode($dataRequest);
-        dd($request);
         // echo "request " . $request;
         $urlRequest = "http://103.130.213.161:906/".$request;
 
@@ -634,6 +633,7 @@ class ProgramController extends AdminController
         ));
         
         $response = curl_exec($curl);
+        dd($response);
         $err = curl_error($curl);
         
         curl_close($curl);
