@@ -160,7 +160,7 @@ class DeviceController extends AdminController
         $show = new Show(Device::findOrFail($id));
         $show->field('id', trans('entity.id'));
         $show->field('name', trans('Tên thiết bị'));
-        $show->field('deviceCode', trans('deviceCode'));
+        $show->field('deviceCode', trans('Mã thiết bị'));
         $show->field('address', trans('Địa chỉ'));
         $show->field('area.title', trans('Cụm loa'));
         // $show->field('areaId', trans('Cụm loa'));
