@@ -33,7 +33,7 @@ class Delete extends RowAction
             DB::transaction(function () use ($model) {
                 $model->delete();
                 if(isset($model->fileVoice)){
-                    $file_path = config('filesystems.disks.upload.url').$model->fileVoice;
+                    $file_path = 'uploads/'.$model->fileVoice;
                     unlink($file_path);
                 }
             });
