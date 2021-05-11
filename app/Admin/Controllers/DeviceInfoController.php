@@ -90,6 +90,11 @@ class DeviceInfoController extends AdminController
 
             $filter->like('deviceCode', trans('Mã thiết bị'));
 
+            $filter->equal('device.status', trans('Trạng thái'))->select([
+                1 => "Bật",
+                0 => "Tắt",
+            ]);
+
             $filter->equal('device.areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
@@ -116,7 +121,7 @@ class DeviceInfoController extends AdminController
         $grid->column('device.status', 'Trạng thái')->display(function($value){
             if($value == 1) return "<b class=\"text-success\">Bật</b>";
             return "<b class=\"text-danger\">Tắt</b>";
-        });   
+        });
 
         $grid->column('created_at', __('Created at'));
 

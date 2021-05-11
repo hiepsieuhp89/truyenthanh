@@ -97,9 +97,11 @@ class DeviceController extends AdminController
 
             $filter->like('deviceCode', trans('Mã thiết bị'));
 
-            //$filter->like('area.title', trans('Khu vực'));
+            $filter->equal('status', trans('Trạng thái'))->select([
+                1 => "Bật",
+                0 => "Tắt",
+            ]);
 
-            // $menuModel = new Area();
             $filter->equal('areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
@@ -122,7 +124,7 @@ class DeviceController extends AdminController
         $grid->column('status', trans('Trạng thái'))->display(function($value){
             if($value == 1) return "<b class=\"text-success\">Bật</b>";
             return "<b class=\"text-danger\">Tắt</b>";
-        });    
+        })->sortable();   
 
         // $grid->column('payment_fee', trans('entity.gateway.payment_fee') . ' (%)');
         // $grid->column('transaction_fee', trans('entity.gateway.transaction_fee') . ' (VNĐ)');
