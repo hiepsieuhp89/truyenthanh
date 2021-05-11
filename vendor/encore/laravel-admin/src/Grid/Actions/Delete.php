@@ -34,7 +34,8 @@ class Delete extends RowAction
                 $model->delete();
                 if(isset($model->fileVoice)){
                     $file_path = 'uploads/'.$model->fileVoice;
-                    unlink($file_path);
+                    if(file_exists($file_path))
+                        unlink($file_path);
                 }
             });
         } catch (\Exception $exception) {
