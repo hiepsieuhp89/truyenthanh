@@ -51,8 +51,8 @@ class AppServiceProvider extends ServiceProvider
         Device::whereIn('deviceCode',$active_device)->update(['status' => 1]);
         Device::whereNotIn('deviceCode',$active_device)->update(['status' => 0]);
 
-        DeviceInfo::whereIn('deviceCode',$active_device)->update(['status' => 1]);
-        DeviceInfo::whereNotIn('deviceCode',$active_device)->update(['status' => 0]);
+        // DeviceInfo::whereIn('deviceCode',$active_device)->update(['status' => 1]);
+        // DeviceInfo::whereNotIn('deviceCode',$active_device)->update(['status' => 0]);
     }
 
     /**
