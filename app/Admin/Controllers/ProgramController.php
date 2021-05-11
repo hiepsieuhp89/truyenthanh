@@ -312,7 +312,7 @@ class ProgramController extends AdminController
         $form->radio('mode',trans('Kiểu phát'))
                     ->options(['1' => 'Trong ngày',
                                '2' => 'Hàng ngày', 
-                               '3' => 'Hàng tuần',
+                               // '3' => 'Hàng tuần',
                                '4' => 'Phát ngay'
                     ])->when(1, function (Form $form) {
                         $form->date('startDate',__('Ngày phát'));
@@ -323,11 +323,11 @@ class ProgramController extends AdminController
                         $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
                         $form->time('time', __('khung giờ phát'))->format('HH:mm:ss');   
 
-                    })->when(3, function (Form $form) {
-                        $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
-                        // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;   
-                        $form->checkbox('days', 'Chọn ngày')->options(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật'])->canCheckAll();
-                        $form->time('time', __('khung giờ phát'))->format('HH:mm:ss');   
+                    // })->when(3, function (Form $form) {
+                    //     $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
+                    //     // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;   
+                    //     $form->checkbox('days', 'Chọn ngày')->options(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật'])->canCheckAll();
+                    //     $form->time('time', __('khung giờ phát'))->format('HH:mm:ss');   
                     })->default('1')->rules('required',['required'=>"Cần nhập giá trị"]);
 
         $form->divider(trans('Chọn loa phát'));
