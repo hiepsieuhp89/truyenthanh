@@ -232,7 +232,7 @@ class ProgramController extends AdminController
         //     if ($fileVoice != "") 
         //     return "<{$fileVoice}>";
         // })->link();
-        $show->field('fileVoice', __('FileVoice'))->link(config('filesystems.disks.upload.url').$model->fileVoice);
+        $show->field('fileVoice', __('FileVoice'))->video();
 
         // $show->field('fileVoice', __('FileVoice'))->link();
         // $show->field('fileVoice', __('FileVoice'))->link();
@@ -528,7 +528,7 @@ class ProgramController extends AdminController
         }
 
         $dataRequest .= ']}"}';
-        
+
         $request = base64_encode($dataRequest);
 
         // echo "request " . $request;
