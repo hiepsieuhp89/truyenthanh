@@ -128,7 +128,7 @@ class DeviceController extends AdminController
         $grid->column('DeviceInfo.status', trans('Trạng thái'))->display(function($value){
             if($value == 1) return "<b class=\"text-success\">Bật</b>";
             return "<b class=\"text-danger\">Tắt</b>";
-        })->sortable();   
+        });   
 
         // $grid->column('payment_fee', trans('entity.gateway.payment_fee') . ' (%)');
         // $grid->column('transaction_fee', trans('entity.gateway.transaction_fee') . ' (VNĐ)');
@@ -158,7 +158,7 @@ class DeviceController extends AdminController
     protected function detail($id)
     {
         $show = new Show(Device::findOrFail($id));
-        
+
         $show->field('id', trans('entity.id'));
 
         $show->field('name', trans('Tên thiết bị'));
