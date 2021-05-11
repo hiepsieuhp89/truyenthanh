@@ -7,6 +7,36 @@
         /* The width is the width of the web page */
       }
 </style>
+
+{{-- <div class="form-group">
+
+    <div class="field">
+
+        <div class="row">
+            <div class="col-md-3">
+                <input id="lat" name="lat" class="form-control" value="" placeholder="latitude" />
+            </div>
+            <div class="col-md-3">
+                <input id="lng" name="lng" class="form-control" value="" placeholder="longitude" />
+            </div>
+
+            <div class="col-md-12 col-md-offset-0">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search" placeholder="Vị trí">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info btn-flat"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <br>
+
+        <div id="map"></div>
+    </div>
+</div> --}}
+<div id="map"></div>
 <script>
     function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -93,4 +123,4 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2nGDxgbOEzdU-cS6FHGYUtwGKUAx0B5s&callback=initMap">
 </script>
 
-<div id="map"></div>
+{{-- <div id="map"></div> --}}

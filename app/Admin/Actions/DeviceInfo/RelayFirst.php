@@ -15,19 +15,16 @@ class RelayFirst extends RowAction
          // $model ...
        $model->relay1 = 1 - $model->relay1;
 
-       if ($model->relay1 == 1) {
+       if (
+        ($model->relay1 == 1 && $this->setRelay($model->deviceCode,'relay1on')) || 
+        ($model->relay1 == 0 && $this->setRelay($model->deviceCode,'relay1off'))) {
+
           $this->setRelay($model->deviceCode,'relay1on');
-       } else {
-          $this->setRelay($model->deviceCode,'relay1off');
-       }
 
-       $model->save();
+          $model->save();
 
-       // return a new html to the front end after saving
-       $html = ($model->relay1 == 1) ? "Tắt" : "Bật";
-
-       return $this->response()->html($html);
-
+          return $this->response()->success('Set Relay thành công')->refresh();
+       } 
     }
     public function display($relay)
     {
@@ -64,6 +61,6 @@ class RelayFirst extends RowAction
         
         curl_close($curl);
 
-        // return $response;
+        return 1;
     }   
 }

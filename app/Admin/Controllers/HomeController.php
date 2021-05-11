@@ -10,17 +10,20 @@ use Encore\Admin\Controllers\Dashboard;
 use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+use Encore\Admin\Show;
 
 
 class HomeController extends Controller
 {
     public function index(Content $content)
     {
-        return $content->title('Mạng lưới phát thanh kỹ thuật số')->view('allDevicesMap');
+        return $content->title('Mạng lưới phát thanh kỹ thuật số')->body($this->show());
     }
-    protected function grid()
+    protected function show()
     {
-    	return view('allDevicesMap');
+    	return view('allDevicesMap',["areaId" => 1]);
     }
     public function changeLanguage(Request $req){
         Session::put('lan', $req->lang);

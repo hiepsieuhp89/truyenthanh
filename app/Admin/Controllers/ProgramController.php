@@ -245,7 +245,7 @@ class ProgramController extends AdminController
         $show->field('startDate', __('Ngày bắt đầu'));
 
         $show->field('endDate', __('Ngày kết thúc'));
-        
+
         $show->field('time', __('Khung giờ phát'));
 
         $show->devices('Danh sách thiết bị phát')->as(function ($devices) {
