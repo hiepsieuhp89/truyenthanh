@@ -8,10 +8,12 @@ use App\Device;
 use App\DeviceInfo;
 use App\Area;
 
+use App\Admin\Actions\Device\PlayMedia;
+use App\Admin\Actions\Device\Delete;
+use App\Admin\Actions\Device\BatchPlayMedia;
+
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Controllers\Dashboard;
-use App\Admin\Actions\Device\PlayMedia;
-use App\Admin\Actions\Device\BatchPlayMedia;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -67,8 +69,9 @@ class DeviceController extends AdminController
         //$grid->filterRecord('`areaId` = 7');
 
         $grid->actions(function ($actions) {
-            
-            // $actions->add(new PlayMedia);
+
+            $actions->disableDelete();
+            $actions->add(new Delete());
 
             // if (!Admin::user()->can('*')) {
 
@@ -97,7 +100,7 @@ class DeviceController extends AdminController
 
             $filter->like('deviceCode', trans('Mã thiết bị'));
 
-            $filter->equal('status', trans('Trạng thái'))->select([
+            $filter->equal('DeviceInfo.status', trans('Trạng thái'))->select([
                 1 => "Bật",
                 0 => "Tắt",
             ]);
@@ -121,7 +124,7 @@ class DeviceController extends AdminController
 
         $grid->column('lon', trans('Tọa độ lon'))->label(' label-info')->style('font-size:16px;')->hide();
 
-        $grid->column('status', trans('Trạng thái'))->display(function($value){
+        $grid->column('DeviceInfo.status', trans('Trạng thái'))->display(function($value){
             if($value == 1) return "<b class=\"text-success\">Bật</b>";
             return "<b class=\"text-danger\">Tắt</b>";
         })->sortable();   

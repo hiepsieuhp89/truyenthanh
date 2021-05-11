@@ -8,6 +8,6 @@ class DeviceInfo extends Model
 {
     public function device()
     {
-        return $this->belongsTo(Device::class, 'id');
+        return $this->belongsTo(Device::class, 'deviceCode','deviceCode');
     }
 }

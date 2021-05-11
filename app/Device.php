@@ -14,7 +14,7 @@ class Device extends Model
     
     public function DeviceInfo()
     {
-        return $this->hasOne(DeviceInfo::class);
+        return $this->hasOne(DeviceInfo::class,'deviceCode','deviceCode');
     }
     public function updateStatus(){
 

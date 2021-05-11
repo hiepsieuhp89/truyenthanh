@@ -16,7 +16,7 @@ class HomeController extends Controller
 {
     public function index(Content $content)
     {
-        return $content->title('Mạng lưới phát thanh kỹ thuật số')->view('allDevicesMap');
+        return $content->title('Mạng lưới phát thanh kỹ thuật số')->view('allDevicesMap')->refresh();
     }
     protected function grid()
     {
