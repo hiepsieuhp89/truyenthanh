@@ -19,8 +19,6 @@ class RelayFirst extends RowAction
         ($model->relay1 == 1 && $this->setRelay($model->deviceCode,'relay1on')) || 
         ($model->relay1 == 0 && $this->setRelay($model->deviceCode,'relay1off'))) {
 
-          $this->setRelay($model->deviceCode,'relay1on');
-
           $model->save();
 
           return $this->response()->success('Set Relay thành công')->refresh();
