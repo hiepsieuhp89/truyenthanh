@@ -94,7 +94,7 @@ class DeviceInfoController extends AdminController
         });
 
         $grid->model()->orderBy('id', 'DESC');
-        
+
         $grid->column('id', __('Id'));
 
         $grid->column('device.name', __('Tên'))->label()->style('font-size:16px;'); 
@@ -113,7 +113,10 @@ class DeviceInfoController extends AdminController
             'off' => ['value' => 0, 'text' => 'Tắt', 'color' => 'danger'],
             'on' => ['value' => 1, 'text' => 'Bật', 'color' => 'primary'],
         ];
-        $grid->column('status', 'Trạng thái')->style('height:30px;')->switch($states);
+        $grid->column('device.status', 'Trạng thái')->display(function($value){
+            if($value == 1) return "<b class=\"text-success\">Bật</b>";
+            return "<b class=\"text-danger\">Tắt</b>";
+        });   
 
         $grid->column('created_at', __('Created at'));
 

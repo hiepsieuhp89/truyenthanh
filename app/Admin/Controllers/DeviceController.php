@@ -52,14 +52,6 @@ class DeviceController extends AdminController
         }
 
         return redirect()->intended($this->path.'?_scope_=auth');
-
-        // if(Request::get('_scope_') == 'auth')
-        //     return $content
-        //         ->title($this->title())
-        //         ->description($this->description['index'] ?? trans('admin.list'))
-        //         ->body($this->grid());
-
-        // return redirect()->intended($this->path.'?_scope_=auth');
     }
     protected function grid()
     {
@@ -128,8 +120,8 @@ class DeviceController extends AdminController
         $grid->column('lon', trans('Tọa độ lon'))->label(' label-info')->style('font-size:16px;')->hide();
 
         $grid->column('status', trans('Trạng thái'))->display(function($value){
-            if($value == 1) return "Bật";
-            return "Tắt";
+            if($value == 1) return "<b class=\"text-success\">Bật</b>";
+            return "<b class=\"text-danger\">Tắt</b>";
         });    
 
         // $grid->column('payment_fee', trans('entity.gateway.payment_fee') . ' (%)');
@@ -229,9 +221,11 @@ class DeviceController extends AdminController
                 $infoModel = new DeviceInfo();
                 $infoModel->id = $form->model()->id;
                 $infoModel->deviceCode = $form->model()->deviceCode;
+                $infoModel->status = $form->model()->status;
                 $infoModel->save();
             } else {
                 $infoModel->deviceCode = $form->model()->deviceCode;
+                $infoModel->status = $form->model()->status;
                 $infoModel->update();
             }
 
