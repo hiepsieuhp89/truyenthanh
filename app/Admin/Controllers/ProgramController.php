@@ -253,7 +253,7 @@ class ProgramController extends AdminController
                 $html .= isset($deviceinfo->device) ? "<pre style=\"margin:10px;\">{$deviceinfo->device->name}</pre>":"NULL";
             }
             return $html;
-        })->badge(' w-100 p-0 d-flex')->style('font-size:16px;');
+        })->badge(' w-100 p-0 d-initial')->style('font-size:16px;');
 
         $show->field('time', __('Khung giờ phát'));
 
