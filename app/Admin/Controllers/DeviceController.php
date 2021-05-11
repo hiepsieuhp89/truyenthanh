@@ -76,22 +76,22 @@ class DeviceController extends AdminController
 
         $grid->actions(function ($actions) {
             
-            $actions->add(new PlayMedia);
+            // $actions->add(new PlayMedia);
 
-            if (!Admin::user()->can('*')) {
+            // if (!Admin::user()->can('*')) {
 
-                $actions->disableDelete();
-            }
+            //     $actions->disableDelete();
+            // }
         });
         $grid->batchActions(function ($batch) {
 
-            $batch->add(new BatchPlayMedia());
+            // $batch->add(new BatchPlayMedia());
 
-            if (!Admin::user()->can('*')) {
+            // if (!Admin::user()->can('*')) {
 
-                $batch->disableDelete();
+            //     $batch->disableDelete();
 
-            }
+            // }
         });
         $grid->filter(function($filter){
 
@@ -112,7 +112,7 @@ class DeviceController extends AdminController
         });
 
         $grid->model()->orderBy('id', 'DESC');
-        
+
         $grid->column('id', trans('entity.id'));
 
         $grid->column('name', trans('Tên thiết bị'))->label()->style('font-size:16px;');  

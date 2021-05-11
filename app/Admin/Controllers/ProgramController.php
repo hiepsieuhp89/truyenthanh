@@ -96,15 +96,15 @@ class ProgramController extends AdminController
         $grid = new Grid(new Program);   
 
         $grid->actions(function ($actions) {
-            if (!Admin::user()->can('*')) {
-                $actions->disableDelete();
-            }
+            // if (!Admin::user()->can('*')) {
+            //     $actions->disableDelete();
+            // }
         });
         $grid->batchActions(function ($batch) {
             $batch->add(new BatchPlayAll());
-            if (!Admin::user()->can('*')) {
-                $batch->disableDelete();
-            }
+            // if (!Admin::user()->can('*')) {
+            //     $batch->disableDelete();
+            // }
         });      
         $grid->filter(function($filter){
             //$filter->expand();

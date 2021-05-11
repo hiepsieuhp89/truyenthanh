@@ -79,8 +79,7 @@ class DocumentController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Document);       
-        $grid->disablePagination();        
-        $grid->disableBatchActions();    
+        $grid->disablePagination();   
         $grid->disableExport();    
         $grid->disableColumnSelector();   
         $grid->actions(function($actions){
