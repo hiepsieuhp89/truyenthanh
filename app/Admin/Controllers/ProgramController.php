@@ -328,7 +328,7 @@ class ProgramController extends AdminController
                     //     // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;   
                     //     $form->checkbox('days', 'Chọn ngày')->options(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật'])->canCheckAll();
                     //     $form->time('time', __('khung giờ phát'))->format('HH:mm:ss');   
-                    })->default('1')->rules('required',['required'=>"Cần nhập giá trị"]);
+                    })->rules('required',['required'=>"Cần nhập giá trị"]);
 
         $form->divider(trans('Chọn loa phát'));
 
