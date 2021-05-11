@@ -232,7 +232,7 @@ class ProgramController extends AdminController
         //     if ($fileVoice != "") 
         //     return "<{$fileVoice}>";
         // })->link();
-        $show->field('fileVoice', __('FileVoice'))->video();
+        $show->field('fileVoice', __('FileVoice'))->audio(['audioWidth' => '100%','audioHeight' => '100%']);
 
         // $show->field('fileVoice', __('FileVoice'))->link();
         // $show->field('fileVoice', __('FileVoice'))->link();
