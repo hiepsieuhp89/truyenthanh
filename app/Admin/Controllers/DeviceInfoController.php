@@ -93,6 +93,8 @@ class DeviceInfoController extends AdminController
             $filter->equal('device.areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
+        $grid->model()->orderBy('id', 'DESC');
+        
         $grid->column('id', __('Id'));
 
         $grid->column('device.name', __('Tên'))->label()->style('font-size:16px;'); 

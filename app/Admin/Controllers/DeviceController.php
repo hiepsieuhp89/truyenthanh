@@ -111,6 +111,8 @@ class DeviceController extends AdminController
             $filter->equal('areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
+        $grid->model()->orderBy('id', 'DESC');
+        
         $grid->column('id', trans('entity.id'));
 
         $grid->column('name', trans('Tên thiết bị'))->label()->style('font-size:16px;');  

@@ -46,9 +46,9 @@ class DocumentController extends AdminController
 
     public function show($id, Content $content)
     {
-        $program = Program::where('id',$id)->first();
+        $document = Document::where('id',$id)->first();
 
-        if($program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id)
+        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth' || $document->creatorId == Admin::user()->id)
             return $content
                 ->title($this->title())
                 ->description($this->description['show'] ?? trans('admin.show'))
@@ -59,9 +59,9 @@ class DocumentController extends AdminController
 
     public function edit($id, Content $content)
     {
-        $program = Program::where('id',$id)->first();
+        $document = Document::where('id',$id)->first();
 
-        if($program->creatorId == Admin::user()->id)
+        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth' || $document->creatorId == Admin::user()->id)
             return $content
                 ->title($this->title())
                 ->description($this->description['edit'] ?? trans('admin.edit'))
@@ -83,6 +83,9 @@ class DocumentController extends AdminController
         $grid->disableBatchActions();    
         $grid->disableExport();    
         $grid->disableColumnSelector();   
+        $grid->actions(function($actions){
+          $actions->disableEdit();
+        });
 
         $grid->filter(function($filter){
             $filter->scope('auth',trans('Tài liệu'))->where('creatorId',Admin::user()->id);
