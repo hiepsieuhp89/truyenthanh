@@ -243,18 +243,17 @@ class ProgramController extends AdminController
                                                 ]);
 
         $show->field('startDate', __('Ngày bắt đầu'));
-        
-        $show->field('endDate', __('Ngày kết thúc'));
 
+        $show->field('endDate', __('Ngày kết thúc'));
 
         $show->devices('Danh sách thiết bị phát')->as(function ($devices) {
             $html = '';
             foreach($devices as $b){
                 $deviceinfo = DeviceInfo::where('deviceCode',$b)->first();
-                $html .= isset($deviceinfo->device) ? "<pre>{$deviceinfo->device->name}</pre>":"NULL";
+                $html .= isset($deviceinfo->device) ? "<pre style=\"width: 30%;margin:10px;\">{$deviceinfo->device->name}</pre>":"NULL";
             }
             return $html;
-        })->badge(' w-100 p-0')->style('font-size:16px;');
+        })->badge(' w-100 p-0 d-flex')->style('font-size:16px;');
 
         $show->field('time', __('Khung giờ phát'));
 
