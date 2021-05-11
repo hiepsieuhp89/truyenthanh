@@ -232,12 +232,10 @@ class ProgramController extends AdminController
         //     if ($fileVoice != "") 
         //     return "<{$fileVoice}>";
         // })->link();
-        $show->field('fileVoice', __('FileVoice'))->audio(['audioWidth' => '100%','audioHeight' => '100%']);
-
-        // $show->field('fileVoice', __('FileVoice'))->link();
-        // $show->field('fileVoice', __('FileVoice'))->link();
+        $show->field('fileVoice', __('FileVoice'))->audio(['audioWidth' => '100%']);
 
         $show->field('priority', __('Priority'));
+
         $show->field('mode', __('Chế độ phât'))->using(['1' => 'Trong ngày',
                                                         '2' => 'Hàng ngày', 
                                                         '3' => 'Hàng tuần',
@@ -245,6 +243,7 @@ class ProgramController extends AdminController
                                                 ]);
 
         $show->field('startDate', __('Ngày bắt đầu'));
+        
         $show->field('endDate', __('Ngày kết thúc'));
 
 
