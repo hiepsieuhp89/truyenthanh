@@ -234,9 +234,9 @@ class ProgramController extends AdminController
         // })->link();
         $show->field('fileVoice', __('FileVoice'))->audio(['audioWidth' => '100%']);
 
-        $show->field('priority', __('Priority'));
+        // $show->field('priority', __('Priority'));
 
-        $show->field('mode', __('Chế độ phât'))->using(['1' => 'Trong ngày',
+        $show->field('mode', __('Chế độ phát'))->using(['1' => 'Trong ngày',
                                                         '2' => 'Hàng ngày', 
                                                         '3' => 'Hàng tuần',
                                                         '4' => 'Phát ngay'
@@ -245,6 +245,8 @@ class ProgramController extends AdminController
         $show->field('startDate', __('Ngày bắt đầu'));
 
         $show->field('endDate', __('Ngày kết thúc'));
+        
+        $show->field('time', __('Khung giờ phát'));
 
         $show->devices('Danh sách thiết bị phát')->as(function ($devices) {
             $html = '';
@@ -255,7 +257,6 @@ class ProgramController extends AdminController
             return $html;
         })->badge(' w-100 p-0 d-initial')->style('font-size:16px;');
 
-        $show->field('time', __('Khung giờ phát'));
 
         // $show->field('days', __('Ngày phát'))->using(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật']);
         // $show->field('devices', __('Danh sách loa'));
