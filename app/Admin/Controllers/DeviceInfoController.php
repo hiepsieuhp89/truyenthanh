@@ -95,7 +95,7 @@ class DeviceInfoController extends AdminController
                 0 => "Tắt",
             ]);
 
-            $filter->equal('areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
+            $filter->equal('device.areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
         $grid->model()->orderBy('id', 'DESC');
