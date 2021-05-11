@@ -71,6 +71,7 @@ class DeviceController extends AdminController
         $grid->actions(function ($actions) {
 
             $actions->disableDelete();
+
             $actions->add(new Delete());
 
             // if (!Admin::user()->can('*')) {
@@ -78,16 +79,16 @@ class DeviceController extends AdminController
             //     $actions->disableDelete();
             // }
         });
-        $grid->batchActions(function ($batch) {
+        // $grid->batchActions(function ($batch) {
 
-            // $batch->add(new BatchPlayMedia());
+        //     $batch->add(new BatchPlayMedia());
 
-            // if (!Admin::user()->can('*')) {
+        //     if (!Admin::user()->can('*')) {
 
-            //     $batch->disableDelete();
+        //         $batch->disableDelete();
 
-            // }
-        });
+        //     }
+        // });
         $grid->filter(function($filter){
 
             $filter->scope('auth',trans('Thiết bị'))->wherein('areaId',explode(',',Admin::user()->areaId));
@@ -157,33 +158,23 @@ class DeviceController extends AdminController
     protected function detail($id)
     {
         $show = new Show(Device::findOrFail($id));
+        
         $show->field('id', trans('entity.id'));
+
         $show->field('name', trans('Tên thiết bị'));
+
         $show->field('deviceCode', trans('Mã thiết bị'));
+
         $show->field('address', trans('Địa chỉ'));
+
         $show->field('area.title', trans('Cụm loa'));
-        // $show->field('areaId', trans('Cụm loa'));
 
-        // $show->area(trans('Cụm loa'), function($area){
-        //     $area->title();
-        // });
         $show->divider();
-        $show->field('lat', trans('Tọa độ Lat'));
-        $show->field('lon', trans('Tọa độ Lon'));
 
-        /*
-        $show->html('Bản đồ')->as(function ($devices) {
-            $devices = Device::all();
-            return view('deviceMap')->render();
-        })->badge()->style('font-size:16px;');
-        */
         $show->field('Vị trí')->latlong('lat', 'lon', $height = 500, $zoom = 16);
-        // $show->title('Vị trí')->as(function () use ($id) {
-        //     return view('deviceMap',['device'=>Device::findOrFail($id)])->render();
-        // })->badge(' w-100 h-400px p-0');
-
 
         $show->field('created_at', trans('entity.created_at'));
+
         $show->field('updated_at', trans('entity.updated_at'));
 
 
