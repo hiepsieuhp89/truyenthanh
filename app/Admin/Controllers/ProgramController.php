@@ -42,7 +42,7 @@ class ProgramController extends AdminController
         // ->body(view('admin.chartjs',[
         //         'programs' => Program::select(DB::raw('type, COUNT(type) as types'))->groupby('type')->get()
         //         ]))
-        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth'){
+        //if(Admin::user()->can('*') || Request::get('_scope_') == 'auth'){
 
             return $content
 
@@ -52,9 +52,9 @@ class ProgramController extends AdminController
 
                 ->body($this->grid());
            
-        }
+        //}
 
-        return redirect()->intended($this->path.'?_scope_=auth');
+        //return redirect()->intended($this->path.'?_scope_=auth');
         
     }
 
