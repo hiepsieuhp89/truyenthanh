@@ -42,7 +42,7 @@ class ProgramController extends AdminController
         // ->body(view('admin.chartjs',[
         //         'programs' => Program::select(DB::raw('type, COUNT(type) as types'))->groupby('type')->get()
         //         ]))
-        //if(Admin::user()->can('*') || Request::get('_scope_') == 'auth'){
+        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth'){
 
             return $content
 
@@ -52,36 +52,36 @@ class ProgramController extends AdminController
 
                 ->body($this->grid());
            
-        //}
+        }
 
-        //return redirect()->intended($this->path.'?_scope_=auth');
+        return redirect()->intended($this->path.'?_scope_=auth');
         
     }
 
     public function show($id, Content $content)
     {
-        // $program = Program::where('id',$id)->first();
+        $program = Program::where('id',$id)->first();
 
-        // if(Admin::user()->can('*') || Request::get('_scope_') == 'auth' || !isset($program->creatorId) || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id)
+        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth' || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id)
             return $content
                 ->title($this->title())
                 ->description($this->description['show'] ?? trans('admin.show'))
                 ->body($this->detail($id));
 
-        //return redirect()->intended($this->path);
+        return redirect()->intended($this->path);
     }
 
     public function edit($id, Content $content)
     {
-        // $program = Program::where('id',$id)->first();
+        $program = Program::where('id',$id)->first();
 
-        // if(Admin::user()->can('*') || Request::get('_scope_') == 'auth' || !isset($program->creatorId) || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id)
+        if(Admin::user()->can('*') || Request::get('_scope_') == 'auth' || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()->id)
             return $content
                 ->title($this->title())
                 ->description($this->description['edit'] ?? trans('admin.edit'))
                 ->body($this->form()->edit($id));
 
-        //return redirect()->intended($this->path);
+        return redirect()->intended($this->path);
     }
 
     /**
@@ -337,7 +337,7 @@ class ProgramController extends AdminController
         else
             $device_auth = Device::join('device_infos', 'device_infos.deviceCode', '=', 'devices.deviceCode')
                 ->WHERE("device_infos.status",1)
-                ->WHEREIN('device_infos.areaId',explode(',',Admin::user()->areaId))
+                ->WHEREIN('devices.areaId',explode(',',Admin::user()->areaId))
                 ->PLUCK('devices.name', 'devices.deviceCode');
 
         $form->listbox('devices', trans('Danh sách loa'))
