@@ -36,8 +36,11 @@ class DeviceController extends AdminController
      * @return Grid
      */
     public function map(){
-        $devices = Device::select('id','name','address','lat','lon','status')->get();
+        $devices = Device::join('device_infos', 'device_infos.deviceCode', '=', 'devices.deviceCode')
+                ->select('devices.id','devices.name','devices.address','devices.lat','devices.lon','device_infos.status')->get();
+                
         return response()->view('map',['devices'=>$devices])->header('Content-Type', 'text/xml');
+
     }
     public function index(Content $content)
     {

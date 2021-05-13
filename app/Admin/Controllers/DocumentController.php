@@ -186,6 +186,7 @@ class DocumentController extends AdminController
 
     protected function createVoice($content, $fileVoice) 
     {
+        ini_set('max_execution_time', 0);
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -193,6 +194,7 @@ class DocumentController extends AdminController
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => "",
           CURLOPT_MAXREDIRS => 10,
+          CURLOPT_CONNECTTIMEOUT => 0,
           CURLOPT_TIMEOUT => 0,
           CURLOPT_FOLLOWLOCATION => false,
           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
