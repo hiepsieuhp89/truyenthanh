@@ -127,7 +127,9 @@ class ProgramController extends AdminController
         })->placeholder('Tên Chương trình / Thiết bị cần tìm');
 
         $grid->model()->orderBy('id', 'DESC');
-        $grid->column('id', __('Id'))->sortable();;
+
+        //$grid->column('id', __('Id'))->sortable();
+
         $grid->column('name', __('Tên'))->style("min-width:100px;")->expand(function ($model) {
             return new Table(
                 ['Người tạo', 'Người duyệt','Khung giờ phát','Ngày bắt đầu','Ngày kết thúc','Ngày tạo','Ngày cập nhật'],
@@ -544,13 +546,14 @@ class ProgramController extends AdminController
             foreach ($period as $key => $value) {
                 $dates[$i++] = $value->format('Y-m-d');
             }
+            if ($type == 1 || $type == 4) { // nếu là file phương tiện
+                foreach($dates as $date){// mỗi ngày
 
-            foreach($dates as $date){// mỗi ngày
-
-                foreach($devices as $device){ //set từng thiết bị
+                    foreach($devices as $device){ //set từng thiết bị
 
 
-                    $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$date.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                        $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$date.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                    }
                 }
             }
         }

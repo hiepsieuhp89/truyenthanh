@@ -11,6 +11,7 @@ return array(
     'App\\Admin\\Actions\\DeviceInfo\\RelaySecond' => $baseDir . '/app/Admin/Actions/DeviceInfo/RelaySecond.php',
     'App\\Admin\\Actions\\DeviceInfo\\StopPlay' => $baseDir . '/app/Admin/Actions/DeviceInfo/StopPlay.php',
     'App\\Admin\\Actions\\Device\\BatchPlayMedia' => $baseDir . '/app/Admin/Actions/Device/BatchPlayMedia.php',
+    'App\\Admin\\Actions\\Device\\Delete' => $baseDir . '/app/Admin/Actions/Device/Delete.php',
     'App\\Admin\\Actions\\Device\\PlayMedia' => $baseDir . '/app/Admin/Actions/Device/PlayMedia.php',
     'App\\Admin\\Actions\\Post\\BatchPlayAll' => $baseDir . '/app/Admin/Actions/Post/BatchPlayAll.php',
     'App\\Admin\\Controllers\\AreaController' => $baseDir . '/app/Admin/Controllers/AreaController.php',

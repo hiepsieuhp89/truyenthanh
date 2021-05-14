@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use Request;
+use Carbon\Carbon;
 
 use App\Device;
 use App\DeviceInfo;
@@ -91,8 +92,8 @@ class DeviceInfoController extends AdminController
             $filter->like('deviceCode', trans('Mã thiết bị'));
 
             $filter->equal('status', trans('Trạng thái'))->select([
-                1 => "Bật",
-                0 => "Tắt",
+                1 => "Đang hoạt động",
+                0 => "Không hoạt động",
             ]);
 
             $filter->equal('device.areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
@@ -100,7 +101,7 @@ class DeviceInfoController extends AdminController
 
         $grid->model()->orderBy('id', 'DESC');
 
-        $grid->column('id', __('Id'));
+        //$grid->column('id', __('Id'));
 
         $grid->column('device.name', __('Tên'))->label()->style('font-size:16px;'); 
 
@@ -115,12 +116,18 @@ class DeviceInfoController extends AdminController
         $grid->column('ip', __('IP'))->editable();
 
         $states = [
-            'off' => ['value' => 0, 'text' => 'Tắt', 'color' => 'danger'],
-            'on' => ['value' => 1, 'text' => 'Bật', 'color' => 'primary'],
+            'off' => ['value' => 0, 'text' => 'Không hoạt động', 'color' => 'danger'],
+            'on' => ['value' => 1, 'text' => 'Hoạt động', 'color' => 'primary'],
         ];
         $grid->column('status', 'Trạng thái')->display(function($value){
-            if($value == 1) return "<b class=\"text-success\">Bật</b>";
-            return "<b class=\"text-danger\">Tắt</b>";
+            if($value == 1) return "<b class=\"text-success\">Đang hoạt động</b>";
+            return "<b class=\"text-danger\">Không hoạt động</b>";
+        });
+
+        $grid->column('turn_off_time','Tắt lúc')->display(function($value){
+            if($value !== NULL)
+                return Carbon::create($value)->diffForHumans(Carbon::now());     
+            return '';   
         });
 
         $grid->column('created_at', __('Created at'));

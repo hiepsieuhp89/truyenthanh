@@ -484,6 +484,7 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'App\\Admin\\Actions\\DeviceInfo\\RelaySecond' => __DIR__ . '/../..' . '/app/Admin/Actions/DeviceInfo/RelaySecond.php',
         'App\\Admin\\Actions\\DeviceInfo\\StopPlay' => __DIR__ . '/../..' . '/app/Admin/Actions/DeviceInfo/StopPlay.php',
         'App\\Admin\\Actions\\Device\\BatchPlayMedia' => __DIR__ . '/../..' . '/app/Admin/Actions/Device/BatchPlayMedia.php',
+        'App\\Admin\\Actions\\Device\\Delete' => __DIR__ . '/../..' . '/app/Admin/Actions/Device/Delete.php',
         'App\\Admin\\Actions\\Device\\PlayMedia' => __DIR__ . '/../..' . '/app/Admin/Actions/Device/PlayMedia.php',
         'App\\Admin\\Actions\\Post\\BatchPlayAll' => __DIR__ . '/../..' . '/app/Admin/Actions/Post/BatchPlayAll.php',
         'App\\Admin\\Controllers\\AreaController' => __DIR__ . '/../..' . '/app/Admin/Controllers/AreaController.php',
