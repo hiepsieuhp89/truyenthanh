@@ -208,23 +208,24 @@ class DeviceController extends AdminController
         //     // $infoModel->deviceCode = $form->model()->deviceCode;
         //     DeviceInfo::updateOrCreate(['id' => $form->model()->id], ['deviceCode' => $form->model()->deviceCode]);
         // });
-        
+        $form->saving(function (Form $form) {
+            $form->model()->status = 0;
+        });
+
         $form->saved(function (Form $form) {
             // $formInfo = new Form(new DeviceInfo);
             // $formInfo->model()->id = $form->model()->id;
             // $formInfo->model()->deviceCode = $form->model()->deviceCode;
 
-            $infoModel = DeviceInfo::find($form->model()->id);
+            $infoModel = DeviceInfo::where('deviceCode',$form->model()->deviceCode)->first();
 
             if(empty($infoModel)) {
                 $infoModel = new DeviceInfo();
-                $infoModel->id = $form->model()->id;
                 $infoModel->deviceCode = $form->model()->deviceCode;
                 $infoModel->status = $form->model()->status;
                 $infoModel->save();
             } else {
                 $infoModel->deviceCode = $form->model()->deviceCode;
-                $infoModel->status = $form->model()->status;
                 $infoModel->update();
             }
 

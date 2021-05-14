@@ -296,6 +296,7 @@ class ProgramController extends AdminController
                         // ])->uniqueName();
                         //$form->media('fileVoice', 'Chọn file')->path('files');
                         $form->file('fileVoice', 'Chọn file')->uniqueName();
+                        //$form->multipleFile('fileVoice', 'Chọn file')->removable();
 
                     })->when(2, function (Form $form) {
                         // $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options(['89' => 'VOV 89','90' => 'RADIO Hà Nội','91' => 'VOV Giao thông HN', '96' => 'XZONE FM']);
@@ -363,26 +364,26 @@ class ProgramController extends AdminController
         $form->model()->creatorId = Admin::user()->id;
 
         $form->saving(function ($form) {
-             $form->model()->creatorId = Admin::user()->id;
-             $form->model()->approvedId = Admin::user()->id;
+            //$form->model()->fileVoice = $this->getFileVoiceAttribute($form->input()->fileVoice);
+            $form->model()->creatorId = Admin::user()->id;
+            $form->model()->approvedId = Admin::user()->id;
         });
 
         $form->saved(function ($form) {
 
             //neu duyet
-            if ($form->model()->status == 2) {
-                // gui lenh
-                // $this->setPlayFM($form->model()->type, '123456789ABCDEF', $form->model()->digiChannel);
-                $songPath = "";
 
                 // nếu phát file phương tiện
                 if ($form->model()->type == 1) {
 
-                    $songPath = config('filesystems.disks.upload.url').$form->model()->fileVoice;  
+                    if ($form->model()->status == 1) // nếu không duyệt
+                        $songPath = "";
+                    if ($form->model()->status == 2) // nếu duyệt
+                        $songPath = config('filesystems.disks.upload.url').$form->model()->fileVoice;  
 
                     if ($form->model()->mode == 4) { // nếu phát ngay
-
-                        $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath); 
+                        if ($form->model()->status == 2)
+                            $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath); 
 
                     } else { // nếu phát theo lịch
                         // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
@@ -394,7 +395,10 @@ class ProgramController extends AdminController
                 // nếu phát đài FM
                 if ($form->model()->type == 2) {
 
-                    $songPath = $form->model()->digiChannel;
+                    if ($form->model()->status == 1) // nếu không duyệt
+                        $songPath = "";
+                    if ($form->model()->status == 2) // nếu duyệt
+                        $songPath = $form->model()->digiChannel;
 
                     if ($form->model()->mode == 4) {
 
@@ -409,8 +413,10 @@ class ProgramController extends AdminController
 
                 // nếu phát tiếp sóng
                 if ($form->model()->type == 3) {
-
-                    $songPath = $form->model()->radioChannel;
+                    if ($form->model()->status == 1) // nếu không duyệt
+                        $songPath = "";
+                    if ($form->model()->status == 2) // nếu duyệt
+                        $songPath = $form->model()->radioChannel;
 
                     if ($form->model()->mode == 4) {
                         $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
@@ -423,7 +429,10 @@ class ProgramController extends AdminController
                 if ($form->model()->type == 4) {
                     $docModel = Document::findOrFail($form->model()->document_Id);
 
-                    $songPath = config('filesystems.disks.upload.url').$docModel->fileVoice;
+                    if ($form->model()->status == 1) // nếu không duyệt
+                        $songPath = "";
+                    if ($form->model()->status == 2) // nếu duyệt
+                        $songPath = config('filesystems.disks.upload.url').$docModel->fileVoice;
 
                     // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                     if ($form->model()->mode == 4) {
@@ -436,11 +445,9 @@ class ProgramController extends AdminController
                 Log::info('Song name ' . $songPath);
  
                 // setPlaySchedule($type, $deviceCode, $data, $startDate, $endDate, $startTime, $endTime, $songName) 
-            }
+            
             //neu khong duyet
-            if ($form->model()->status == 1) {
-
-            }
+            
         });
 
         $form->disableReset();
@@ -552,7 +559,7 @@ class ProgramController extends AdminController
                     foreach($devices as $device){ //set từng thiết bị
 
 
-                        $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$date.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                        $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"24:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$date.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
                     }
                 }
             }
@@ -683,4 +690,15 @@ class ProgramController extends AdminController
     
     //     return $newTime;
     // }
+    public function setFileVoiceAttribute($fileVoice)
+    {
+        if (is_array($fileVoice)) {
+            $this->attributes['fileVoice'] = json_encode($fileVoice);
+        }
+    }
+
+    public function getFileVoiceAttribute($fileVoice)
+    {
+        return json_decode($fileVoice, true);
+    }
 }
