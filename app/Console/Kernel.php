@@ -59,16 +59,16 @@ class Kernel extends ConsoleKernel
 
             $active_device = array_column($response["Data"], "DeviceID");
 
-            // DeviceInfo::whereIn('deviceCode',$active_device)->update([
-            //     'status' => 1,
-            //     'turn_off_time' => null,
-            // ]);
-            // DeviceInfo::whereNotIn('deviceCode',$active_device)->update([
-            //     'status' => 0,
-            // ]);
-            // DeviceInfo::whereNotIn('deviceCode',$active_device)->where('turn_off_time',null)->update([
-            //     'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
-            // ]);
+            DeviceInfo::whereIn('deviceCode',$active_device)->update([
+                'status' => 1,
+                'turn_off_time' => null,
+            ]);
+            DeviceInfo::whereNotIn('deviceCode',$active_device)->update([
+                'status' => 0,
+            ]);
+            DeviceInfo::whereNotIn('deviceCode',$active_device)->where('turn_off_time',null)->update([
+                'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
+            ]);
 
         })->everyMinute();
     }

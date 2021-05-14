@@ -124,11 +124,11 @@ class DeviceInfoController extends AdminController
             return "<b class=\"text-danger\">Không hoạt động</b>";
         });
 
-        // $grid->column('turn_off_time','Tắt lúc')->display(function($value){
-        //     if($value !== NULL)
-        //         return Carbon::create($value)->diffForHumans(Carbon::now());     
-        //     return '';   
-        // });
+        $grid->column('turn_off_time','Tắt lúc')->display(function($value){
+            if($value !== NULL)
+                return Carbon::create($value)->diffForHumans(Carbon::now());     
+            return '';   
+        });
 
         $grid->column('created_at', __('Created at'));
 
