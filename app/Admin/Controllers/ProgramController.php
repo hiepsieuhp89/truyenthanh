@@ -225,7 +225,7 @@ class ProgramController extends AdminController
         $model = Program::findOrFail($id);
         $show = new Show($model);
 
-        $show->field('id', __('Id'));
+        //$show->field('id', __('Id'));
         $show->field('name', __('Tên chương trình'));
         $show->field('type', __('Loại phát sóng'))->using(['1' => 'Bản tin',
                                                             '2' => 'Tiếp sóng', 
@@ -236,7 +236,21 @@ class ProgramController extends AdminController
         //     if ($fileVoice != "") 
         //     return "<{$fileVoice}>";
         // })->link();
-        $show->field('fileVoice', __('FileVoice'))->audio(['audioWidth' => '100%']);
+
+        // $show->field('fileVoice', __('FileVoice'))->as(function($fileVoices){
+        //     $html = '';
+        //     foreach($fileVoices as $file){
+        //         $html .= '<audio controls=""><source src="'.config('filesystems.disks.upload.url').trim($file,'"').'"></audio>';
+        //     }
+        //     return $html;
+        // })->badge();
+
+        $show->field('fileVoice', __('FileVoice'))->as(function() use ($model){
+            if($model->type == 4)
+                return $model->document->fileVoice;
+            if($model->type == 1)
+                return $model->fileVoice;
+        })->audio();
 
         // $show->field('priority', __('Priority'));
 
@@ -265,8 +279,14 @@ class ProgramController extends AdminController
         // $show->field('days', __('Ngày phát'))->using(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật']);
         // $show->field('devices', __('Danh sách loa'));
 
-        $show->field('creatorId', __('Người tạo'));
-        $show->field('approvedId', __('Người phê duyệt'));
+        $show->field('creatorId', __('Người tạo'))->as(function($creator_id) use ($id){
+            $n = Program::find($id)->creator->name ? Program::find($id)->creator->name:"";
+            return $n ;
+        });
+        $show->field('approvedId', __('Người phê duyệt'))->as(function($approver_id) use ($id){
+            $n = Program::find($id)->approver->name ? Program::find($id)->approver->name:"";
+            return $n ;
+        });
         $show->field('created_at', __('Ngày tạo'));
         $show->field('updated_at', __('Ngày cập nhật'));
 
@@ -295,7 +315,23 @@ class ProgramController extends AdminController
                             // 'initialPreviewFileType'=>'audio',
                         // ])->uniqueName();
                         //$form->media('fileVoice', 'Chọn file')->path('files');
-                        $form->file('fileVoice', 'Chọn file')->uniqueName();
+
+                        $form->radio('file_mode','Chọn nguồn file')
+                        ->options([
+                            1 => 'Chọn file có sẵn',
+                            2 => 'Tải lên file mới'
+                        ])->when(1, function(Form $form){
+
+                            $form->media('fileVoice', 'Chọn file có sẵn')->path('/files');
+
+                        })->when(2, function(Form $form){
+
+                            $form->file('fileVoice', 'Chọn file');
+
+                        });
+                        //$form->multipleFile('fileVoice', 'Chọn file');
+
+                        //$form->file('fileVoice', 'Chọn file')->uniqueName();
                         //$form->multipleFile('fileVoice', 'Chọn file')->removable();
 
                     })->when(2, function (Form $form) {
@@ -364,12 +400,24 @@ class ProgramController extends AdminController
         $form->model()->creatorId = Admin::user()->id;
 
         $form->saving(function ($form) {
-            //$form->model()->fileVoice = $this->getFileVoiceAttribute($form->input()->fileVoice);
+
+            if($form->file_mode == 1){// nếu chọn file trong hệ thống
+                //
+            }
+            if($form->file_mode == 2){//nếu upload file
+
+                $form->fileVoice->move('uploads/files', $form->fileVoice->getClientOriginalName());
+
+                $form->fileVoice = 'files/'.$form->fileVoice->getClientOriginalName();
+            }
+
             $form->model()->creatorId = Admin::user()->id;
+
             $form->model()->approvedId = Admin::user()->id;
         });
 
         $form->saved(function ($form) {
+
 
             //neu duyet
 

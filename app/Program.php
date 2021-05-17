@@ -38,4 +38,14 @@ class Program extends Model
     {
         return $this->belongsTo(Admin::class,'approvedId');
     }
+    public function setFileVoiceAttribute($fileVoice)
+    {
+        $this->attributes['fileVoice'] = trim(trim($fileVoice,'["'),'"]');
+    }
+
+    // public function getFileVoiceAttribute($fileVoice)
+    // {
+    //     return json_decode($fileVoice, true)
+    //     return explode(',',trim(trim(json_decode($fileVoice, true),'['),']'));
+    // }
 }

@@ -58,7 +58,9 @@
         height: auto;
         max-height: 92px;
     }
-
+    audio{
+        width: 100%;
+    }
 </style>
 <div class="form-group {!! !$errors->has($label) ?: 'has-error' !!}">
 
@@ -70,7 +72,7 @@
         <div class="controls">
             <a href="#file-browser-{!!$column!!}" class="mailbox-attachment-name" style="word-break:break-all;"
                data-toggle="modal" data-target="#file-browser-{!!$column!!}">
-                <button class="btn btn-info" type="button">选择文件</button>
+                <button class="btn btn-info" type="button">Chọn file</button>
             </a>
         <!-- 模态框（Modal） -->
 
@@ -93,8 +95,10 @@
                             <span class="file-select {{$column}}-pic">
                                 <input type="checkbox" name="{!!$column!!}-pic" value="{{ $item['name'] }}"/>
                             </span>
-
-                                            {!! $item['preview'] !!}
+                                            {{-- {!! $item['preview'] !!} --}}
+                                            <span class="file-icon">
+                                                <audio controls=""><source src="{{$item['url']}}" type="audio/wav"></audio>
+                                            </span>
 
                                             <div class="file-info">
                                                 <a href="{{ $item['link'] }}" class="file-name"
@@ -130,28 +134,48 @@
 <script>
     (function() {
         window['{{$column}}'] = [];
+
         if ($('#{{$column}}').val() !== "null") {
-            window[`{{$column}}`] = JSON.parse($('#{{$column}}').val());
+
+            window[`{{$column}}`].push(JSON.parse($('#{{$column}}').val()));
+
             $('#preview-{{$column}}').html(preview(window[`{{$column}}`]));
+
             for (var n = 0; n < $('.{{$column}}-pic>input:checkbox').length; n++) {
+
                 if (window[`{{$column}}`].indexOf($('.{{$column}}-pic>input:checkbox')[n].value) !== -1) {
+
                     $('.{{$column}}-pic>input:checkbox')[n].checked = true;
+
                 }
             }
         }
         $('.{{$column}}-pic>input:checkbox').click(function () {
+            
+            $('.{{$column}}-pic>input:checkbox').removeAttr('checked');
 
             if (this.checked == true) {
-                var url = this.value;
-                window[`{{$column}}`].push(this.value);
-            } else {
+
+                $(this).prop('checked',false);
+
                 var index = window[`{{$column}}`].indexOf(this.value);
-                if (index > -1) {
-                    window[`{{$column}}`].splice(index, 1);
-                }
+
+                window[`{{$column}}`] = [];
+
+            } else {
+
+                $(this).prop('checked',true);
+
+                var url = this.value;
+
+                window[`{{$column}}`] = [];
+
+                window[`{{$column}}`].push(this.value);
             }
             $('#preview-{{$column}}').html(preview(window[`{{$column}}`]));
+
             $('#{{$column}}').val(JSON.stringify(window[`{{$column}}`]));
+            
         });
         $('.modal-dialog').click(function () {
             $('#file-browser-{!!$column!!}').modal('hide');
@@ -162,7 +186,7 @@
 
         function preview(list) {
             var picItem = function (url) {
-                return '<span class="file-icon has-img col-sm-2"><img src="{{$baseURL}}/' + url + '" alt="Attachment" \/><\/span>';
+                return '<audio controls=""><source src="{{$baseURL}}/' + url + '" type="audio/wav"><\/audio>';
             }
             var picList = '';
             for (var i = 0; i < list.length; i++) {

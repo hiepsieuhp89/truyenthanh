@@ -67,7 +67,7 @@ return [
             'driver' => 'local',
             'root' => storage_path('public'),
             // 'root' => 'public/voices'),
-            'url' => env('APP_URL').'/',
+            'url' => env('APP_URL'),
             'visibility' => 'public',
         ],
 
