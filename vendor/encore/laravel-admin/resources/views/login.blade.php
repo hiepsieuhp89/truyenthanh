@@ -65,7 +65,7 @@
                         <div class="flex-sb-m w-full p-t-3 p-b-32">
                         	@if(config('admin.auth.remember'))
                         	<div class="contact100-form-checkbox">
-                                <input class="input-checkbox100" type="checkbox" name="remember" value="1" {{ (!old('username') || old('remember')) ? 'checked' : '' }}>
+                                <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember" value="1" {{ (!old('username') || old('remember')) ? 'checked' : '' }}>
                                 <label class="label-checkbox100" for="ckb1">
                                 {{ trans('admin.remember_me') }}
                                 </label>
