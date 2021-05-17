@@ -1,103 +1,133 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{{config('admin.title')}} | {{ trans('admin.login') }}</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  
-  @if(!is_null($favicon = Admin::favicon()))
+<html lang="en">
+    <head>
+        <title>{{config('admin.title')}} | {{ trans('admin.login') }}</title>
+        <base href="{{asset('')}}">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+@if(!is_null($favicon = Admin::favicon()))
   <link rel="shortcut icon" href="{{$favicon}}">
   @endif
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+        <meta name="robots" content="noindex, follow">
+    </head>
+    <body style="background-color: #666666;">
+        <div class="limiter">
+            <div class="container-login100">
+                <div class="wrap-login100">
+                    <form class="login100-form validate-form" action="{{ admin_url('auth/login') }}" method="post">
+                        <span class="login100-form-title p-b-43">
+                        {{config('admin.name')}}
+                        </span>
+                        <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+                            <input class="input100" placeholder="{{ trans('admin.username') }}" name="username" value="{{ old('username') }}">
+                            <span class="focus-input100"></span>
+                            {{-- <span class="label-input100">Email</span> --}}
+                        </div>
 
-  <!-- Bootstrap 3.3.5 -->
-  <link rel="stylesheet" href="{{ admin_asset("vendor/laravel-admin/AdminLTE/bootstrap/css/bootstrap.min.css") }}">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ admin_asset("vendor/laravel-admin/font-awesome/css/font-awesome.min.css") }}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{ admin_asset("vendor/laravel-admin/AdminLTE/dist/css/AdminLTE.min.css") }}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="{{ admin_asset("vendor/laravel-admin/AdminLTE/plugins/iCheck/square/blue.css") }}">
+                        @if($errors->has('username'))
+				          @foreach($errors->get('username') as $message)
+				            <label style="    color: red;" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+				          @endforeach
+				        @endif
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="//oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-</head>
-<body class="hold-transition login-page" @if(config('admin.login_background_image'))style="background: url({{config('admin.login_background_image')}}) no-repeat;background-size: cover;"@endif>
-<div class="login-box">
-  <div class="login-logo">
-    <a href="{{ admin_url('/') }}" style="text-shadow: 0 0 5px black;color:white;"><b>{{config('admin.name')}}</b></a>
-  </div>
-  <!-- /.login-logo -->
-  <div class="login-box-body">
-    <p class="login-box-msg">{{ trans('admin.login') }}</p>
+                        <div class="wrap-input100 validate-input" data-validate="Password is required">
+                            <input class="input100" type="password" placeholder="{{ trans('admin.password') }}" name="password">
+                            <span class="focus-input100"></span>
+                        </div>
 
-    <form action="{{ admin_url('auth/login') }}" method="post">
-      <div class="form-group has-feedback {!! !$errors->has('username') ?: 'has-error' !!}">
+                        @if($errors->has('password'))
+				          @foreach($errors->get('password') as $message)
+				            <label style="    color: red;" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
+				          @endforeach
+				        @endif
 
-        @if($errors->has('username'))
-          @foreach($errors->get('username') as $message)
-            <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
-          @endforeach
-        @endif
-
-        <input type="text" class="form-control" placeholder="{{ trans('admin.username') }}" name="username" value="{{ old('username') }}">
-        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback {!! !$errors->has('password') ?: 'has-error' !!}">
-
-        @if($errors->has('password'))
-          @foreach($errors->get('password') as $message)
-            <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{{$message}}</label><br>
-          @endforeach
-        @endif
-
-        <input type="password" class="form-control" placeholder="{{ trans('admin.password') }}" name="password">
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-      </div>
-      <div class="row">
-        <div class="col-xs-8">
-          @if(config('admin.auth.remember'))
-          <div class="checkbox icheck">
-            <label>
-              <input type="checkbox" name="remember" value="1" {{ (!old('username') || old('remember')) ? 'checked' : '' }}>
-              {{ trans('admin.remember_me') }}
-            </label>
-          </div>
-          @endif
+                        <div class="flex-sb-m w-full p-t-3 p-b-32">
+                        	@if(config('admin.auth.remember'))
+                        	<div class="contact100-form-checkbox">
+                                <input class="input-checkbox100" type="checkbox" name="remember" value="1" {{ (!old('username') || old('remember')) ? 'checked' : '' }}>
+                                <label class="label-checkbox100" for="ckb1">
+                                {{ trans('admin.remember_me') }}
+                                </label>
+                            </div>
+					        @endif
+                        </div>
+                        <div class="container-login100-form-btn">
+                            <button type="submit" class="login100-form-btn">
+                            {{ trans('admin.login') }}
+                            </button>
+                        </div>
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    </form>
+                    <div id="carousel" class="carousel slide login100-more" data-ride="carousel" style="height: 100vh;">
+					  <div class="carousel-inner h-100">
+					    <div class="carousel-item active h-100">
+					      <img class="d-block h-100" src="images/bg-01.jpg" alt="First slide">
+					    </div>
+					    {{-- <div class="carousel-item h-100">
+					      <img class="d-block h-100" src="images/bg-01.jpg" alt="Second slide">
+					    </div>
+					    <div class="carousel-item h-100">
+					      <img class="d-block h-100" src="images/bg-01.jpg" alt="Third slide">
+					    </div> --}}
+					  </div>
+					  <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+					    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					    <span class="sr-only">Previous</span>
+					  </a>
+					  <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+					    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+					    <span class="sr-only">Next</span>
+					  </a>
+					</div>
+                    {{-- <div class="login100-more" style="background-image: url('images/bg-01.jpg');"></div> --}}
+                </div>
+            </div>
         </div>
-        <!-- /.col -->
-        <div class="col-xs-4">
-          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">{{ trans('admin.login') }}</button>
-        </div>
-        <!-- /.col -->
-      </div>
-    </form>
+        
+        <!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/daterangepicker/moment.min.js"></script>
+	<script src="vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>
 
-  </div>
-  <!-- /.login-box-body -->
-</div>
-<!-- /.login-box -->
-
-<!-- jQuery 2.1.4 -->
-<script src="{{ admin_asset("vendor/laravel-admin/AdminLTE/plugins/jQuery/jQuery-2.1.4.min.js")}} "></script>
-<!-- Bootstrap 3.3.5 -->
-<script src="{{ admin_asset("vendor/laravel-admin/AdminLTE/bootstrap/js/bootstrap.min.js")}}"></script>
-<!-- iCheck -->
-<script src="{{ admin_asset("vendor/laravel-admin/AdminLTE/plugins/iCheck/icheck.min.js")}}"></script>
-<script>
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' // optional
-    });
-  });
-</script>
-</body>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'UA-23581568-13');
+        </script>
+    </body>
 </html>
