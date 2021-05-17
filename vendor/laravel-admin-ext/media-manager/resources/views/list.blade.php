@@ -331,8 +331,10 @@ $(function () {
                                 <input type="checkbox" value="{{ $item['name'] }}"/>
                             </span>
 
-                            {!! $item['preview'] !!}
+                            {{-- {!! $item['preview'] !!} --}}
+                            <span class="file-icon"><i class="fa fa-file"></i></span>
 
+                            
                             <div class="file-info">
                                 <a @if(!$item['isDir'])target="_blank"@endif href="{{ $item['link'] }}" class="file-name" title="{{ $item['name'] }}">
                                     {{ $item['icon'] }} {{ basename($item['name']) }}

@@ -195,6 +195,7 @@ class MediaManager extends Extension
     {
         $url = route('media-index', ['path' => '__path__', 'view' => request('view')]);
 
+
         $preview = "<a href=\"$url\"><span class=\"file-icon text-aqua\"><i class=\"fa fa-folder\"></i></span></a>";
 
         $dirs = array_map(function ($dir) use ($preview) {
@@ -271,6 +272,24 @@ class MediaManager extends Extension
 
             case 'txt':
                 $preview = '<span class="file-icon"><i class="fa fa-file-text-o"></i></span>';
+                break;
+            case 'audio':
+                if ($this->storage->getDriver()->getConfig()->has('url')) {
+                    $url = $this->storage->url($file);
+
+                    $preview = '<span class="file-icon"><audio controls=""><source src="'.$url.'"></audio></span>';
+                } else {
+                    $preview = '<span class="file-icon"><i class="fa fa-file-image-o"></i></span>';
+                }
+            break;
+
+            case 'video':
+                if ($this->storage->getDriver()->getConfig()->has('url')) {
+                    $url = $this->storage->url($file);
+                        $preview = '<span class="file-icon"><audio controls=""><source src="'.$url.'"></audio></span>';
+                } else {
+                    $preview = '<span class="file-icon"><i class="fa fa-file-image-o"></i></span>';
+                }
                 break;
 
             case 'code':

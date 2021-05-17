@@ -318,17 +318,19 @@ class ProgramController extends AdminController
 
                         $form->radio('file_mode','Chọn nguồn file')
                         ->options([
-                            1 => 'Chọn file có sẵn',
+                            // 1 => 'Chọn file có sẵn',
                             2 => 'Tải lên file mới'
-                        ])->when(1, function(Form $form){
+                        ])
+                        // ->when(1, function(Form $form){
 
-                            $form->media('fileVoice', 'Chọn file có sẵn')->path('/files');
+                        //     $form->media('fileVoice', 'Chọn file có sẵn')->path('/files');
 
-                        })->when(2, function(Form $form){
+                        // })
+                        ->when(2, function(Form $form){
 
                             $form->file('fileVoice', 'Chọn file');
 
-                        });
+                        })->default(2);
                         //$form->multipleFile('fileVoice', 'Chọn file');
 
                         //$form->file('fileVoice', 'Chọn file')->uniqueName();
@@ -384,9 +386,9 @@ class ProgramController extends AdminController
 
         $form->listbox('devices', trans('Danh sách loa'))
 
-            ->options($device_auth)
+            ->options($device_auth);
 
-            ->rules('required',['required'=>"Cần nhập giá trị"]);
+            //->rules('required',['required'=>"Cần nhập giá trị"]);
 
         $states = [
             'off' => ['value' => 1, 'text' => 'Chưa duyệt', 'color' => 'danger'],
@@ -400,16 +402,21 @@ class ProgramController extends AdminController
         $form->model()->creatorId = Admin::user()->id;
 
         $form->saving(function ($form) {
+            // if($form->file_mode == 1){// nếu chọn file trong hệ thống
+            //     //$form->fileVoice = json_decode($form->fileVoice,true);
+            //     if(!is_numeric(strpos($form->fileVoice,'["'))){
 
-            if($form->file_mode == 1){// nếu chọn file trong hệ thống
-                //
-            }
-            if($form->file_mode == 2){//nếu upload file
+            //         $form->fileVoice = json_decode($form->fileVoice);
+            //         $form->fileVoice = '["'.$form->fileVoice.'"]';
+            //     }
 
-                $form->fileVoice->move('uploads/files', $form->fileVoice->getClientOriginalName());
+            // }
+            // // if($form->file_mode == 2){//nếu upload file
 
-                $form->fileVoice = 'files/'.$form->fileVoice->getClientOriginalName();
-            }
+            // //     $form->fileVoice->move('uploads/files', $form->fileVoice->getClientOriginalName());
+
+            // //     $form->fileVoice = 'files/'.$form->fileVoice->getClientOriginalName();
+            // // }
 
             $form->model()->creatorId = Admin::user()->id;
 

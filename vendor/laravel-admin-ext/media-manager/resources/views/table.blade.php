@@ -350,8 +350,9 @@ $(function () {
                             </span>
                         </td>
                         <td>
-                            {!! $item['preview'] !!}
-
+                             {!! $item['preview'] !!}                         
+                            
+                            
                             <a @if(!$item['isDir'])target="_blank"@endif href="{{ $item['link'] }}" class="file-name" title="{{ $item['name'] }}">
                             {{ $item['icon'] }} {{ basename($item['name']) }}
                             </a>
