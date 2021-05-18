@@ -82,14 +82,14 @@
                     <div id="carousel" class="carousel slide login100-more" data-ride="carousel" style="height: 100vh;">
 					  <div class="carousel-inner h-100">
 					    <div class="carousel-item active h-100">
-					      <img class="d-block h-100" src="images/bg-01.jpg" alt="First slide">
-					    </div>
-					    {{-- <div class="carousel-item h-100">
-					      <img class="d-block h-100" src="images/bg-01.jpg" alt="Second slide">
+					      <img class="d-block h-100 w-100 cover" src="images/bg-01.jpg" alt="First slide">
 					    </div>
 					    <div class="carousel-item h-100">
-					      <img class="d-block h-100" src="images/bg-01.jpg" alt="Third slide">
-					    </div> --}}
+					      <img class="d-block h-100 w-100 cover" src="images/bg-02.jpg" alt="Second slide">
+					    </div>
+					    <div class="carousel-item h-100">
+					      <img class="d-block h-100 w-100 cover" src="images/bg-03.jpg" alt="Third slide">
+					    </div>
 					  </div>
 					  <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
 					    <span class="carousel-control-prev-icon" aria-hidden="true"></span>

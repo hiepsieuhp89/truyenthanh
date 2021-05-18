@@ -618,3 +618,6 @@ input.input100 {
   background: #333333;
   color: #fff;
 }
+.cover{
+  object-fit: cover;
+}
