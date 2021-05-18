@@ -661,7 +661,7 @@ class ProgramController extends AdminController
                     foreach($devices as $device){ //set từng thiết bị
 
                         $startT = new Carbon($startDate.' '.$startTime);
-                        
+
                         for($i = 0; $i < $replay_times; $i++){
          
                             $start_time_of_the_loop_play = $startT->toTimeString(); 
@@ -679,7 +679,7 @@ class ProgramController extends AdminController
 
         $dataRequest .= ']}"}';
 
-        dd($dataRequest);
+        //dd($dataRequest);
 
         $request = base64_encode($dataRequest);
 
