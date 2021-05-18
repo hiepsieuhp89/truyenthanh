@@ -17,7 +17,8 @@
         "laravel-admin-ext/media-player": "^1.1",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "~1.0",
-        "mtownsend/response-xml": "^2.0"
+        "mtownsend/response-xml": "^2.0",
+        "php-ffmpeg/php-ffmpeg": "^0.18.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

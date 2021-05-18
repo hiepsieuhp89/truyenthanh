@@ -30,11 +30,20 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '287ab17ce6f668f316457963e34e57a5fe0da527',
+    'reference' => '25df56a7f32edafa56457f542e6676b1e0a784ce',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
   array (
+    'alchemy/binary-driver' => 
+    array (
+      'pretty_version' => 'v5.2.0',
+      'version' => '5.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e0615cdff315e6b4b05ada67906df6262a020d22',
+    ),
     'cordoval/hamcrest-php' => 
     array (
       'replaced' => 
@@ -156,6 +165,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'cb17b6477dfff935958ba01325f2e8a2bfa6dab3',
+    ),
+    'evenement/evenement' => 
+    array (
+      'pretty_version' => 'v3.0.1',
+      'version' => '3.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '531bfb9d15f8aa57454f5f0285b18bec903b8fb7',
     ),
     'fideloper/proxy' => 
     array (
@@ -493,7 +511,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '287ab17ce6f668f316457963e34e57a5fe0da527',
+      'reference' => '25df56a7f32edafa56457f542e6676b1e0a784ce',
     ),
     'laravel/tinker' => 
     array (
@@ -571,6 +589,15 @@ private static $installed = array (
       ),
       'reference' => '2fd2c4a77d58a4e95234c8a61c5df1f157a91bf4',
     ),
+    'neutron/temporary-filesystem' => 
+    array (
+      'pretty_version' => '3.0',
+      'version' => '3.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '60e79adfd16f42f4b888e351ad49f9dcb959e3c2',
+    ),
     'nikic/php-parser' => 
     array (
       'pretty_version' => 'v4.10.4',
@@ -615,6 +642,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'a70c0ced4be299a63d32fa96d9281d03e94041df',
+    ),
+    'php-ffmpeg/php-ffmpeg' => 
+    array (
+      'pretty_version' => 'v0.18.0',
+      'version' => '0.18.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'edc0a7729d8818ed883e77b3d26ceb6d49ec41de',
     ),
     'phpdocumentor/reflection-common' => 
     array (
@@ -986,6 +1022,15 @@ private static $installed = array (
       array (
         0 => '1.1',
       ),
+    ),
+    'symfony/filesystem' => 
+    array (
+      'pretty_version' => 'v5.2.7',
+      'version' => '5.2.7.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '056e92acc21d977c37e6ea8e97374b2a6c8551b0',
     ),
     'symfony/finder' => 
     array (

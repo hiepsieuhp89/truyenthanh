@@ -11,22 +11,24 @@ class AddFileModeInProgram extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('programs', function (Blueprint $table) {
-            $table->integer('file_mode')->nullable();
-        });
-    }
+    // public function up()
+    // {
+    //     if (!Schema::hasColumn('file_mode', 'programs'))
+    //     {
+    //         Schema::table('programs', function (Blueprint $table) {
+    //             $table->integer('file_mode')->nullable();
+    //         });
+    //     }
+    // }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::table('program', function (Blueprint $table) {
-            //
-        });
-    }
+    // /**
+    //  * Reverse the migrations.
+    //  *
+    //  * @return void
+    //  */
+    // public function down()
+    // {
+    //     Schema::table('program', function (Blueprint $table) {
+    //     });
+    // }
 }

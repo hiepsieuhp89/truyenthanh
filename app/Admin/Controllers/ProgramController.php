@@ -2,12 +2,14 @@
 
 namespace App\Admin\Controllers;
 
+
 use Request;
 use Helper;
 use DB;
 use DateTime;
 use DatePeriod;
 use DateInterval;
+use Carbon\Carbon;
 
 use App\Program;
 use App\Area;
@@ -24,6 +26,9 @@ use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
+
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
 
 class ProgramController extends AdminController
 {
@@ -94,7 +99,7 @@ class ProgramController extends AdminController
      */
     protected function grid()
     {
-
+        
         $grid = new Grid(new Program);   
 
         $grid->actions(function ($actions) {
@@ -330,7 +335,10 @@ class ProgramController extends AdminController
 
                             $form->file('fileVoice', 'Chọn file');
 
-                        })->default(2);
+                        })->rules('required',['required'=>"Cần nhập giá trị"])->default(2);
+
+                        //$form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
+
                         //$form->multipleFile('fileVoice', 'Chọn file');
 
                         //$form->file('fileVoice', 'Chọn file')->uniqueName();
@@ -347,6 +355,8 @@ class ProgramController extends AdminController
 
                     })->when(4, function (Form $form) {
                         $form->select('document_Id', trans('Chọn file văn bản'))->options(Document::all()->pluck('name', 'id'));
+                        // $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
+
                     })->rules('required',['required'=>"Cần nhập giá trị"])->default(1);
                            
         $form->divider(trans('Thời gian'));
@@ -359,11 +369,16 @@ class ProgramController extends AdminController
                     ])->when(1, function (Form $form) {
                         $form->date('startDate',__('Ngày phát'));
                         // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;  
-                        $form->time('time', __('khung giờ phát'))->format('HH:mm:ss');   
+                        $form->time('time', __('khung giờ phát'))->format('HH:mm:ss'); 
+
+                        $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
               
                     })->when(2, function (Form $form) {
                         $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
+
                         $form->time('time', __('khung giờ phát'))->format('HH:mm:ss');   
+
+                        $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
 
                     // })->when(3, function (Form $form) {
                     //     $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
@@ -425,7 +440,6 @@ class ProgramController extends AdminController
 
         $form->saved(function ($form) {
 
-
             //neu duyet
 
                 // nếu phát file phương tiện
@@ -437,13 +451,15 @@ class ProgramController extends AdminController
                         $songPath = config('filesystems.disks.upload.url').$form->model()->fileVoice;  
 
                     if ($form->model()->mode == 4) { // nếu phát ngay
+
                         if ($form->model()->status == 2)
+
                             $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath); 
 
                     } else { // nếu phát theo lịch
                         // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                         // set schedule
-                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath);    
+                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices),$form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay);    
                     } 
 
                 }
@@ -562,7 +578,7 @@ class ProgramController extends AdminController
         // } 
     }   
 
-    protected function setPlaySchedule($type, $deviceCode, $startDate, $endDate, $startTime, $songName) 
+    protected function setPlaySchedule($type, $deviceCode, $startDate, $endDate, $startTime, $songName, $replay_times, $replay_delay = 30) 
     {
         $curl = curl_init();
         // $dataRequest = '{"DataType":'.$type.',"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"'.$data.'\\\":\\\"6\\\",\\\"PacketType\\\":17}\"}]}"}';
@@ -570,16 +586,40 @@ class ProgramController extends AdminController
         //     $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\":\\\\\"'.$data.'\\\\\",\\\\\"PacketType\\\\\":11}\"}]}"}';
         // } else {
         $devices = explode(',',$deviceCode);   
+
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        if($endDate == NULL){ // nếu đặt trong ngày
+        $ffprobe = FFProbe::create([
+            'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
+            'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe' 
+        ]);
+
+        $file_duration = $ffprobe->format($songName)->get('duration'); 
+
+        $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
+
+        $startT = new Carbon($startDate.' '.$startTime); //tạo định dạng ngày tháng
+
+        if($endDate == NULL || $endDate == ''){ // nếu đặt trong ngày
+
             $endDate = '3000-05-10';
 
             if ($type == 1 || $type == 4) { // nếu là file phương tiện
 
                 foreach($devices as $device){
 
-                    $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                    for($i = 0; $i < $replay_times; $i++){
+
+                        $start_time_of_the_loop_play = $startT->toTimeString(); 
+
+                        $start_date_of_the_loop_play = $startT->toDateString(); 
+
+                        $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+
+                        $startT->addSeconds($file_duration);
+                    }
+                    $startT = new Carbon($startDate.' '.$startTime);
+
                 }
                 // nếu là đài FM hoặc tiếp sóng
             } else {
@@ -608,13 +648,28 @@ class ProgramController extends AdminController
             foreach ($period as $key => $value) {
                 $dates[$i++] = $value->format('Y-m-d');
             }
+
+            $dates[$i] = $endDate;
+
             if ($type == 1 || $type == 4) { // nếu là file phương tiện
+
                 foreach($dates as $date){// mỗi ngày
+
+                    $startT = new Carbon($date.' '.$startTime);
 
                     foreach($devices as $device){ //set từng thiết bị
 
+                        for($i = 0; $i < $replay_times; $i++){
+         
+                            $start_time_of_the_loop_play = $startT->toTimeString(); 
 
-                        $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"24:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$date.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                            $start_date_of_the_loop_play = $startT->toDateString(); 
+
+                            $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"24:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                            
+                            $startT->addSeconds($file_duration);
+                        }
+                        $startT = new Carbon($date.' '.$startTime);
                     }
                 }
             }
@@ -622,7 +677,9 @@ class ProgramController extends AdminController
         
 
         $dataRequest .= ']}"}';
+
         //dd($dataRequest);
+        
         $request = base64_encode($dataRequest);
 
         // echo "request " . $request;
