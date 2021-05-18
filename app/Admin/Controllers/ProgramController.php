@@ -614,8 +614,6 @@ class ProgramController extends AdminController
 
                 foreach($devices as $device){
 
-                    $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
-
                     $startT = new Carbon($startDate.' '.$startTime);
 
                     for($i = 0; $i < $replay_times; $i++){
@@ -624,12 +622,10 @@ class ProgramController extends AdminController
 
                         $start_date_of_the_loop_play = $startT->toDateString(); 
 
-                        $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1},';
+                        $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"23:59:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
 
                         $startT->addSeconds($file_duration);
-                    }     
-
-                    $dataRequest .= ']}\\\\\"}\"},';   
+                    }        
 
                 }
                 // nếu là đài FM hoặc tiếp sóng
@@ -685,7 +681,7 @@ class ProgramController extends AdminController
 
         $dataRequest .= ']}"}';
 
-        //dd($dataRequest);
+        dd($dataRequest);
 
         $request = base64_encode($dataRequest);
 
