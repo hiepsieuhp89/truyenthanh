@@ -681,7 +681,7 @@ class ProgramController extends AdminController
 
         $dataRequest .= ']}"}';
 
-        dd($dataRequest);
+        //dd($dataRequest);
 
         $request = base64_encode($dataRequest);
 
