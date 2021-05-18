@@ -459,7 +459,7 @@ class ProgramController extends AdminController
                     } else { // nếu phát theo lịch
                         // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                         // set schedule
-                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices),$form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay);    
+                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices),$form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);    
                     } 
 
                 }
@@ -478,7 +478,7 @@ class ProgramController extends AdminController
                     } else {
 
                         // play schedule
-                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath);
+                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                     }
                 }
 
@@ -492,7 +492,7 @@ class ProgramController extends AdminController
                     if ($form->model()->mode == 4) {
                         $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else {
-                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath);
+                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                     }
                 }
 
@@ -509,7 +509,7 @@ class ProgramController extends AdminController
                     if ($form->model()->mode == 4) {
                         $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else {
-                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath);
+                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                     }
                 } 
 
@@ -593,7 +593,7 @@ class ProgramController extends AdminController
         //     'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
         //     'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe' 
         // ]
-        
+
         $ffprobe = FFProbe::create();
 
         $file_duration = $ffprobe->format($songName)->get('duration'); 
