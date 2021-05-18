@@ -186,7 +186,7 @@ class ProgramController extends AdminController
                 } 
             } 
         });
-
+        $grid->column('replay', 'Số lần lặp');
         $grid->column('mode', __('Kiểu phát'))->using(['1' => 'Trong ngày',
                                                             '2' => 'Hàng ngày', 
                                                             '3' => 'Hàng tuần',
@@ -270,6 +270,8 @@ class ProgramController extends AdminController
         $show->field('endDate', __('Ngày kết thúc'));
 
         $show->field('time', __('Khung giờ phát'));
+
+        $show->field('replay', 'Số lần lặp');
 
         $show->devices('Danh sách thiết bị phát')->as(function ($devices) {
             $html = '';
@@ -612,6 +614,8 @@ class ProgramController extends AdminController
 
                 foreach($devices as $device){
 
+                    $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
+
                     $startT = new Carbon($startDate.' '.$startTime);
 
                     for($i = 0; $i < $replay_times; $i++){
@@ -620,10 +624,12 @@ class ProgramController extends AdminController
 
                         $start_date_of_the_loop_play = $startT->toDateString(); 
 
-                        $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                        $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1},';
 
                         $startT->addSeconds($file_duration);
-                    }        
+                    }     
+
+                    $dataRequest .= ']}\\\\\"}\"},';   
 
                 }
                 // nếu là đài FM hoặc tiếp sóng
@@ -679,7 +685,7 @@ class ProgramController extends AdminController
 
         $dataRequest .= ']}"}';
 
-        //dd($dataRequest);
+        dd($dataRequest);
 
         $request = base64_encode($dataRequest);
 

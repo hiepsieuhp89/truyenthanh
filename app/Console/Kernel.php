@@ -57,7 +57,7 @@ class Kernel extends ConsoleKernel
             $response = str_replace(']"}', "]}", $response);
             $response = json_decode($response,true);
 
-            if($response['DataType'] == 5){$active_device = array_column($response["Data"], "DeviceID");
+            if(isset($response['DataType']) && $response['DataType'] == 5){$active_device = array_column($response["Data"], "DeviceID");
                 //dd(Carbon::now('Asia/Ho_Chi_Minh'));
                     DeviceInfo::whereIn('deviceCode',$active_device)->update([
                         'status' => 1,
