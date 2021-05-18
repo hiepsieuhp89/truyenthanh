@@ -589,12 +589,14 @@ class ProgramController extends AdminController
 
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        // [
-        //     'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
-        //     'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe' 
-        // ]
 
-        $ffprobe = FFProbe::create();
+        if(env('APP_ENV') == 'local')
+            $ffprobe = FFProbe::create([
+                'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
+                'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe' 
+            ]);
+        else
+            $ffprobe = FFProbe::create();
 
         $file_duration = $ffprobe->format($songName)->get('duration'); 
 
@@ -640,40 +642,36 @@ class ProgramController extends AdminController
             }
         }
         else{// nếu đặt hàng ngày
-            $dates = [];
-            $period = new DatePeriod( // lấy danh sách ngày phát
-                new DateTime($startDate),
-                new DateInterval('P1D'),
-                new DateTime($endDate)
-            );
+            // $dates = [];
+            // $period = new DatePeriod( // lấy danh sách ngày phát
+            //     new DateTime($startDate),
+            //     new DateInterval('P1D'),
+            //     new DateTime($endDate)
+            // );
 
-            $i = 0;
-            foreach ($period as $key => $value) {
-                $dates[$i++] = $value->format('Y-m-d');
-            }
+            // $i = 0;
+            // foreach ($period as $key => $value) {
+            //     $dates[$i++] = $value->format('Y-m-d');
+            // }
 
-            $dates[$i] = $endDate;
+            // $dates[$i] = $endDate;
 
             if ($type == 1 || $type == 4) { // nếu là file phương tiện
 
-                foreach($dates as $date){// mỗi ngày
-
-                    $startT = new Carbon($date.' '.$startTime);
-
                     foreach($devices as $device){ //set từng thiết bị
 
+                        $startT = new Carbon($startDate.' '.$startTime);
+                        
                         for($i = 0; $i < $replay_times; $i++){
          
                             $start_time_of_the_loop_play = $startT->toTimeString(); 
 
                             $start_date_of_the_loop_play = $startT->toDateString(); 
 
-                            $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"24:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+                            $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"24:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":5}]}\\\\\"}\"},';
                             
                             $startT->addSeconds($file_duration);
                         }
-                        $startT = new Carbon($date.' '.$startTime);
-                    }
                 }
             }
         }
@@ -681,7 +679,7 @@ class ProgramController extends AdminController
 
         $dataRequest .= ']}"}';
 
-        //dd($dataRequest);
+        dd($dataRequest);
 
         $request = base64_encode($dataRequest);
 
