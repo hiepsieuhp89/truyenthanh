@@ -610,6 +610,8 @@ class ProgramController extends AdminController
 
                 foreach($devices as $device){
 
+                    $startT = new Carbon($startDate.' '.$startTime);
+
                     for($i = 0; $i < $replay_times; $i++){
 
                         $start_time_of_the_loop_play = $startT->toTimeString(); 
@@ -619,8 +621,7 @@ class ProgramController extends AdminController
                         $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"00:00:00\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
 
                         $startT->addSeconds($file_duration);
-                    }
-                    $startT = new Carbon($startDate.' '.$startTime);
+                    }        
 
                 }
                 // nếu là đài FM hoặc tiếp sóng
