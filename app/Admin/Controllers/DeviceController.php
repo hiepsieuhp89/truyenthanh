@@ -193,7 +193,10 @@ class DeviceController extends AdminController
     {
         $form = new Form(new Device);
         $form->text('name', trans('Tên thiết bị'))->rules('required')->autofocus();
-        $form->select('areaId', trans('Cụm loa'))->options(Area::selectOptions());
+
+        if(Admin::user()->can('*'))
+            $form->select('areaId', trans('Cụm loa'))->options(Area::selectOptions());
+
         $form->text('deviceCode', trans('Mã thiết bị'))->creationRules(['required', "unique:devices"])
         ->updateRules(['required', "unique:devices,deviceCode,{{id}}"]);
         $form->text('address', trans('Địa chỉ'))->rules('required');
@@ -209,6 +212,8 @@ class DeviceController extends AdminController
         //     DeviceInfo::updateOrCreate(['id' => $form->model()->id], ['deviceCode' => $form->model()->deviceCode]);
         // });
         $form->saving(function (Form $form) {
+            if(!Admin::user()->can('*'))
+                    $form->model()->areaId = Admin::user()->areaId    ;       
             $form->model()->status = 0;
         });
 
