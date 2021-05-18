@@ -108,8 +108,8 @@ class DeviceController extends AdminController
                 1 => "Bật",
                 0 => "Tắt",
             ]);
-
-            $filter->equal('areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
+            if(Admin::user()->can('*'))
+                $filter->equal('areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
         $grid->model()->orderBy('id', 'DESC');

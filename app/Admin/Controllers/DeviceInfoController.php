@@ -95,8 +95,8 @@ class DeviceInfoController extends AdminController
                 1 => "Đang hoạt động",
                 0 => "Không hoạt động",
             ]);
-
-            $filter->equal('device.areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
+            if(Admin::user()->can('*'))
+                $filter->equal('device.areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
         $grid->model()->orderBy('id', 'DESC');
