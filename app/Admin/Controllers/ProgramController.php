@@ -589,10 +589,12 @@ class ProgramController extends AdminController
 
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        $ffprobe = FFProbe::create([
-            'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
-            'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe' 
-        ]);
+        // [
+        //     'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
+        //     'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe' 
+        // ]
+        
+        $ffprobe = FFProbe::create();
 
         $file_duration = $ffprobe->format($songName)->get('duration'); 
 
@@ -679,7 +681,7 @@ class ProgramController extends AdminController
         $dataRequest .= ']}"}';
 
         //dd($dataRequest);
-        
+
         $request = base64_encode($dataRequest);
 
         // echo "request " . $request;
