@@ -339,14 +339,12 @@ class ProgramController extends AdminController
                         ->when(2, function(Form $form){
 
                             $form->file('fileVoice', 'Chọn file')->uniqueName();
+
                             $form->select('volumeBooster','Tăng Volume')
                             ->options([
                                 5 => '0.5 lần (Giảm volume)',
                                 10 => '1 lần',
                                 20 => '2 lần',
-                                30 => '3 lần',
-                                40 => '4 lần',
-                                50 => '5 lần',
                             ])->default(10);
 
                         })->rules('required',['required'=>"Cần nhập giá trị"])->default(2);
@@ -369,6 +367,13 @@ class ProgramController extends AdminController
 
                     })->when(4, function (Form $form) {
                         $form->select('document_Id', trans('Chọn file văn bản'))->options(Document::all()->pluck('name', 'id'));
+
+                        $form->select('volumeBooster','Tăng Volume')
+                            ->options([
+                                5 => '0.5 lần (Giảm volume)',
+                                10 => '1 lần',
+                                20 => '2 lần',
+                            ])->default(10);
                         // $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
 
                     })->rules('required',['required'=>"Cần nhập giá trị"])->default(1);

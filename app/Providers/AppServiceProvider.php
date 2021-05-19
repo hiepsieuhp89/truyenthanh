@@ -5,6 +5,8 @@ namespace App\Providers;
 use App;
 use App\Device;
 use App\DeviceInfo;
+use App\Document;
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
@@ -49,7 +51,10 @@ class AppServiceProvider extends ServiceProvider
         $response = str_replace(']"}', "]}", $response);
         $response = json_decode($response,true);
 
-        if(isset($response['DataType']) && $response['DataType'] == 5){$active_device = array_column($response["Data"], "DeviceID");
+        if(isset($response['DataType']) && $response['DataType'] == 5){
+
+          $active_device = array_column($response["Data"], "DeviceID");
+
                 //dd(Carbon::now('Asia/Ho_Chi_Minh'));
                     DeviceInfo::whereIn('deviceCode',$active_device)->update([
                         'status' => 1,
@@ -60,7 +65,30 @@ class AppServiceProvider extends ServiceProvider
                     ]);
                     DeviceInfo::whereNotIn('deviceCode',$active_device)->where('turn_off_time',null)->update([
                         'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
-                    ]);}
+                    ]);
+        }
+
+        foreach(Document::all() as $document){
+
+          if(!is_numeric(strpos($document->fileVoice, '.wav'))){
+
+            $fileName = substr($document->fileVoice,0,strpos($document->fileVoice, '.mp3'));
+  
+            if(file_exists(config('filesystems.disks.upload.path').$document->fileVoice)){
+
+              $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$document->fileVoice.' '.$fileName.'.wav';
+
+              exec($exec_to_convert_to_wav);
+
+              unlink(config('filesystems.disks.upload.path').$document->fileVoice);
+
+              $document->fileVoice = $fileName.'.wav';
+
+              $document->save();
+            }
+          }             
+        }
+
     }
 
     /**

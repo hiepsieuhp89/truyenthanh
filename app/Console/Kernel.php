@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Carbon\Carbon;
 use App\DeviceInfo;
+use App\Document;
 
 class Kernel extends ConsoleKernel
 {
@@ -69,7 +70,6 @@ class Kernel extends ConsoleKernel
                     DeviceInfo::whereNotIn('deviceCode',$active_device)->where('turn_off_time',null)->update([
                         'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
                     ]);}
-
         })->everyMinute();
     }
 

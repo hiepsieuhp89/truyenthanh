@@ -170,11 +170,12 @@ class DocumentController extends AdminController
             $form->model()->creatorId = Admin::user()->id;
         });
         $form->saved(function (Form $form) {
+
             Log::info("Saved - name  " . $form->model()->name);
 
             Log::info("Saved - content  " . $form->model()->content);
 
-            $form->model()->fileVoice = 'voices/'.md5($form->model()->name).".mp3";
+            $form->model()->fileVoice = 'voices/'.md5($form->model()->name).".wav";
 
             $this->createVoice($form->model()->content, $form->model()->fileVoice);
 
@@ -223,6 +224,7 @@ class DocumentController extends AdminController
           Log::error("cURL Error #:" . $err);
         } else {
           Log::info(" Tạo file  " . $fileVoice);
+
           file_put_contents('uploads/'.$fileVoice , $response);
           // move file
         } 
