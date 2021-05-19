@@ -365,12 +365,7 @@ class ProgramController extends AdminController
                     })->when(4, function (Form $form) {
                         $form->select('document_Id', trans('Chọn file văn bản'))->options(Document::all()->pluck('name', 'id'));
 
-                        $form->select('volumeBooster','Tăng Volume')
-                            ->options([
-                                5 => '0.5 lần (Giảm volume)',
-                                10 => '1 lần',
-                                20 => '2 lần',
-                            ])->default(10);
+                        
                         // $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
 
                     })->rules('required',['required'=>"Cần nhập giá trị"])->default(1);
@@ -463,7 +458,7 @@ class ProgramController extends AdminController
                 $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$form->model()->fileVoice.' -filter:a "volume='.$booster.'" '.config('filesystems.disks.upload.path').$form->model()->fileVoice.'.wav';
 
                 exec($exec_to_convert_to_wav);
-
+        
                 unlink(config('filesystems.disks.upload.path').$form->model()->fileVoice);
 
                 $form->model()->fileVoice = $form->model()->fileVoice.'.wav';
