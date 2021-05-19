@@ -164,13 +164,10 @@ class ProgramController extends AdminController
                                                             '4' => 'Bản tin văn bản'
                                                         ])->label(' label-primary')->style('font-size:16px;')->sortable();
                                                         
-        $grid->column('document.fileVoice', 'File')->display(function ($fileVoiceDocs) {
-            if ($this->type == 4) { // type voice
-                return "<audio controls><source src='".config('filesystems.disks.upload.url').$fileVoiceDocs."' type='audio/wav'></audio>";
-            } 
-            if ($this->type == 1) { // type media mp3
-                return "<audio controls><source src='".config('filesystems.disks.upload.url').$this->fileVoice."' type='audio/wav'></audio>";
-            } 
+        $grid->column('fileVoice', 'File')->display(function ($fileVoice) {
+            if ($this->type == 4 || $this->type == 1) { // type voice
+                return "<audio controls><source src='".config('filesystems.disks.upload.url').$fileVoice."' type='audio/wav'></audio>";
+            }
             if ($this->type == 2) {
                 if ($this->digiChannel == '91') {
                     return 'VOV Giao thông HN';
@@ -459,17 +456,30 @@ class ProgramController extends AdminController
 
         $form->saved(function ($form) {
 
-            $booster = (double) $form->model()->volumeBooster / 10;
+            if(!is_numeric($form->model()->document_Id) && $form->model()->type == 1){
 
-            $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$form->model()->fileVoice.' -filter:a "volume='.$booster.'" '.config('filesystems.disks.upload.path').$form->model()->fileVoice.'.wav';
+                $booster = (double) $form->model()->volumeBooster / 10;
 
-            exec($exec_to_convert_to_wav);
+                $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$form->model()->fileVoice.' -filter:a "volume='.$booster.'" '.config('filesystems.disks.upload.path').$form->model()->fileVoice.'.wav';
 
-            unlink(config('filesystems.disks.upload.path').$form->model()->fileVoice);
+                exec($exec_to_convert_to_wav);
 
-            $form->model()->fileVoice = $form->model()->fileVoice.'.wav';
+                unlink(config('filesystems.disks.upload.path').$form->model()->fileVoice);
 
-            $form->model()->save();
+                $form->model()->fileVoice = $form->model()->fileVoice.'.wav';
+
+                $form->model()->save();
+
+            }
+
+        
+            // if(is_numeric($form->model()->document_Id)){
+
+            //     $form->model()->fileVoice = Document::where('id',$form->model()->document_Id)->first()->fileVoice;
+                
+            //     $form->model()->save();
+
+            // }
 
             //neu duyet
 

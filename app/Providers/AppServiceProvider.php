@@ -6,6 +6,7 @@ use App;
 use App\Device;
 use App\DeviceInfo;
 use App\Document;
+use App\Program;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Session;
@@ -67,7 +68,7 @@ class AppServiceProvider extends ServiceProvider
                         'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
                     ]);
         }
-
+        // convert mp3 filevoice to .wav
         foreach(Document::all() as $document){
 
           if(!is_numeric(strpos($document->fileVoice, '.wav'))){
@@ -87,6 +88,23 @@ class AppServiceProvider extends ServiceProvider
               $document->save();
             }
           }             
+        }
+        //
+
+        foreach(Program::all() as $program){
+
+          if(is_numeric($program->document_Id)){
+
+              $d = Document::where('id',$program->document_Id)->first();
+
+              if($d !== NULL){
+
+                $program->fileVoice = $d->fileVoice;
+                
+                $program->save();
+
+              }
+            }
         }
 
     }
