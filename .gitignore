@@ -3,7 +3,7 @@
 >>>>>>> b7bf7f0... bt
 Homestead.json
 Homestead.yaml
-/public/uploads
+/public
 npm-debug.log
 yarn-error.log
 .env
