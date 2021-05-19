@@ -456,7 +456,7 @@ class ProgramController extends AdminController
 
         $form->saved(function ($form) {
 
-            if(!is_numeric($form->model()->document_Id) && $form->model()->type == 1){
+            if($form->model()->type == 1){
 
                 $booster = (double) $form->model()->volumeBooster / 10;
 
@@ -469,17 +469,21 @@ class ProgramController extends AdminController
                 $form->model()->fileVoice = $form->model()->fileVoice.'.wav';
 
                 $form->model()->save();
-
             }
 
-        
-            // if(is_numeric($form->model()->document_Id)){
+            if($form->model()->type == 4){
 
-            //     $form->model()->fileVoice = Document::where('id',$form->model()->document_Id)->first()->fileVoice;
+                $d = Document::where('id',$form->model()->document_Id)->first();
+
+                if($d !== NULL){
+
+                    $form->model()->fileVoice = Document::where('id',$form->model()->document_Id)->first()->fileVoice;
                 
-            //     $form->model()->save();
+                    $form->model()->save();
 
-            // }
+                }
+
+            }
 
             //neu duyet
 
