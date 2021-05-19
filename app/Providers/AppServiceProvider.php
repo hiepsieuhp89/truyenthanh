@@ -68,44 +68,45 @@ class AppServiceProvider extends ServiceProvider
                         'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
                     ]);
         }
+        
         // convert mp3 filevoice to .wav
-        foreach(Document::all() as $document){
+        // foreach(Document::all() as $document){
 
-          if(!is_numeric(strpos($document->fileVoice, '.wav'))){
+        //   if(!is_numeric(strpos($document->fileVoice, '.wav'))){
 
-            $fileName = substr($document->fileVoice,0,strpos($document->fileVoice, '.mp3'));
+        //     $fileName = substr($document->fileVoice,0,strpos($document->fileVoice, '.mp3'));
   
-            if(file_exists(config('filesystems.disks.upload.path').$document->fileVoice)){
+        //     if(file_exists(config('filesystems.disks.upload.path').$document->fileVoice)){
 
-              $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$document->fileVoice.' '.$fileName.'.wav';
+        //       $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$document->fileVoice.' '.$fileName.'.wav';
 
-              exec($exec_to_convert_to_wav);
+        //       exec($exec_to_convert_to_wav);
 
-              unlink(config('filesystems.disks.upload.path').$document->fileVoice);
+        //       unlink(config('filesystems.disks.upload.path').$document->fileVoice);
 
-              $document->fileVoice = $fileName.'.wav';
+        //       $document->fileVoice = $fileName.'.wav';
 
-              $document->save();
-            }
-          }             
-        }
-        //
-        // put fileVoice to
-        foreach(Program::all() as $program){
+        //       $document->save();
+        //     }
+        //   }             
+        // }
+        // //
+        // // put fileVoice to
+        // foreach(Program::all() as $program){
 
-          if(is_numeric($program->document_Id)){
+        //   if(is_numeric($program->document_Id)){
 
-              $d = Document::where('id',$program->document_Id)->first();
+        //       $d = Document::where('id',$program->document_Id)->first();
 
-              if($d !== NULL){
+        //       if($d !== NULL){
 
-                $program->fileVoice = $d->fileVoice;
+        //         $program->fileVoice = $d->fileVoice;
                 
-                $program->save();
+        //         $program->save();
 
-              }
-            }
-        }
+        //       }
+        //     }
+        // }
 
     }
 
