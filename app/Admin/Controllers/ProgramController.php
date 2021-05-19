@@ -186,6 +186,9 @@ class ProgramController extends AdminController
                 } 
             } 
         });
+        $grid->column('volumeBooster', __('Volume'))->display(function($value){
+            return (double) $value / 10;
+        })->hide();
         $grid->column('replay', 'Số lần lặp');
         $grid->column('mode', __('Kiểu phát'))->using(['1' => 'Trong ngày',
                                                             '2' => 'Hàng ngày', 
@@ -335,7 +338,16 @@ class ProgramController extends AdminController
                         // })
                         ->when(2, function(Form $form){
 
-                            $form->file('fileVoice', 'Chọn file');
+                            $form->file('fileVoice', 'Chọn file')->uniqueName();
+                            $form->select('volumeBooster','Tăng Volume')
+                            ->options([
+                                5 => '0.5 lần (Giảm volume)',
+                                10 => '1 lần',
+                                20 => '2 lần',
+                                30 => '3 lần',
+                                40 => '4 lần',
+                                50 => '5 lần',
+                            ])->default(10);
 
                         })->rules('required',['required'=>"Cần nhập giá trị"])->default(2);
 
@@ -441,6 +453,18 @@ class ProgramController extends AdminController
         });
 
         $form->saved(function ($form) {
+
+            $booster = (double) $form->model()->volumeBooster / 10;
+
+            $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$form->model()->fileVoice.' -filter:a "volume='.$booster.'" '.config('filesystems.disks.upload.path').$form->model()->fileVoice.'.wav';
+
+            exec($exec_to_convert_to_wav);
+
+            unlink(config('filesystems.disks.upload.path').$form->model()->fileVoice);
+
+            $form->model()->fileVoice = $form->model()->fileVoice.'.wav';
+
+            $form->model()->save();
 
             //neu duyet
 
@@ -734,6 +758,8 @@ class ProgramController extends AdminController
         $err = curl_error($curl);
         
         curl_close($curl);
+
+        //if($respons)
         
         // if ($err) {
         //   echo "cURL Error #:" . $err;

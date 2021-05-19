@@ -82,6 +82,6 @@ class BatchPlayAll extends BatchAction
                 // curl_close($curl);
 
         // return a success message of "copy success" and refresh the page
-        return $this->response()->success($dataRequest)->refresh();
+        return $this->response()->success('Thành công')->refresh();
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class InsertPlaytypeToPrograms extends Migration
+class InsertVolumeBoostToPrograms extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class InsertPlaytypeToPrograms extends Migration
     public function up()
     {
         Schema::table('programs', function (Blueprint $table) {
-            $table->integer('playType')->default(1);
+            $table->double('volumeBooster')->default(1);
         });
     }
 
