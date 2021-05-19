@@ -732,7 +732,7 @@ class ProgramController extends AdminController
                         }
                         $dataRequest .= ']}\\\\\"}\"}';
 
-                    if($device != $devices(count($devices) - 1)) $dataRequest .= ',';
+                    if($device != $devices[count($devices) - 1]) $dataRequest .= ',';
                 }
             }
         }
