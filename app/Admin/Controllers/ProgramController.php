@@ -124,11 +124,11 @@ class ProgramController extends AdminController
                 ->orwhere('approvedId',Admin::user()->id);
 
             $filter->equal('mode', 'Kiểu phát')->select([
-                '1' => 'Trong ngày','2' => 'Hàng ngày','3' => 'Hàng tuần','4' => 'Phát ngay'
+                1 => 'Trong ngày',2 => 'Hàng ngày',3 => 'Hàng tuần',4 => 'Phát ngay'
             ]);
 
             $filter->equal('type', 'Loại phát sóng')->select([
-                '1' => 'Bản tin','2' => 'Tiếp sóng','3' => 'Thu phát FM','4' => 'Bản tin văn bản'
+                1 => 'Bản tin',2 => 'Tiếp sóng',3 => 'Thu phát FM',4 => 'Bản tin văn bản'
             ]);
 
             $filter->like('name', 'Tên chương trình');
