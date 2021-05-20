@@ -110,6 +110,7 @@ class ProgramController extends AdminController
         });
         $grid->batchActions(function ($batch) {
             $batch->add(new BatchPlayAll());
+            $batch->disableDelete();
             // if (!Admin::user()->can('*')) {
             //     $batch->disableDelete();
             // }
