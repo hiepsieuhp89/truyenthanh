@@ -341,7 +341,7 @@ class ProgramController extends AdminController
                                 20 => '2 lần',
                             ])->default(10);
 
-                        })->rules('required',['required'=>"Cần nhập giá trị"]);
+                        })->rules('required',['required'=>"Cần nhập giá trị"])->default(2);
 
                         //$form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
 
