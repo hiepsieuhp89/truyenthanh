@@ -117,11 +117,19 @@ class ProgramController extends AdminController
         });      
         $grid->filter(function($filter){
             //$filter->expand();
-            //$filter->disableIdFilter();
+            $filter->disableIdFilter();
 
             $filter->scope('auth',trans('Chương trình'))
                 ->where('creatorId',Admin::user()->id)
                 ->orwhere('approvedId',Admin::user()->id);
+
+            $filter->equal('mode', 'Kiểu phát')->select([
+                '1' => 'Trong ngày','2' => 'Hàng ngày','3' => 'Hàng tuần','4' => 'Phát ngay'
+            ]);
+
+            $filter->equal('type', 'Loại phát sóng')->select([
+                '1' => 'Bản tin','2' => 'Tiếp sóng','3' => 'Thu phát FM','4' => 'Bản tin văn bản'
+            ]);
 
             $filter->like('name', 'Tên chương trình');
 
@@ -152,13 +160,13 @@ class ProgramController extends AdminController
                     ] 
                 ]
             );
-        });
+        })->sortable();
 
         $states = [
             'off' => ['value' => 1, 'text' => 'Chưa duyệt', 'color' => 'danger'],
             'on' => ['value' => 2, 'text' => 'Đã duyệt', 'color' => 'success'],
         ];
-        $grid->column('status', __('Trạng thái'))->switch($states);
+        $grid->column('status', __('Trạng thái'))->switch($states)->sortable();
 
         $grid->column('type', __('Loại phát sóng'))->using(['1' => 'Bản tin',
                                                             '2' => 'Tiếp sóng', 
@@ -189,10 +197,11 @@ class ProgramController extends AdminController
             return (double) $value / 10;
         })->hide();
         $grid->column('replay', 'Số lần lặp');
-        $grid->column('mode', __('Kiểu phát'))->using(['1' => 'Trong ngày',
-                                                            '2' => 'Hàng ngày', 
-                                                            '3' => 'Hàng tuần',
-                                                            '4' => 'Phát ngay']);
+        $grid->column('mode', __('Kiểu phát'))
+        ->using(['1' => 'Trong ngày','2' => 'Hàng ngày','3' => 'Hàng tuần','4' => 'Phát ngay'])
+        ->label('default')->style('font-size:16px;')->sortable();
+
+
         $grid->column('startDate', __('Ngày bắt đầu'))->sortable()->hide();
         $grid->column('endDate', __('Ngày kết thúc'))->hide();
 
