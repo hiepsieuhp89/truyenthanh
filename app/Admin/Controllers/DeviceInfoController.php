@@ -124,6 +124,14 @@ class DeviceInfoController extends AdminController
             return "<b class=\"text-danger\">Không hoạt động</b>";
         });
 
+        $grid->column('is_playing', 'Đang phát')->display(function($value){
+
+            if(trim($value) != '') return "<b class=\"text-success\">Có</b>";
+
+            return "<b class=\"text-danger\">Không</b>";
+            
+        });
+
         $grid->column('turn_off_time','Tắt lúc')->display(function($value){
             if($value !== NULL)
                 return Carbon::create($value)->diffForHumans(Carbon::now());     

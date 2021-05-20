@@ -52,23 +52,35 @@ class AppServiceProvider extends ServiceProvider
         $response = str_replace(']"}', "]}", $response);
         $response = json_decode($response,true);
 
+        //dd(array_column($response["Data"],"DeviceData"));
+
+        //$active_device = array_column($response["Data"], "DeviceID","PlayURL");
+
         if(isset($response['DataType']) && $response['DataType'] == 5){
 
-          $active_device = array_column($response["Data"], "DeviceID");
+          $device_data = array_map(function($arr){
+            return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"]];
+          }, $response["Data"]);
 
-                //dd(Carbon::now('Asia/Ho_Chi_Minh'));
-                    DeviceInfo::whereIn('deviceCode',$active_device)->update([
-                        'status' => 1,
-                        'turn_off_time' => null,
-                    ]);
-                    DeviceInfo::whereNotIn('deviceCode',$active_device)->update([
+          foreach ($device_data as $active_device) {
+
+              DeviceInfo::where('deviceCode',$active_device[0])->update([
+                  'status' => 1,
+                  'turn_off_time' => null,
+                  'is_playing' => $active_device[1],
+              ]);
+
+          }
+
+                    DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->update([
                         'status' => 0,
+                        'is_playing' => ''
                     ]);
-                    DeviceInfo::whereNotIn('deviceCode',$active_device)->where('turn_off_time',null)->update([
+                    DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->where('turn_off_time',null)->update([
                         'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
                     ]);
         }
-        
+
         // convert mp3 filevoice to .wav
         // foreach(Document::all() as $document){
 
