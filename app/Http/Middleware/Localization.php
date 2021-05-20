@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Request;
 use Illuminate\Support\Facades\Session;
 use App;
 use Config;
@@ -19,12 +20,9 @@ class Localization extends Middleware
      */
     public function handle($request, Closure $next)
     {
-
-        $lang = Session::has('lan')?Session::get('lan'):'vn';
-
-        //dd(Session::get('lan'));
-
-        //App::setLocale($lang);
+        // if(!is_numeric(strpos(Request::fullUrl(), '?redirect',1)) && !is_numeric(strpos(Request::fullUrl(), '&redirect',1)))
+            
+        //     return redirect(Request::fullUrl().'?redirect');
 
         return $next($request);
     }

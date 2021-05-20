@@ -23,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         Carbon::setLocale('vi');
 
         $curl = curl_init();

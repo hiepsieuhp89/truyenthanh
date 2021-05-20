@@ -334,7 +334,7 @@ class ProgramController extends AdminController
 
                             $form->file('fileVoice', 'Chọn file')->uniqueName();
 
-                            $form->select('volumeBooster','Tăng Volume')
+                            $form->select('volumeBooster','Tăng giảm Volume')
                             ->options([
                                 5 => '0.5 lần (Giảm volume)',
                                 10 => '1 lần',
@@ -379,7 +379,7 @@ class ProgramController extends AdminController
                         // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;  
                         $form->time('time', __('khung giờ phát'))->format('HH:mm:ss'); 
 
-                        $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
+                        $form->number('replay', 'Số lần phát liên tục')->max(10)->min(1)->default(1);
               
                     })->when(2, function (Form $form) {
                         $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
@@ -425,21 +425,6 @@ class ProgramController extends AdminController
         $form->model()->creatorId = Admin::user()->id;
 
         $form->saving(function ($form) {
-            // if($form->file_mode == 1){// nếu chọn file trong hệ thống
-            //     //$form->fileVoice = json_decode($form->fileVoice,true);
-            //     if(!is_numeric(strpos($form->fileVoice,'["'))){
-
-            //         $form->fileVoice = json_decode($form->fileVoice);
-            //         $form->fileVoice = '["'.$form->fileVoice.'"]';
-            //     }
-
-            // }
-            // // if($form->file_mode == 2){//nếu upload file
-
-            // //     $form->fileVoice->move('uploads/files', $form->fileVoice->getClientOriginalName());
-
-            // //     $form->fileVoice = 'files/'.$form->fileVoice->getClientOriginalName();
-            // // }
 
             $form->model()->creatorId = Admin::user()->id;
 
@@ -485,9 +470,6 @@ class ProgramController extends AdminController
                 }
 
             }
-
-            //neu duyet
-
                 // nếu phát file phương tiện
                 if ($form->model()->type == 1) {
 
@@ -495,7 +477,6 @@ class ProgramController extends AdminController
                         $songPath = "";
                     if ($form->model()->status == 2) // nếu duyệt
                         $songPath = config('filesystems.disks.upload.url').$form->model()->fileVoice;  
-
                     if ($form->model()->mode == 4) { // nếu phát ngay
 
                         if ($form->model()->status == 2)
@@ -562,8 +543,6 @@ class ProgramController extends AdminController
                 Log::info('Song name ' . $songPath);
  
                 // setPlaySchedule($type, $deviceCode, $data, $startDate, $endDate, $startTime, $endTime, $songName) 
-            
-            //neu khong duyet
             
         });
 
