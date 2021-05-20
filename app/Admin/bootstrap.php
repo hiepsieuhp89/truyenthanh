@@ -24,5 +24,16 @@ Admin::favicon(env("APP_URL").'/images/icon-s.png');
 Admin::style('.w-100{width:100%;} .h-100{height:100%;} .h-400px{height:400px;} .p-0{padding:0;} .d-flex{display:flex;} .d-initial{display:initial;}');
 Admin::js(env('APP_URL').'/js/custom.js');
 
+Admin::script('
+	if(document.URL.indexOf("#")==-1){
+        // Set the URL to whatever it was plus "#".
+        url = document.URL+"#";
+        location = "#";
+
+        //Reload the page
+        location.reload(true);
+    }'
+);
+
 //Encore\Admin\Form::forget(['map', 'editor']);
 

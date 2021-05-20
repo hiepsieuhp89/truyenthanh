@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         Carbon::setLocale('vi');
 
         $curl = curl_init();
@@ -51,10 +52,6 @@ class AppServiceProvider extends ServiceProvider
         $response = str_replace('"{"', "{", $response);
         $response = str_replace(']"}', "]}", $response);
         $response = json_decode($response,true);
-
-        //dd(array_column($response["Data"],"DeviceData"));
-
-        //$active_device = array_column($response["Data"], "DeviceID","PlayURL");
 
         if(isset($response['DataType']) && $response['DataType'] == 5){
 
