@@ -339,7 +339,7 @@ class ProgramController extends AdminController
                                 5 => '0.5 lần (Giảm volume)',
                                 10 => '1 lần',
                                 20 => '2 lần',
-                            ])->default(10);
+                            ])->rules('required',['required'=>"Cần nhập giá trị"])->default(10);
 
                         })->rules('required',['required'=>"Cần nhập giá trị"])->default(2);
 
