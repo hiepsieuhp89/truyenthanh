@@ -314,10 +314,10 @@ class ProgramController extends AdminController
         $form->text('name', __('Tên chương trình'))->rules('required',['required'=>"Cần nhập giá trị"]);
        
         $form->radio('type',trans('Loại phát sóng'))
-                    ->options(['1' => 'Bản tin',
-                               '2' => 'Tiếp sóng', 
-                                '3' => 'Thu phát FM',
-                                '4' => 'Bản tin văn bản'
+                    ->options([1 => 'Bản tin',
+                               2 => 'Tiếp sóng', 
+                                3 => 'Thu phát FM',
+                                4 => 'Bản tin văn bản'
                     ])->when(1, function (Form $form) {
                         // $form->file('fileVoice', 'Chọn file')->options([
                             // 'previewFileType'=>'audio',
@@ -330,11 +330,6 @@ class ProgramController extends AdminController
                             // 1 => 'Chọn file có sẵn',
                             2 => 'Tải lên file mới'
                         ])
-                        // ->when(1, function(Form $form){
-
-                        //     $form->media('fileVoice', 'Chọn file có sẵn')->path('/files');
-
-                        // })
                         ->when(2, function(Form $form){
 
                             $form->file('fileVoice', 'Chọn file')->uniqueName();
@@ -346,7 +341,7 @@ class ProgramController extends AdminController
                                 20 => '2 lần',
                             ])->default(10);
 
-                        })->rules('required',['required'=>"Cần nhập giá trị"])->default(2);
+                        })->rules('required',['required'=>"Cần nhập giá trị"]);
 
                         //$form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
 
@@ -370,7 +365,7 @@ class ProgramController extends AdminController
                         
                         // $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
 
-                    })->rules('required',['required'=>"Cần nhập giá trị"])->default(1);
+                    })->rules('required',['required'=>"Cần nhập giá trị"]);
                            
         $form->divider(trans('Thời gian'));
 
