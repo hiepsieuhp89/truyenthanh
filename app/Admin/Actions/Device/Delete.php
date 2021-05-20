@@ -21,10 +21,17 @@ class Delete extends RowAction
 
         try {
             DB::transaction(function () use ($model) {
-            	$deviceinfo = DeviceInfo::where('deviceCode',$model->deviceCode)->first();
 
-            	if($deviceinfo !== NULL){
-            		$deviceinfo->delete();
+            	$deviceinfo = DeviceInfo::where('deviceCode',$model->deviceCode)->get();
+
+            	if(count($deviceinfo) > 0){
+
+            		foreach($deviceinfo as $value){
+
+                        $value->delete();
+
+                    }
+
             	}
             	
                 $model->delete();
