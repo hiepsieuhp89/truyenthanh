@@ -453,17 +453,26 @@ class ProgramController extends AdminController
 
             if($form->model()->type == 1){
 
-                $booster = (double) $form->model()->volumeBooster / 10;
+                if(!is_numeric(strpos($form->model()->fileVoice, '.wav', 1)) || !(strlen() - strpos($form->model()->fileVoice, '.wav', 1) == 4)){
 
-                $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$form->model()->fileVoice.' -filter:a "volume='.$booster.'" '.config('filesystems.disks.upload.path').$form->model()->fileVoice.'.wav';
+                    $booster = (double) $form->model()->volumeBooster / 10;
 
-                exec($exec_to_convert_to_wav);
-        
-                unlink(config('filesystems.disks.upload.path').$form->model()->fileVoice);
+                    $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$form->model()->fileVoice.' -filter:a "volume='.$booster.'" '.config('filesystems.disks.upload.path').$form->model()->fileVoice.'.wav';
 
-                $form->model()->fileVoice = $form->model()->fileVoice.'.wav';
+                    exec($exec_to_convert_to_wav);
+            
+                    if(file_exists(config('filesystems.disks.upload.path').$form->model()->fileVoice.'.wav')){
 
-                $form->model()->save();
+                        if(file_exists(config('filesystems.disks.upload.path').$form->model()->fileVoice))
+                            
+                            unlink(config('filesystems.disks.upload.path').$form->model()->fileVoice);
+
+                        $form->model()->fileVoice = $form->model()->fileVoice.'.wav';
+
+                        $form->model()->save();
+                    }
+
+                }
             }
 
             if($form->model()->type == 4){
