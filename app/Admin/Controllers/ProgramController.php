@@ -26,6 +26,7 @@ use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
+use Encore\Admin\Actions\BatchAction;
 
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
@@ -464,7 +465,7 @@ class ProgramController extends AdminController
                     if(file_exists(config('filesystems.disks.upload.path').$form->model()->fileVoice.'.wav')){
 
                         if(file_exists(config('filesystems.disks.upload.path').$form->model()->fileVoice))
-                            
+
                             unlink(config('filesystems.disks.upload.path').$form->model()->fileVoice);
 
                         $form->model()->fileVoice = $form->model()->fileVoice.'.wav';
@@ -481,7 +482,7 @@ class ProgramController extends AdminController
 
                 if($d !== NULL){
 
-                    $form->model()->fileVoice = Document::where('id',$form->model()->document_Id)->first()->fileVoice;
+                    $form->model()->fileVoice = $d->fileVoice;
                 
                     $form->model()->save();
 
@@ -762,6 +763,8 @@ class ProgramController extends AdminController
         // echo "XXX " . $urlRequest;
         Log::info('Play schedule ' .$urlRequest);
 
+        //Log::info('Play schedule json' .$urlRequest);
+
 
         curl_setopt_array($curl, array(
           CURLOPT_URL => $urlRequest,
@@ -782,7 +785,12 @@ class ProgramController extends AdminController
         
         curl_close($curl);
 
-        //if($respons)
+        $response = json_decode($response);
+
+        // if(is_numeric($response->DataType))
+        //     return response()->success('Thành công')->refresh();
+        // else
+        //     return response()->fail('Không thành công')->refresh();
         
         // if ($err) {
         //   echo "cURL Error #:" . $err;

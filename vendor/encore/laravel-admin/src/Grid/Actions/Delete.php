@@ -32,7 +32,7 @@ class Delete extends RowAction
         try {
             DB::transaction(function () use ($model) {
                 $model->delete();
-                if(isset($model->fileVoice)){
+                if($model->type == 1 && isset($model->fileVoice)){
                     $file_path = 'uploads/'.$model->fileVoice;
                     if(file_exists($file_path))
                         unlink($file_path);
