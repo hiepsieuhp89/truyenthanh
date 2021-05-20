@@ -168,10 +168,10 @@ class ProgramController extends AdminController
         ];
         $grid->column('status', __('Trạng thái'))->switch($states)->sortable();
 
-        $grid->column('type', __('Loại phát sóng'))->using(['1' => 'Bản tin',
-                                                            '2' => 'Tiếp sóng', 
-                                                            '3' => 'Thu phát FM',
-                                                            '4' => 'Bản tin văn bản'
+        $grid->column('type', __('Loại phát sóng'))->using([1 => 'Bản tin',
+                                                            2 => 'Tiếp sóng', 
+                                                            3 => 'Thu phát FM',
+                                                            4 => 'Bản tin văn bản'
                                                         ])->label(' label-primary')->style('font-size:16px;')->sortable();
                                                         
         $grid->column('fileVoice', 'File')->display(function ($fileVoice) {
@@ -198,7 +198,7 @@ class ProgramController extends AdminController
         })->hide();
         $grid->column('replay', 'Số lần lặp');
         $grid->column('mode', __('Kiểu phát'))
-        ->using(['1' => 'Trong ngày','2' => 'Hàng ngày','3' => 'Hàng tuần','4' => 'Phát ngay'])
+        ->using([1 => 'Trong ngày',2 => 'Hàng ngày',3 => 'Hàng tuần',4 => 'Phát ngay'])
         ->label('default')->style('font-size:16px;')->sortable();
 
 
