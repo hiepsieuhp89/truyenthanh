@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
         $response = str_replace(']"}', "]}", $response);
         $response = json_decode($response,true);
 
-        Program::where('volumeBooster','<',5)->update(['volumeBooster' => 10]);
+        
         if(isset($response['DataType']) && $response['DataType'] == 5){
 
           $device_data = array_map(function($arr){

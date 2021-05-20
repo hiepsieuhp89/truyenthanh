@@ -83,6 +83,8 @@ class Kernel extends ConsoleKernel
 
             }
         })->everyMinute();
+
+        //Program::where('volumeBooster','<',5)->update(['volumeBooster' => 10]);
     }
 
     /**
