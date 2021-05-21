@@ -446,6 +446,7 @@ class ProgramController extends AdminController
 
                 if(!is_numeric(strpos($form->model()->fileVoice, '.wav', 1)) || !(strlen($form->model()->fileVoice) - strpos($form->model()->fileVoice, '.wav', 1) == 4)){
 
+
                     $booster = (double) $form->model()->volumeBooster / 10;
 
                     $exec_to_convert_to_wav = 'ffmpeg -i '.config('filesystems.disks.upload.path').$form->model()->fileVoice.' -filter:a "volume='.$booster.'" '.config('filesystems.disks.upload.path').$form->model()->fileVoice.'.wav';

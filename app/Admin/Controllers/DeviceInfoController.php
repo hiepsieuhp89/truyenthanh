@@ -126,7 +126,7 @@ class DeviceInfoController extends AdminController
 
         $grid->column('is_playing', 'Đang phát')->display(function($value){
 
-            if(trim($value) != '') return "<b class=\"text-success\">Có</b>";
+            if(trim($value) != '') return "<b class=\"text-success\"><a href=\"". $value ."\" class=\"text-success\">Có</a></b>";
 
             return "<b class=\"text-danger\">Không</b>";
             
