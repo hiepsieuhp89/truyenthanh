@@ -444,7 +444,7 @@ class ProgramController extends AdminController
 
             if($form->model()->type == 1){
 
-                if(!is_numeric(strpos($form->model()->fileVoice, '.wav', 1)) || !(strlen() - strpos($form->model()->fileVoice, '.wav', 1) == 4)){
+                if(!is_numeric(strpos($form->model()->fileVoice, '.wav', 1)) || !(strlen($form->model()->fileVoice) - strpos($form->model()->fileVoice, '.wav', 1) == 4)){
 
                     $booster = (double) $form->model()->volumeBooster / 10;
 

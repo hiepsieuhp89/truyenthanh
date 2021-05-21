@@ -105,8 +105,8 @@ class DeviceController extends AdminController
             $filter->like('deviceCode', trans('Mã thiết bị'));
 
             $filter->equal('DeviceInfo.status', trans('Trạng thái'))->select([
-                1 => "Bật",
-                0 => "Tắt",
+                1 => "Đang hoạt động",
+                0 => "Không hoạt động",
             ]);
             if(Admin::user()->can('*'))
                 $filter->equal('areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
