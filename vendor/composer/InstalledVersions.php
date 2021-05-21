@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '25df56a7f32edafa56457f542e6676b1e0a784ce',
+    'reference' => '8602782734f81dc1cf09f65e2d807531bf9bdb6d',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -495,6 +495,15 @@ private static $installed = array (
       ),
       'reference' => '398c10efd40a8f6b03fade0aa9cb0ddf1a72a75e',
     ),
+    'laravel-admin-ext/scheduling' => 
+    array (
+      'pretty_version' => 'v1.1',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '72bd03a2917a7d479b019ccc64e991c7d5bec7bb',
+    ),
     'laravel/framework' => 
     array (
       'pretty_version' => 'v5.8.38',
@@ -511,7 +520,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '25df56a7f32edafa56457f542e6676b1e0a784ce',
+      'reference' => '8602782734f81dc1cf09f65e2d807531bf9bdb6d',
     ),
     'laravel/tinker' => 
     array (

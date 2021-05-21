@@ -63,6 +63,7 @@ return array(
     'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
     'Encore\\FileBrowser\\' => array($vendorDir . '/laravel-admin-ext/file-browser/src'),
     'Encore\\Chartjs\\' => array($vendorDir . '/laravel-admin-ext/chartjs/src'),
+    'Encore\\Admin\\Scheduling\\' => array($vendorDir . '/laravel-admin-ext/scheduling/src'),
     'Encore\\Admin\\Media\\' => array($vendorDir . '/laravel-admin-ext/media-manager/src'),
     'Encore\\Admin\\MediaPlayer\\' => array($vendorDir . '/laravel-admin-ext/media-player/src'),
     'Encore\\Admin\\Latlong\\' => array($vendorDir . '/laravel-admin-ext/latlong/src'),

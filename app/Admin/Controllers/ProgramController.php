@@ -17,7 +17,10 @@ use App\Device;
 use App\DeviceInfo;
 use App\Document;
 
-use App\Admin\Actions\Post\BatchPlayAll;    
+use App\Admin\Actions\Program\Delete;
+use App\Admin\Actions\Program\BatchPlayAll;   
+use App\Admin\Actions\Program\BatchDelete;   
+
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Form; 
@@ -101,19 +104,19 @@ class ProgramController extends AdminController
     protected function grid()
     {
         
-        $grid = new Grid(new Program);   
+        $grid = new Grid((new Program));  
 
         $grid->actions(function ($actions) {
-            // if (!Admin::user()->can('*')) {
-            //     $actions->disableDelete();
-            // }
+
+            $actions->disableDelete();
+            $actions->add(new Delete);
         });
+
         $grid->batchActions(function ($batch) {
-            $batch->add(new BatchPlayAll());
+    
             $batch->disableDelete();
-            // if (!Admin::user()->can('*')) {
-            //     $batch->disableDelete();
-            // }
+
+            $batch->add(new BatchDelete());
         });      
         $grid->filter(function($filter){
             //$filter->expand();
@@ -223,10 +226,6 @@ class ProgramController extends AdminController
         $grid->column('created_at', __('Ngày tạo'))->hide();
         $grid->column('updated_at', __('Ngày cập nhật'))->hide();
 
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
-            // $actions->disableEdit();
-            // $actions->disableDelete();
-        });
         return $grid;
     }
 

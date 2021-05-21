@@ -126,6 +126,7 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         array (
             'Encore\\FileBrowser\\' => 19,
             'Encore\\Chartjs\\' => 15,
+            'Encore\\Admin\\Scheduling\\' => 24,
             'Encore\\Admin\\Media\\' => 19,
             'Encore\\Admin\\MediaPlayer\\' => 25,
             'Encore\\Admin\\Latlong\\' => 21,
@@ -387,6 +388,10 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'Encore\\Chartjs\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel-admin-ext/chartjs/src',
+        ),
+        'Encore\\Admin\\Scheduling\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel-admin-ext/scheduling/src',
         ),
         'Encore\\Admin\\Media\\' => 
         array (
@@ -1458,6 +1463,10 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'Encore\\Admin\\Middleware\\Permission' => __DIR__ . '/..' . '/encore/laravel-admin/src/Middleware/Permission.php',
         'Encore\\Admin\\Middleware\\Pjax' => __DIR__ . '/..' . '/encore/laravel-admin/src/Middleware/Pjax.php',
         'Encore\\Admin\\Middleware\\Session' => __DIR__ . '/..' . '/encore/laravel-admin/src/Middleware/Session.php',
+        'Encore\\Admin\\Scheduling\\CronSchedule' => __DIR__ . '/..' . '/laravel-admin-ext/scheduling/src/CronSchedule.php',
+        'Encore\\Admin\\Scheduling\\Scheduling' => __DIR__ . '/..' . '/laravel-admin-ext/scheduling/src/Scheduling.php',
+        'Encore\\Admin\\Scheduling\\SchedulingController' => __DIR__ . '/..' . '/laravel-admin-ext/scheduling/src/SchedulingController.php',
+        'Encore\\Admin\\Scheduling\\SchedulingServiceProvider' => __DIR__ . '/..' . '/laravel-admin-ext/scheduling/src/SchedulingServiceProvider.php',
         'Encore\\Admin\\Show' => __DIR__ . '/..' . '/encore/laravel-admin/src/Show.php',
         'Encore\\Admin\\Show\\AbstractField' => __DIR__ . '/..' . '/encore/laravel-admin/src/Show/AbstractField.php',
         'Encore\\Admin\\Show\\Divider' => __DIR__ . '/..' . '/encore/laravel-admin/src/Show/Divider.php',

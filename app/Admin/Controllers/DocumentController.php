@@ -5,8 +5,10 @@ namespace App\Admin\Controllers;
 use Request;
 use Helper;
 use DB;
+use Carbon\Carbon;
 
 use App\Document;
+use App\Admin\Actions\Document\Delete;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -84,6 +86,11 @@ class DocumentController extends AdminController
         $grid->disableColumnSelector();   
         $grid->actions(function($actions){
           $actions->disableEdit();
+          $actions->disableDelete();
+          $actions->add(new Delete);
+        });
+        $grid->batchActions(function($batch){
+          $batch->disableDelete();
         });
 
         $grid->filter(function($filter){
@@ -135,6 +142,12 @@ class DocumentController extends AdminController
         $form = new Form(new Document);
         $form->text('name', trans('Tên bài'))->rules('required')->autofocus();
         $form->textarea('content')->rows(15)->rules('required');
+        $form->select('volumeBooster','Tăng giảm âm lượng')->options([
+          5 => '0.5 lần (Giảm volume)',
+          10 => '1 lần',
+          20 => '2 lần',
+          30 => '3 lần',
+        ])->default(10);
 
         $form->disableViewCheck();
         $form->disableEditingCheck();
@@ -175,9 +188,11 @@ class DocumentController extends AdminController
 
             Log::info("Saved - content  " . $form->model()->content);
 
-            $form->model()->fileVoice = 'voices/'.md5($form->model()->name).".wav";
+            $file_temp = 'voices/'.md5($form->model()->content.(Carbon::now())).".mp3";
 
-            $this->createVoice($form->model()->content, $form->model()->fileVoice);
+            $form->model()->fileVoice = $this->createVoice($form->model()->content, $file_temp, $form->model()->volumeBooster);
+
+            //$form->model()->fileVoice = $file_temp;
 
             $form->model()->save();
         });
@@ -185,7 +200,7 @@ class DocumentController extends AdminController
         return $form;
     }
 
-    protected function createVoice($content, $fileVoice) 
+    protected function createVoice($content, $fileVoice, $volumeBooster) 
     {
         ini_set('max_execution_time', 0);
         $curl = curl_init();
@@ -223,9 +238,27 @@ class DocumentController extends AdminController
         //   echo "cURL Error #:" . $err;
           Log::error("cURL Error #:" . $err);
         } else {
+
           Log::info(" Tạo file  " . $fileVoice);
 
           file_put_contents('uploads/'.$fileVoice , $response);
+
+            $booster = $volumeBooster / 10;
+
+          $fileInputPath = config('filesystems.disks.upload.path').$fileVoice;
+
+          $fileOutputPath = config('filesystems.disks.upload.path').$fileVoice.'.wav';
+
+          $cmd = 'ffmpeg -y -i '.$fileInputPath.' -filter:a "volume='.$booster.'" '.$fileOutputPath;
+
+          exec($cmd);
+
+          if(file_exists($fileOutputPath)){
+              unlink($fileInputPath);
+              return $fileVoice.'.wav';
+          }
+          return $fileVoice;
+        
           // move file
         } 
     }   

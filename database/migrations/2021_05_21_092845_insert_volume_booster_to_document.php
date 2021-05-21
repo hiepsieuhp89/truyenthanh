@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class InsertVolumeBoostToPrograms extends Migration
+class InsertVolumeBoosterToDocument extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class InsertVolumeBoostToPrograms extends Migration
      */
     public function up()
     {
-        Schema::table('programs', function (Blueprint $table) {
+        Schema::table('documents', function (Blueprint $table) {
             $table->double('volumeBooster')->default(10);
         });
     }
@@ -25,7 +25,7 @@ class InsertVolumeBoostToPrograms extends Migration
      */
     public function down()
     {
-        Schema::table('programs', function (Blueprint $table) {
+        Schema::table('documents', function (Blueprint $table) {
             //
         });
     }
