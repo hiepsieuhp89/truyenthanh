@@ -117,7 +117,6 @@ class ProgramController extends AdminController
         {
 
             $batch->disableDelete();
-
             $batch->add(new BatchDelete());
         });
         $grid->filter(function ($filter)
@@ -178,13 +177,11 @@ class ProgramController extends AdminController
 
         $grid->column('fileVoice', 'File')->display(function ($fileVoice)
         {
-            if ($this->type == 4 || $this->type == 1)
-            { // type voice
+            if ($this->type == 4 || $this->type == 1){
                 return "<audio controls><source src='" . config('filesystems.disks.upload.url') . $fileVoice . "' type='audio/wav'></audio>";
             }
-            if ($this->type == 2 || $this->type == 3)
-            {
-                return '<a class="btn btn-primary m-auto">'.$this->radioChannel.'</a>';
+            if ($this->type == 2 || $this->type == 3){
+                return '<a>'.$this->radioChannel.'</a>';
             }
         });
         $grid->column('volumeBooster', __('Volume'))->display(function ($value)
