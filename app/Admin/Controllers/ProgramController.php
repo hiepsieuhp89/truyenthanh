@@ -184,7 +184,7 @@ class ProgramController extends AdminController
             }
             if ($this->type == 2 || $this->type == 3)
             {
-                return $this->digiChannel;
+                return '<a class="btn btn-primary m-auto">'.$this->radioChannel.'</a>';
             }
         });
         $grid->column('volumeBooster', __('Volume'))->display(function ($value)
