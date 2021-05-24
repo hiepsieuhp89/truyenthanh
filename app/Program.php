@@ -28,6 +28,10 @@ class Program extends Model
     {
         return $this->belongsTo(Document::class,'document_Id');
     }
+    public function record()
+    {
+        return $this->belongsTo(VoiceRecord::class, 'record_Id');
+    }
 
     public function creator()
     {

@@ -96,7 +96,7 @@ class Api extends Model
 
         if ($endDate == NULL || $endDate == ''){ // nếu đặt trong ngày
 
-            if ($type == 1 || $type == 4){ // nếu là file phương tiện
+            if ($type == 1 || $type == 4 || $type == 5 || $type == 2){ // nếu là file phương tiện
 
                 foreach ($devices as $device)
                 {
@@ -129,7 +129,7 @@ class Api extends Model
             }
             if ($type == 3) {// nếu là đài FM hoặc tiếp sóng
                 foreach($devices as $device){
-                    $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"'.$data.'\\\\\",\\\\\"PacketType\\\\\":11}\"},';
+                    $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"'.$songName.'\\\\\",\\\\\"PacketType\\\\\":11}\"},';
                 }
                 $dataRequest .= ']}\\\\\"}\"}';
                 if($device != $devices[count($devices) - 1]) $dataRequest .= ',';
@@ -148,7 +148,7 @@ class Api extends Model
             //     $dates[$i++] = $value->format('Y-m-d');
             // }
             // $dates[$i] = $endDate;
-            if ($type == 1 || $type == 4)
+            if ($type == 1 || $type == 4 || $type == 5)
             { // nếu là file phương tiện
                 foreach ($devices as $device)
                 { //set từng thiết bị
@@ -265,7 +265,7 @@ class Api extends Model
 
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        if ($type == 1 || $type == 4)
+        if ($type == 1 || $type == 4 || $type == 5 || $type == 2)
         { // nếu phát ngay file pt
             foreach ($deviceCode as $device)
             {
@@ -273,11 +273,6 @@ class Api extends Model
                 $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
             }
 
-        }
-        else
-        {
-
-            $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"' . $deviceCode . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"' . $songName . '\\\\\",\\\\\"PacketType\\\\\":11}\"}]}"}';
         }
 
         $dataRequest .= ']}"}';

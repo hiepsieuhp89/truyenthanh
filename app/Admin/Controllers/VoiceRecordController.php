@@ -9,6 +9,10 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
+use App\Admin\Actions\VoiceRecord\Delete;
+use App\Admin\Actions\VoiceRecord\BatchDelete;
+
+
 class VoiceRecordController extends AdminController
 {
     /**
@@ -26,10 +30,25 @@ class VoiceRecordController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new VoiceRecord());
+        
+        $grid->actions(function($actions){
+            $actions->disableView();
+            $actions->disableDelete();
 
-        $grid->column('id', __('Id'));
-        $grid->column('name', __('Name'));
-        $grid->column('fileVoice', __('FileVoice'));
+            $actions->add(new Delete());
+        });
+
+        $grid->batchActions(function ($actions) {
+            $actions->disableDelete();
+
+            $actions->add(new BatchDelete());
+        });
+
+        $grid->column('id', __('Mã số'));
+        $grid->column('name', __('Tên bản ghi'));
+        $grid->column('fileVoice', __('File ghi âm'))->display(function ($fileVoice) {
+            return "<audio controls><source src='" . config('filesystems.disks.upload.url') . $fileVoice . "' type='audio/wav'></audio>";
+        }); 
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -69,9 +88,11 @@ class VoiceRecordController extends AdminController
         $form->record('fileVoice', __('File ghi âm'));
 
         $form->saving(function($form){
-            dd($form->fileVoice);
-            $form->fileVoice = 'records/'.$form->getClientOriginalName();
-            file_put_contents('uploads/' . $form->fileVoice, $form->fileVoice->getClientOriginalName());
+
+            file_put_contents(config('filesystems.disks.upload.path').'records/'.$form->fileVoice->getClientOriginalName(), file_get_contents($form->fileVoice));
+
+            $form->fileVoice = 'records/' . $form->fileVoice->getClientOriginalName();
+
         });
         return $form;
     }

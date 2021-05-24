@@ -14,6 +14,7 @@ use App\Area;
 use App\Device;
 use App\DeviceInfo;
 use App\Document;
+use App\VoiceRecord;
 
 use App\Api;
 
@@ -135,7 +136,7 @@ class ProgramController extends AdminController
                 ->select([1 => 'Trong ngày', 2 => 'Hàng ngày', 3 => 'Hàng tuần', 4 => 'Phát ngay']);
 
             $filter->equal('type', 'Loại phát sóng')
-                ->select([1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản']);
+                ->select([1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm']);
 
             $filter->like('name', 'Tên chương trình');
 
@@ -171,14 +172,14 @@ class ProgramController extends AdminController
             ->switch($states)->sortable();
 
         $grid->column('type', __('Loại phát sóng'))
-            ->using([1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản'])
+            ->using([1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm'])
             ->label(' label-primary')
             ->style('font-size:16px;')
             ->sortable();
 
         $grid->column('fileVoice', 'Nội dung/Kênh')->display(function ($fileVoice)
         {
-            if ($this->type == 4 || $this->type == 1){
+            if ($this->type == 4 || $this->type == 1|| $this->type == 5){
                 return "<audio controls><source src='" . config('filesystems.disks.upload.url') . $fileVoice . "' type='audio/wav'></audio>";
             }
             if ($this->type == 2 || $this->type == 3){
@@ -325,8 +326,11 @@ class ProgramController extends AdminController
 
         $form->radio('type', trans('Loại phát sóng'))
             ->options([
-                1 => 'Bản tin',//2 => 'Tiếp sóng',
-                3 => 'Thu phát FM', 4 => 'Bản tin văn bản'
+                1 => 'Bản tin',
+                2 => 'Tiếp sóng',
+                3 => 'Thu phát FM', 
+                4 => 'Bản tin văn bản',
+                5 => 'Bản ghi âm',
             ])->when(1, function (Form $form){
             // $form->file('fileVoice', 'Chọn file')->options([
             // 'previewFileType'=>'audio',
@@ -357,6 +361,18 @@ class ProgramController extends AdminController
                 //$form->file('fileVoice', 'Chọn file')->uniqueName();
                 //$form->multipleFile('fileVoice', 'Chọn file')->removable();
                 
+            })->when(2, function (Form $form) {
+
+                $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options([
+                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
+                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+                    //'https://vovstream.1cdn.vn/vovlive/vovGTHN.sdp_aac/playlist.m3u8' => 'VOV Giao thông HN',
+                    //'https://vovstream.1cdn.vn/vovlive/vovGTHCM.sdp_aac/playlist.m3u8'
+                    // => 'VOV Giao thông HCM',
+                
+                ]);
+                //$form->number('inteval', 'Thời lượng (Phút)')->rules('required');
+
             })->when(3, function (Form $form){
 
                 $form->text('radioChannel', 'Kênh')->rules(
@@ -368,6 +384,12 @@ class ProgramController extends AdminController
                     ->options(Document::all()
                     ->pluck('name', 'id'));
                     
+            })->when(5, function (Form $form) {
+
+                $form->select('record_Id', trans('Chọn file ghi âm'))
+                    ->options(VoiceRecord::all()
+                    ->pluck('name', 'id'));
+
             })->rules('required', ['required' => "Cần nhập giá trị"]);
 
         $form->divider(trans('Thời gian'));
@@ -451,7 +473,7 @@ class ProgramController extends AdminController
 
         $form->saved(function ($form)
         {
-
+            // đoạn code xử lý file
             if ($form->model()->type == 1)
             {
 
@@ -501,6 +523,22 @@ class ProgramController extends AdminController
                 }
 
             }
+            if ($form->model()->type == 5) {
+
+                $d =VoiceRecord::where('id', $form->model()
+                    ->record_Id)
+                    ->first();
+
+                if ($d !== NULL) {
+
+                    $form->model()->fileVoice = $d->fileVoice;
+
+                    $form->model()
+                        ->save();
+                }
+            }
+            //kết thúc đoạn code xử lý file
+            
             // nếu phát file phương tiện
             if ($form->model()->type == 1)
             {
@@ -527,7 +565,24 @@ class ProgramController extends AdminController
                 }
 
             }
+            if ($form->model()->type == 2) {
 
+                if ($form->model()->status == 1) // nếu không duyệt
+                    $songPath = "";
+                if ($form->model()->status == 2) // nếu duyệt
+                    $songPath = $form->model()->digiChannel;
+
+                if ($form->model()->mode == 4) { // nếu phát ngay
+                    if ($form->model()->status == 2) 
+                    (new Api())->playOnline($form->model()->type, implode(',', $form->model()
+                            ->devices), $songPath);
+                } else { // nếu phát theo lịch
+                    // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
+                    // set schedule
+                    (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                        ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                }
+            }
             // if ($form->model()->type == 2) {
             //     if ($form->model()->status == 1) // nếu không duyệt
             //         $songPath = "";
@@ -586,6 +641,25 @@ class ProgramController extends AdminController
                 {
                     (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                }
+            }
+            if ($form->model()->type == 5) {
+                $voiceModel = VoiceRecord::findOrFail($form->model()
+                    ->record_Id);
+
+                if ($form->model()->status == 1) // nếu không duyệt
+                    $songPath = "";
+                if ($form->model()->status == 2) // nếu duyệt
+                    $songPath = config('filesystems.disks.upload.url') . $voiceModel->fileVoice;
+
+                // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
+                if ($form->model()->mode == 4) {
+                    (new Api())
+                        ->playOnline($form->model()->type, implode(',', $form->model()
+                            ->devices), $songPath);
+                } else {
+                    (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                        ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
             }
 

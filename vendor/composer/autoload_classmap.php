@@ -45,6 +45,8 @@ return array(
     'App\\Admin\\Controllers\\ExampleController' => $baseDir . '/app/Admin/Controllers/ExampleController.php',
     'App\\Admin\\Controllers\\HomeController' => $baseDir . '/app/Admin/Controllers/HomeController.php',
     'App\\Admin\\Controllers\\ProgramController' => $baseDir . '/app/Admin/Controllers/ProgramController.php',
+    'App\\Admin\\Controllers\\VoiceRecordController' => $baseDir . '/app/Admin/Controllers/VoiceRecordController.php',
+    'App\\Admin\\Extensions\\RecordVoice' => $baseDir . '/app/Admin/Extensions/RecordVoice.php',
     'App\\Admin\\Extensions\\StopPlay' => $baseDir . '/app/Admin/Extensions/StopPlay.php',
     'App\\Admin_role' => $baseDir . '/app/Admin_role.php',
     'App\\Api' => $baseDir . '/app/Api.php',

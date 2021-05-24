@@ -14,6 +14,7 @@ class RecordVoice extends Field
 
     protected static $js = [
         'https://unpkg.com/mic-recorder-to-mp3@2.2.1/dist/index.js',
+        'https://momentjs.com/downloads/moment-with-locales.js',
     ];
 
     public function render()
@@ -41,7 +42,7 @@ class RecordVoice extends Field
             function stopRecording() {
             recorder.stop().getMp3().then(([buffer, blob]) => {
                 console.log(buffer, blob);
-                const file = new File(buffer, 'record_'+ Date.now() +'.wav', {
+                const file = new File(buffer, 'record_'+ moment().format('DD_MM_YYYY__HH_mm_ss') +'.wav', {
                     type: blob.type,
                     lastModified: Date.now()
                 });

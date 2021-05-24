@@ -556,6 +556,8 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'App\\Admin\\Controllers\\ExampleController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ExampleController.php',
         'App\\Admin\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Admin/Controllers/HomeController.php',
         'App\\Admin\\Controllers\\ProgramController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ProgramController.php',
+        'App\\Admin\\Controllers\\VoiceRecordController' => __DIR__ . '/../..' . '/app/Admin/Controllers/VoiceRecordController.php',
+        'App\\Admin\\Extensions\\RecordVoice' => __DIR__ . '/../..' . '/app/Admin/Extensions/RecordVoice.php',
         'App\\Admin\\Extensions\\StopPlay' => __DIR__ . '/../..' . '/app/Admin/Extensions/StopPlay.php',
         'App\\Admin_role' => __DIR__ . '/../..' . '/app/Admin_role.php',
         'App\\Api' => __DIR__ . '/../..' . '/app/Api.php',
