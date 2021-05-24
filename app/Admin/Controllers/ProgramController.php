@@ -350,44 +350,7 @@ class ProgramController extends AdminController
                 ->rules('required', ['required' => "Cần nhập giá trị"])
                 ->default(2);
 
-            $form->divider(trans('Thời gian'));
-
-            $form->radio('mode', trans('Kiểu phát'))
-                ->options(['1' => 'Trong ngày', '2' => 'Hàng ngày',
-            // '3' => 'Hàng tuần',
-            '4' => 'Phát ngay'])->when(1, function (Form $form)
-            {
-                $form->date('startDate', __('Ngày phát'));
-                // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;
-                $form->time('time', __('khung giờ phát'))
-                    ->format('HH:mm:ss');
-
-                $form->number('replay', 'Số lần phát liên tục')
-                    ->max(10)
-                    ->min(1)
-                    ->default(1);
-
-            })->when(2, function (Form $form)
-            {
-                $form->dateRange('startDate', 'endDate', __('Thời gian phát'));
-
-                $form->time('time', __('khung giờ phát'))
-                    ->format('HH:mm:ss');
-
-                $form->number('replay', 'Số lần phát liên tục')
-                    ->max(20)
-                    ->min(1)
-                    ->default(1);
-
-                // })->when(3, function (Form $form) {
-                //     $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
-                //     // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;
-                //     $form->checkbox('days', 'Chọn ngày')->options(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật'])->canCheckAll();
-                //     $form->time('time', __('khung giờ phát'))->format('HH:mm:ss');
-                
-            })
-                ->rules('required', ['required' => "Cần nhập giá trị"]);
-
+    
             //$form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
             //$form->multipleFile('fileVoice', 'Chọn file');
             //$form->file('fileVoice', 'Chọn file')->uniqueName();
@@ -399,12 +362,6 @@ class ProgramController extends AdminController
             $form->number('radioChannel', 'Kênh')
                 ->rules('required', ['required' => "Cần nhập giá trị"]);
 
-            $form->divider(trans('Thời gian'));
-
-            $form->radio('mode', trans('Kiểu phát'))
-                ->options(['4' => 'Phát ngay'])
-                ->rules('required', ['required' => "Cần nhập giá trị"])
-                ->default(4);
         })->when(4, function (Form $form)
         {
 
@@ -412,9 +369,15 @@ class ProgramController extends AdminController
                 ->options(Document::all()
                 ->pluck('name', 'id'));
 
-            $form->divider(trans('Thời gian'));
+            
 
-            $form->radio('mode', trans('Kiểu phát'))
+            // $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
+            
+        })->rules('required', ['required' => "Cần nhập giá trị"]);
+
+        $form->divider(trans('Thời gian'));
+        
+        $form->radio('mode', trans('Kiểu phát'))
                 ->options(['1' => 'Trong ngày', '2' => 'Hàng ngày',
             // '3' => 'Hàng tuần',
             '4' => 'Phát ngay'])->when(1, function (Form $form)
@@ -450,10 +413,6 @@ class ProgramController extends AdminController
             })
                 ->rules('required', ['required' => "Cần nhập giá trị"]);
 
-            // $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
-            
-        })
-            ->rules('required', ['required' => "Cần nhập giá trị"]);
 
         $form->divider(trans('Chọn loa phát'));
 
