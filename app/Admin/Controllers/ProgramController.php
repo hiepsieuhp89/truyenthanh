@@ -182,8 +182,15 @@ class ProgramController extends AdminController
             if ($this->type == 4 || $this->type == 1|| $this->type == 5){
                 return "<audio controls><source src='" . config('filesystems.disks.upload.url') . $fileVoice . "' type='audio/wav'></audio>";
             }
-            if ($this->type == 2 || $this->type == 3){
+            if ($this->type == 3){
                 return '<a>'.$this->radioChannel.'</a>';
+            }
+            if($this->type == 2){
+                $scope = [
+                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
+                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+                ];
+                return $scope[$this->digiChannel];
             }
         });
         $grid->column('volumeBooster', __('Volume'))->display(function ($value)
@@ -380,15 +387,11 @@ class ProgramController extends AdminController
 
             })->when(4, function (Form $form){
 
-                $form->select('document_Id', trans('Chọn file văn bản'))
-                    ->options(Document::all()
-                    ->pluck('name', 'id'));
+                $form->select('document_Id', trans('Chọn file văn bản'))->options(Document::all()->pluck('name', 'id'));
                     
             })->when(5, function (Form $form) {
 
-                $form->select('record_Id', trans('Chọn file ghi âm'))
-                    ->options(VoiceRecord::all()
-                    ->pluck('name', 'id'));
+                $form->select('record_Id', trans('Chọn file ghi âm'))->options(VoiceRecord::all()->pluck('name', 'id'));
 
             })->rules('required', ['required' => "Cần nhập giá trị"]);
 
