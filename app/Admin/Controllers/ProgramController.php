@@ -359,8 +359,8 @@ class ProgramController extends AdminController
                 
             })->when(3, function (Form $form){
 
-                $form->number('radioChannel', 'Kênh')
-                        ->rules('required', ['required' => "Cần nhập giá trị"]);
+                $form->text('radioChannel', 'Kênh')->rules(
+                    'required|numeric', ['required' => "Cần nhập giá trị","numeric"=>"Cần nhập dạng số"]);
 
             })->when(4, function (Form $form){
 
@@ -442,6 +442,7 @@ class ProgramController extends AdminController
 
         $form->saving(function ($form)
         {
+            $form->radioChannel = (double) $form->radioChannel;
 
             $form->model()->creatorId = Admin::user()->id;
 

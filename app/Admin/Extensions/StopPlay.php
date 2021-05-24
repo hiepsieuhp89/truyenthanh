@@ -17,14 +17,14 @@ class StopPlay
     {
         return <<<SCRIPT
 
-$('.grid-check-row').on('click', function () {
+        $('.grid-check-row').on('click', function () {
 
-    // Your code.
-    console.log($(this).data('id'));
+            // Your code.
+            console.log($(this).data('id'));
 
-});
+        });
 
-SCRIPT;
+        SCRIPT;
     }
 
     protected function render()

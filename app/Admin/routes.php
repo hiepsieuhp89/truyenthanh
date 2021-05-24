@@ -15,8 +15,10 @@ Route::group([
     $router->resource('areas', AreaController::class, ['except' => ['create']]);
     $router->resource('devices', DeviceController::class);
     $router->resource('docs', DocumentController::class);
+    $router->resource('voice-records', VoiceRecordController::class);
     $router->resource('programs', ProgramController::class);
     $router->resource('devicedata', DeviceInfoController::class, ['except' => ['create']]);
+    
 
     $router->get('/xml/map', 'DeviceController@map')->name('admin.map');
 });

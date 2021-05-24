@@ -15,6 +15,8 @@ class CreateVoiceRecordsTable extends Migration
     {
         Schema::create('voice_records', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->text('name')->nullable();
+            $table->text('fileVoice')->nullable();
             $table->timestamps();
         });
     }
