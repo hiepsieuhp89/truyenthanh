@@ -83,16 +83,21 @@ class Api extends Model
 
         $startT = new Carbon($startDate . ' ' . $startTime); //tạo định dạng ngày tháng
 
+        if($type != 3){
+
+        	if (env('APP_ENV') == 'local') $ffprobe = FFProbe::create(['ffmpeg.binaries' => 'D:\ffmpeg\bin\ffmpeg.exe', 'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe']);
+        	
+            else $ffprobe = FFProbe::create();
+
+            $file_duration = $ffprobe->format($songName)->get('duration');
+
+            $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
+        }
+
         if ($endDate == NULL || $endDate == ''){ // nếu đặt trong ngày
 
             if ($type == 1 || $type == 4){ // nếu là file phương tiện
-                
-                if (env('APP_ENV') == 'local') $ffprobe = FFProbe::create(['ffmpeg.binaries' => 'D:\ffmpeg\bin\ffmpeg.exe', 'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe']);
-                else $ffprobe = FFProbe::create();
 
-                $file_duration = $ffprobe->format($songName)->get('duration');
-
-                $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
                 foreach ($devices as $device)
                 {
 
