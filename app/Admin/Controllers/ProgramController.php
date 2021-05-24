@@ -175,7 +175,7 @@ class ProgramController extends AdminController
             ->style('font-size:16px;')
             ->sortable();
 
-        $grid->column('fileVoice', 'File')->display(function ($fileVoice)
+        $grid->column('fileVoice', 'Nội dung')->display(function ($fileVoice)
         {
             if ($this->type == 4 || $this->type == 1){
                 return "<audio controls><source src='" . config('filesystems.disks.upload.url') . $fileVoice . "' type='audio/wav'></audio>";
@@ -373,7 +373,7 @@ class ProgramController extends AdminController
 
         $form->radio('mode', trans('Kiểu phát'))
             ->options([
-                
+
                 '1' => 'Trong ngày', 
                 '2' => 'Hàng ngày',
                 // '3' => 'Hàng tuần',
