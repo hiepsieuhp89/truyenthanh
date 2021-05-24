@@ -50,7 +50,6 @@ class Api extends Model
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => $urlRequest,
-            //   CURLOPT_URL => "http://103.130.213.161:906/eyJEYXRhVHlwZSI6NCwiRGF0YSI6IntcIkNvbW1hbmRJdGVtX1RzXCI6W3tcIkRldmljZUlEXCI6XCIxMjM0NTY3ODlBQkNERjFcIixcIkNvbW1hbmRTZW5kXCI6XCJ7XFxcIkRhdGFcXFwiOlxcXCIxM1xcXCIsXFxcIlBhY2tldFR5cGVcXFwiOjE3fVwifV19In0=",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -83,11 +82,11 @@ class Api extends Model
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
         $startT = new Carbon($startDate . ' ' . $startTime); //tạo định dạng ngày tháng
-        if ($endDate == NULL || $endDate == '')
-        { // nếu đặt trong ngày
-            //$endDate = '3000-05-10';
-            if ($type == 1 || $type == 4)
-            { // nếu là file phương tiện
+
+        if ($endDate == NULL || $endDate == ''){ // nếu đặt trong ngày
+
+            if ($type == 1 || $type == 4){ // nếu là file phương tiện
+                
                 if (env('APP_ENV') == 'local') $ffprobe = FFProbe::create(['ffmpeg.binaries' => 'D:\ffmpeg\bin\ffmpeg.exe', 'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe']);
                 else $ffprobe = FFProbe::create();
 
@@ -122,19 +121,17 @@ class Api extends Model
 
                     if ($device != $devices[count($devices) - 1]) $dataRequest .= ',';
                 }
-
             }
-            // if ($type == 3) {// nếu là đài FM hoặc tiếp sóng
-            //     foreach($devices as $device){
-            //         $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"'.$data.'\\\\\",\\\\\"PacketType\\\\\":11}\"},';
-            //     }
-            //     $dataRequest .= ']}\\\\\"}\"}';
-            //     if($device != $devices[count($devices) - 1]) $dataRequest .= ',';
-            // }
+            if ($type == 3) {// nếu là đài FM hoặc tiếp sóng
+                foreach($devices as $device){
+                    $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"'.$data.'\\\\\",\\\\\"PacketType\\\\\":11}\"},';
+                }
+                $dataRequest .= ']}\\\\\"}\"}';
+                if($device != $devices[count($devices) - 1]) $dataRequest .= ',';
+            }
             
         }
-        else
-        { // nếu đặt hàng ngày
+        else{ // nếu đặt hàng ngày
             // $dates = [];
             // $period = new DatePeriod( // lấy danh sách ngày phát
             //     new DateTime($startDate),
@@ -194,7 +191,6 @@ class Api extends Model
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => $urlRequest,
-            //   CURLOPT_URL => "http://103.130.213.161:906/eyJEYXRhVHlwZSI6NCwiRGF0YSI6IntcIkNvbW1hbmRJdGVtX1RzXCI6W3tcIkRldmljZUlEXCI6XCIxMjM0NTY3ODlBQkNERjFcIixcIkNvbW1hbmRTZW5kXCI6XCJ7XFxcIkRhdGFcXFwiOlxcXCIxM1xcXCIsXFxcIlBhY2tldFR5cGVcXFwiOjE3fVwifV19In0=",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,

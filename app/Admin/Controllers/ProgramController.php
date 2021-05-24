@@ -323,116 +323,116 @@ class ProgramController extends AdminController
             ->rules('required', ['required' => "Cần nhập giá trị"]);
 
         $form->radio('type', trans('Loại phát sóng'))
-            ->options([1 => 'Bản tin',
-        //2 => 'Tiếp sóng',
-        3 => 'Thu phát FM', 4 => 'Bản tin văn bản'])->when(1, function (Form $form)
-        {
+            ->options([
+                1 => 'Bản tin',//2 => 'Tiếp sóng',
+                3 => 'Thu phát FM', 4 => 'Bản tin văn bản'
+            ])->when(1, function (Form $form){
             // $form->file('fileVoice', 'Chọn file')->options([
             // 'previewFileType'=>'audio',
             // 'initialPreviewFileType'=>'audio',
             // ])->uniqueName();
             //$form->media('fileVoice', 'Chọn file')->path('files');
-            $form->radio('file_mode', 'Chọn nguồn file')
-                ->options([
-            // 1 => 'Chọn file có sẵn',
-            2 => 'Tải lên file mới'])->when(2, function (Form $form)
-            {
+                $form->radio('file_mode', 'Chọn nguồn file')
+                    ->options([
+                // 1 => 'Chọn file có sẵn',
+                2 => 'Tải lên file mới'])->when(2, function (Form $form)
+                {
 
-                $form->file('fileVoice', 'Chọn file')
-                    ->uniqueName();
+                    $form->file('fileVoice', 'Chọn file')
+                        ->uniqueName();
 
-                $form->select('volumeBooster', 'Tăng giảm Volume')
-                    ->options([5 => '0.5 lần (Giảm volume)', 10 => '1 lần', 20 => '2 lần', ])
+                    $form->select('volumeBooster', 'Tăng giảm Volume')
+                        ->options([5 => '0.5 lần (Giảm volume)', 10 => '1 lần', 20 => '2 lần', ])
+                        ->rules('required', ['required' => "Cần nhập giá trị"])
+                        ->default(10);
+
+                })
                     ->rules('required', ['required' => "Cần nhập giá trị"])
-                    ->default(10);
+                    ->default(2);
 
-            })
-                ->rules('required', ['required' => "Cần nhập giá trị"])
-                ->default(2);
+        
+                //$form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
+                //$form->multipleFile('fileVoice', 'Chọn file');
+                //$form->file('fileVoice', 'Chọn file')->uniqueName();
+                //$form->multipleFile('fileVoice', 'Chọn file')->removable();
+                
+            })->when(3, function (Form $form){
 
-    
-            //$form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
-            //$form->multipleFile('fileVoice', 'Chọn file');
-            //$form->file('fileVoice', 'Chọn file')->uniqueName();
-            //$form->multipleFile('fileVoice', 'Chọn file')->removable();
-            
-        })->when(3, function (Form $form)
-        {
+                $form->number('radioChannel', 'Kênh')
+                        ->rules('required', ['required' => "Cần nhập giá trị"]);
 
-            $form->number('radioChannel', 'Kênh')
-                ->rules('required', ['required' => "Cần nhập giá trị"]);
+            })->when(4, function (Form $form){
 
-        })->when(4, function (Form $form)
-        {
-
-            $form->select('document_Id', trans('Chọn file văn bản'))
-                ->options(Document::all()
-                ->pluck('name', 'id'));
-
-            
-
-            // $form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
-            
-        })->rules('required', ['required' => "Cần nhập giá trị"]);
+                $form->select('document_Id', trans('Chọn file văn bản'))
+                    ->options(Document::all()
+                    ->pluck('name', 'id'));
+                    
+            })->rules('required', ['required' => "Cần nhập giá trị"]);
 
         $form->divider(trans('Thời gian'));
-        
-        $form->radio('mode', trans('Kiểu phát'))
-                ->options(['1' => 'Trong ngày', '2' => 'Hàng ngày',
-            // '3' => 'Hàng tuần',
-            '4' => 'Phát ngay'])->when(1, function (Form $form)
-            {
-                $form->date('startDate', __('Ngày phát'));
-                // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;
-                $form->time('time', __('khung giờ phát'))
-                    ->format('HH:mm:ss');
 
-                $form->number('replay', 'Số lần phát liên tục')
+        $form->radio('mode', trans('Kiểu phát'))
+            ->options([
+                
+                '1' => 'Trong ngày', 
+                '2' => 'Hàng ngày',
+                // '3' => 'Hàng tuần',
+                '4' => 'Phát ngay'
+
+            ])->when(1, function (Form $form){
+
+                $form->date('startDate', __('Ngày phát'))->rules('required',['required'=>"Cần nhập giá trị"]);
+
+                $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required',['required'=>"Cần nhập giá trị"]);
+
+                $form->number('replay', 'Số lần phát liên tiếp')
                     ->max(10)
                     ->min(1)
-                    ->default(1);
+                    ->default(1)
+                    ->rules('required',['required'=>"Cần nhập giá trị"]);
 
-            })->when(2, function (Form $form)
-            {
-                $form->dateRange('startDate', 'endDate', __('Thời gian phát'));
+            })->when(2, function (Form $form){
+
+                $form->dateRange('startDate', 'endDate', __('Thời gian phát'))->rules('required',['required'=>"Cần nhập giá trị"]);
 
                 $form->time('time', __('khung giờ phát'))
-                    ->format('HH:mm:ss');
+                    ->format('HH:mm:ss')->rules('required',['required'=>"Cần nhập giá trị"]);
 
-                $form->number('replay', 'Số lần phát liên tục')
-                    ->max(20)
+                $form->number('replay', 'Số lần phát liên tiếp')
+                    ->max(10)
                     ->min(1)
-                    ->default(1);
+                    ->default(1)
+                    ->rules('required',['required'=>"Cần nhập giá trị"]);
 
-                // })->when(3, function (Form $form) {
-                //     $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
-                //     // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;
-                //     $form->checkbox('days', 'Chọn ngày')->options(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật'])->canCheckAll();
-                //     $form->time('time', __('khung giờ phát'))->format('HH:mm:ss');
-                
-            })
-                ->rules('required', ['required' => "Cần nhập giá trị"]);
+                    // })->when(3, function (Form $form) {
+                    //     $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
+                    //     // $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required');;
+                    //     $form->checkbox('days', 'Chọn ngày')->options(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật'])->canCheckAll();
+                    //     $form->time('time', __('khung giờ phát'))->format('HH:mm:ss');
+                    
+            })->rules('required', ['required' => "Cần nhập giá trị"]);
 
 
         $form->divider(trans('Chọn loa phát'));
 
-        if (Admin::user()
-            ->can('*')) $device_auth = Device::join('device_infos', 'device_infos.deviceCode', '=', 'devices.deviceCode')->WHERE("device_infos.status", 1)
+        if (Admin::user()->can('*')) 
+            $device_auth = Device::join('device_infos', 'device_infos.deviceCode', '=', 'devices.deviceCode')
+            ->WHERE("device_infos.status", 1)
             ->PLUCK('devices.name', 'devices.deviceCode');
-        else $device_auth = Device::join('device_infos', 'device_infos.deviceCode', '=', 'devices.deviceCode')->WHERE("device_infos.status", 1)
-            ->WHEREIN('devices.areaId', explode(',', Admin::user()
-            ->areaId))
+
+        else 
+            $device_auth = Device::join('device_infos', 'device_infos.deviceCode', '=', 'devices.deviceCode')
+            ->WHERE("device_infos.status", 1)
+            ->WHEREIN('devices.areaId', explode(',', Admin::user()->areaId))
             ->PLUCK('devices.name', 'devices.deviceCode');
 
         $form->listbox('devices', trans('Danh sách loa'))
+            ->options($device_auth)
+            ->rules('required',['required'=>"Cần nhập giá trị"]);
 
-            ->options($device_auth);
-
-        //->rules('required',['required'=>"Cần nhập giá trị"]);
         $states = ['off' => ['value' => 1, 'text' => 'Chưa duyệt', 'color' => 'danger'], 'on' => ['value' => 2, 'text' => 'Đã duyệt', 'color' => 'success'], ];
 
-        $form->switch('status', 'Phê duyệt')
-            ->states($states)->default(2);
+        $form->switch('status', 'Phê duyệt')->states($states)->default(2);
 
         Log::info('User ID name ' . Admin::user()
             ->id);
