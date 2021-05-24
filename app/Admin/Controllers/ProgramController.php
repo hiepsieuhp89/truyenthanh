@@ -513,8 +513,7 @@ class ProgramController extends AdminController
                 { // nếu phát ngay
                     if ($form->model()->status == 2)
 
-                    (new Api())
-                        ->playOnline($form->model()->type, implode(',', $form->model()
+                    (new Api())->playOnline($form->model()->type, implode(',', $form->model()
                         ->devices) , $songPath);
 
                 }
@@ -522,7 +521,7 @@ class ProgramController extends AdminController
                 { // nếu phát theo lịch
                     // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                     // set schedule
-                    $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                    (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
 
