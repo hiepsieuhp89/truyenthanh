@@ -325,7 +325,7 @@ class ProgramController extends AdminController
        
         $form->radio('type',trans('Loại phát sóng'))
                     ->options([1 => 'Bản tin',
-                               2 => 'Tiếp sóng', 
+                               //2 => 'Tiếp sóng', 
                                 3 => 'Thu phát FM',
                                 4 => 'Bản tin văn bản'
                     ])->when(1, function (Form $form) {
@@ -362,20 +362,22 @@ class ProgramController extends AdminController
 
                     })->when(2, function (Form $form) {
                         // $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options(['89' => 'VOV 89','90' => 'RADIO Hà Nội','91' => 'VOV Giao thông HN', '96' => 'XZONE FM']);
-                        $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))
-                        ->options([
-                            '91' => 'VOV Giao thông HN', 
-                            '102.7' => 'VOV 2'
-                        ]);
+                        // $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))
+                        // ->options([
+                        //     '91' => 'VOV Giao thông HN', 
+                        //     '102.7' => 'VOV 2'
+                        // ]);
+
                         //$form->number('inteval', 'Thời lượng (Phút)')->rules('required',['required'=>"Cần nhập giá trị"]);
 
                     })->when(3, function (Form $form) {
-                        $form->radio('radioChannel', trans('Chọn kênh thu phát'))
-                        ->options([
-                            '91' => 'VOV Giao thông HN', 
-                            '102.7' => 'VOV 2'
-                        ]);
-                        //$form->number('inteval', 'Thời lượng (Phút)')->rules('required',['required'=>"Cần nhập giá trị"]);
+                        // $form->radio('radioChannel', trans('Chọn kênh thu phát'))
+                        // ->options([
+                        //     '91' => 'VOV Giao thông HN', 
+                        //     '102.7' => 'VOV 2'
+                        // ]);
+
+                        $form->number('radioChannel', 'Kênh')->rules('required',['required'=>"Cần nhập giá trị"]);
 
                     })->when(4, function (Form $form) {
                         $form->select('document_Id', trans('Chọn file văn bản'))->options(Document::all()->pluck('name', 'id'));
@@ -538,7 +540,7 @@ class ProgramController extends AdminController
                         $songPath = $form->model()->radioChannel;
 
                     if ($form->model()->mode == 4) {
-                        
+
                         (new Api())->setPlayFM($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else {
                         (new Api())->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
