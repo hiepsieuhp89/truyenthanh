@@ -59,29 +59,29 @@ class Kernel extends ConsoleKernel
             $response = json_decode($response,true);
 
             if(isset($response['DataType']) && $response['DataType'] == 5){
-              $device_data = array_map(function($arr){
-                return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"]];
-              }, $response["Data"]);
 
-              foreach ($device_data as $active_device) {
+          $device_data = array_map(function($arr){
+            return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"]];
+            }, $response["Data"]);
 
-                  DeviceInfo::where('deviceCode',$active_device[0])->update([
-                      'status' => 1,
-                      'turn_off_time' => null,
-                      'is_playing' => $active_device[1],
-                  ]);
+            foreach ($device_data as $active_device) {
 
-              }
-
-                        DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->update([
-                            'status' => 0,
-                            'is_playing' => ''
-                        ]);
-                        DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->where('turn_off_time',null)->update([
-                            'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
-                        ]);
+                DeviceInfo::where('deviceCode',$active_device[0])->update([
+                    'status' => 1,
+                    'turn_off_time' => null,
+                    'is_playing' => $active_device[1],
+                ]);
 
             }
+
+                      DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->update([
+                          'status' => 0,
+                          'is_playing' => ''
+                      ]);
+                      DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->where('turn_off_time',null)->update([
+                          'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
+                      ]);
+          }
         })->everyMinute();
 
         //Program::where('volumeBooster','<',5)->update(['volumeBooster' => 10]);

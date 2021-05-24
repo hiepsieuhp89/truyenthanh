@@ -23,60 +23,60 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Carbon::setLocale('vi');
+        Carbon::setLocale('vi');
 
-        // $curl = curl_init();
+        $curl = curl_init();
 
-        // $dataRequest = "eyJEYXRhVHlwZSI6MjAsIkRhdGEiOiJHRVRfQUxMX0RFVklDRV9TVEFUVVMifQ==";
+        $dataRequest = "eyJEYXRhVHlwZSI6MjAsIkRhdGEiOiJHRVRfQUxMX0RFVklDRV9TVEFUVVMifQ==";
         
-        // curl_setopt_array($curl, array(
-        //   CURLOPT_URL => "http://103.130.213.161:906/".$dataRequest,
-        //   CURLOPT_RETURNTRANSFER => true,
-        //   CURLOPT_ENCODING => "",
-        //   CURLOPT_MAXREDIRS => 10,
-        //   CURLOPT_CONNECTTIMEOUT => 20,
-        //   CURLOPT_TIMEOUT => 30,
-        //   CURLOPT_FOLLOWLOCATION => false,
-        //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        //   CURLOPT_CUSTOMREQUEST => "GET",
-        // ));
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "http://103.130.213.161:906/".$dataRequest,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_CONNECTTIMEOUT => 20,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_FOLLOWLOCATION => false,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+        ));
         
-        // $response = curl_exec($curl);
-        // $err = curl_error($curl);
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
         
-        // curl_close($curl);
-        // $response = str_replace(':"{', ":{", $response);
-        // $response = str_replace(':"[{', ":[{", $response);
-        // $response = str_replace('"}"', "}", $response);
-        // $response = str_replace('"{"', "{", $response);
-        // $response = str_replace(']"}', "]}", $response);
-        // $response = json_decode($response,true);
+        curl_close($curl);
+        $response = str_replace(':"{', ":{", $response);
+        $response = str_replace(':"[{', ":[{", $response);
+        $response = str_replace('"}"', "}", $response);
+        $response = str_replace('"{"', "{", $response);
+        $response = str_replace(']"}', "]}", $response);
+        $response = json_decode($response,true);
 
         
-        // if(isset($response['DataType']) && $response['DataType'] == 5){
+        if(isset($response['DataType']) && $response['DataType'] == 5){
 
-        //   $device_data = array_map(function($arr){
-        //     return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"]];
-        //   }, $response["Data"]);
+          $device_data = array_map(function($arr){
+            return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"]];
+          }, $response["Data"]);
 
-        //   foreach ($device_data as $active_device) {
+          foreach ($device_data as $active_device) {
 
-        //       DeviceInfo::where('deviceCode',$active_device[0])->update([
-        //           'status' => 1,
-        //           'turn_off_time' => null,
-        //           'is_playing' => $active_device[1],
-        //       ]);
+              DeviceInfo::where('deviceCode',$active_device[0])->update([
+                  'status' => 1,
+                  'turn_off_time' => null,
+                  'is_playing' => $active_device[1],
+              ]);
 
-        //   }
+          }
 
-        //             DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->update([
-        //                 'status' => 0,
-        //                 'is_playing' => ''
-        //             ]);
-        //             DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->where('turn_off_time',null)->update([
-        //                 'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
-        //             ]);
-        // }
+                    DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->update([
+                        'status' => 0,
+                        'is_playing' => ''
+                    ]);
+                    DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->where('turn_off_time',null)->update([
+                        'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
+                    ]);
+        }
 
         // convert mp3 filevoice to .wav
         // foreach(Document::all() as $document){

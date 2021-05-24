@@ -17,6 +17,8 @@ use App\Device;
 use App\DeviceInfo;
 use App\Document;
 
+use App\Api;
+
 use App\Admin\Actions\Program\Delete;
 use App\Admin\Actions\Program\BatchPlayAll;   
 use App\Admin\Actions\Program\BatchDelete;   
@@ -360,12 +362,20 @@ class ProgramController extends AdminController
 
                     })->when(2, function (Form $form) {
                         // $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options(['89' => 'VOV 89','90' => 'RADIO Hà Nội','91' => 'VOV Giao thông HN', '96' => 'XZONE FM']);
-                        $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options(['91' => 'VOV Giao thông HN', '102.7' => 'VOV 2']);
-                        $form->number('inteval', 'Thời lượng (Phút)')->rules('required',['required'=>"Cần nhập giá trị"]);
+                        $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))
+                        ->options([
+                            '91' => 'VOV Giao thông HN', 
+                            '102.7' => 'VOV 2'
+                        ]);
+                        //$form->number('inteval', 'Thời lượng (Phút)')->rules('required',['required'=>"Cần nhập giá trị"]);
 
                     })->when(3, function (Form $form) {
-                        $form->radio('radioChannel', trans('Chọn kênh thu phát'))->options(['91' => 'VOV Giao thông HN', '102.7' => 'VOV 2']);
-                        $form->number('inteval', 'Thời lượng (Phút)')->rules('required',['required'=>"Cần nhập giá trị"]);
+                        $form->radio('radioChannel', trans('Chọn kênh thu phát'))
+                        ->options([
+                            '91' => 'VOV Giao thông HN', 
+                            '102.7' => 'VOV 2'
+                        ]);
+                        //$form->number('inteval', 'Thời lượng (Phút)')->rules('required',['required'=>"Cần nhập giá trị"]);
 
                     })->when(4, function (Form $form) {
                         $form->select('document_Id', trans('Chọn file văn bản'))->options(Document::all()->pluck('name', 'id'));
@@ -486,12 +496,12 @@ class ProgramController extends AdminController
                         $songPath = "";
                     if ($form->model()->status == 2) // nếu duyệt
                         $songPath = config('filesystems.disks.upload.url').$form->model()->fileVoice;
-                          
+
                     if ($form->model()->mode == 4) { // nếu phát ngay
 
                         if ($form->model()->status == 2)
 
-                            $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath); 
+                            (new Api())->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath); 
 
                     } else { // nếu phát theo lịch
                         // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
@@ -511,25 +521,27 @@ class ProgramController extends AdminController
                     if ($form->model()->mode == 4) {
 
                         // play online
-                        $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
+                        (new Api())->setPlayFM($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else {
 
                         // play schedule
-                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                        (new Api())->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                     }
                 }
 
                 // nếu phát tiếp sóng
                 if ($form->model()->type == 3) {
+
                     if ($form->model()->status == 1) // nếu không duyệt
                         $songPath = "";
                     if ($form->model()->status == 2) // nếu duyệt
                         $songPath = $form->model()->radioChannel;
 
                     if ($form->model()->mode == 4) {
-                        $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
+                        
+                        (new Api())->setPlayFM($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else {
-                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                        (new Api())->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                     }
                 }
 
@@ -544,9 +556,9 @@ class ProgramController extends AdminController
 
                     // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                     if ($form->model()->mode == 4) {
-                        $this->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
+                        (new Api())->playOnline($form->model()->type, implode(',',$form->model()->devices),$songPath);   
                     } else {
-                        $this->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                        (new Api())->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                     }
                 } 
 
@@ -566,300 +578,300 @@ class ProgramController extends AdminController
 
     //{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"123456789ABCDEF\",\"CommandSend\":\"{\\\"PacketType\\\":2,\\\"Data\\\":\\\"{\\\\\\\"PlayList\\\\\\\":[{\\\\\\\"SongName\\\\\\\":\\\\\\\"TraLaiEmLoiYeu-NhatTinhAnh_xwc9.mp3\\\\\\\",\\\\\\\"TimeStart\\\\\\\":\\\\\\\"16:48:13\\\\\\\",\\\\\\\"TimeStop\\\\\\\":\\\\\\\"19:48:13\\\\\\\",\\\\\\\"DateStart\\\\\\\":\\\\\\\"2020-11-16\\\\\\\",\\\\\\\"DateStop\\\\\\\":\\\\\\\"2020-11-16\\\\\\\",\\\\\\\"PlayType\\\\\\\":1,\\\\\\\"PlayRepeatType\\\\\\\":1},{\\\\\\\"SongName\\\\\\\":\\\\\\\"TinhAnhVanNhuThe-NhatTinhAnh_cxkg.mp3\\\\\\\",\\\\\\\"TimeStart\\\\\\\":\\\\\\\"20:48:13\\\\\\\",\\\\\\\"TimeStop\\\\\\\":\\\\\\\"21:48:13\\\\\\\",\\\\\\\"DateStart\\\\\\\":\\\\\\\"2020-11-16\\\\\\\",\\\\\\\"DateStop\\\\\\\":\\\\\\\"2020-11-16\\\\\\\",\\\\\\\"PlayType\\\\\\\":1,\\\\\\\"PlayRepeatType\\\\\\\":1}]}\\\"}\"}]}"}
 
-    protected function setPlayFM($type, $deviceCode, $data) 
-    {
-        $curl = curl_init();
+    // protected function setPlayFM($type, $deviceCode, $data) 
+    // {
+    //     $curl = curl_init();
 
-        // $dataRequest = '{"DataType":'.$type.',"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"'.$data.'\\\":\\\"6\\\",\\\"PacketType\\\":17}\"}]}"}';
-        if ($type == 2 || $type == 3) {
-            $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"Data\\\":\\\"'.$data.'\\\",\\\"PacketType\\\":11}\"}]}"}';
-        } else {
-            $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"TraLaiEmLoiYeu-NhatTinhAnh_xwc9.mp3\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"16:48:13\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"19:48:13\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"2020-11-16\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"2020-11-16\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"}]}"}';
-        }
+    //     // $dataRequest = '{"DataType":'.$type.',"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"'.$data.'\\\":\\\"6\\\",\\\"PacketType\\\":17}\"}]}"}';
+    //     if ($type == 2 || $type == 3) {
+    //         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"Data\\\":\\\"'.$data.'\\\",\\\"PacketType\\\":11}\"}]}"}';
+    //     } else {
+    //         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"TraLaiEmLoiYeu-NhatTinhAnh_xwc9.mp3\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"16:48:13\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"19:48:13\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"2020-11-16\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"2020-11-16\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"}]}"}';
+    //     }
         
-        $request = base64_encode($dataRequest);
+    //     $request = base64_encode($dataRequest);
 
-        // echo "request " . $request;
-        $urlRequest = "http://103.130.213.161:906/".$request;
+    //     // echo "request " . $request;
+    //     $urlRequest = "http://103.130.213.161:906/".$request;
 
-        // admin_toastr('$urlRequest', 'info');
+    //     // admin_toastr('$urlRequest', 'info');
 
-        // echo "XXX " . $urlRequest;
-        Log::info($urlRequest);
+    //     // echo "XXX " . $urlRequest;
+    //     Log::info($urlRequest);
 
 
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => $urlRequest,
-        //   CURLOPT_URL => "http://103.130.213.161:906/eyJEYXRhVHlwZSI6NCwiRGF0YSI6IntcIkNvbW1hbmRJdGVtX1RzXCI6W3tcIkRldmljZUlEXCI6XCIxMjM0NTY3ODlBQkNERjFcIixcIkNvbW1hbmRTZW5kXCI6XCJ7XFxcIkRhdGFcXFwiOlxcXCIxM1xcXCIsXFxcIlBhY2tldFR5cGVcXFwiOjE3fVwifV19In0=",
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_CONNECTTIMEOUT => 20,
-          CURLOPT_TIMEOUT => 30,
-          CURLOPT_FOLLOWLOCATION => false,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => "GET",
-        ));
+    //     curl_setopt_array($curl, array(
+    //       CURLOPT_URL => $urlRequest,
+    //     //   CURLOPT_URL => "http://103.130.213.161:906/eyJEYXRhVHlwZSI6NCwiRGF0YSI6IntcIkNvbW1hbmRJdGVtX1RzXCI6W3tcIkRldmljZUlEXCI6XCIxMjM0NTY3ODlBQkNERjFcIixcIkNvbW1hbmRTZW5kXCI6XCJ7XFxcIkRhdGFcXFwiOlxcXCIxM1xcXCIsXFxcIlBhY2tldFR5cGVcXFwiOjE3fVwifV19In0=",
+    //       CURLOPT_RETURNTRANSFER => true,
+    //       CURLOPT_ENCODING => "",
+    //       CURLOPT_MAXREDIRS => 10,
+    //       CURLOPT_CONNECTTIMEOUT => 20,
+    //       CURLOPT_TIMEOUT => 30,
+    //       CURLOPT_FOLLOWLOCATION => false,
+    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //       CURLOPT_CUSTOMREQUEST => "GET",
+    //     ));
         
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
+    //     $response = curl_exec($curl);
+    //     $err = curl_error($curl);
         
-        curl_close($curl);
+    //     curl_close($curl);
         
-        // if ($err) {
-        //   echo "cURL Error #:" . $err;
-        // } else {
-        //   echo $response;
-        // } 
-    }   
+    //     // if ($err) {
+    //     //   echo "cURL Error #:" . $err;
+    //     // } else {
+    //     //   echo $response;
+    //     // } 
+    // }   
 
-    protected function setPlaySchedule($type, $deviceCode, $startDate, $endDate, $startTime, $songName, $replay_times, $replay_delay = 30) 
-    {
-        $curl = curl_init();
-        // $dataRequest = '{"DataType":'.$type.',"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"'.$data.'\\\":\\\"6\\\",\\\"PacketType\\\":17}\"}]}"}';
-        // if ($type == 2 || $type == 3) {
-        //     $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\":\\\\\"'.$data.'\\\\\",\\\\\"PacketType\\\\\":11}\"}]}"}';
-        // } else {
-        $devices = explode(',',$deviceCode);   
+    // protected function setPlaySchedule($type, $deviceCode, $startDate, $endDate, $startTime, $songName, $replay_times, $replay_delay = 30) 
+    // {
+    //     $curl = curl_init();
+    //     // $dataRequest = '{"DataType":'.$type.',"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"'.$data.'\\\":\\\"6\\\",\\\"PacketType\\\":17}\"}]}"}';
+    //     // if ($type == 2 || $type == 3) {
+    //     //     $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\":\\\\\"'.$data.'\\\\\",\\\\\"PacketType\\\\\":11}\"}]}"}';
+    //     // } else {
+    //     $devices = explode(',',$deviceCode);   
 
-        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
-
-
-        if(env('APP_ENV') == 'local')
-            $ffprobe = FFProbe::create([
-                'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
-                'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe' 
-            ]);
-        else
-            $ffprobe = FFProbe::create();
-
-        $file_duration = $ffprobe->format($songName)->get('duration'); 
-
-        $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
-
-        $startT = new Carbon($startDate.' '.$startTime); //tạo định dạng ngày tháng
-
-        if($endDate == NULL || $endDate == ''){ // nếu đặt trong ngày
-
-            //$endDate = '3000-05-10';
-
-            if ($type == 1 || $type == 4) { // nếu là file phương tiện
-
-                foreach($devices as $device){
-
-                    $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
+    //     $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
 
-                    $startT = new Carbon($startDate.' '.$startTime);
+    //     if(env('APP_ENV') == 'local')
+    //         $ffprobe = FFProbe::create([
+    //             'ffmpeg.binaries'  => 'D:\ffmpeg\bin\ffmpeg.exe',
+    //             'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe' 
+    //         ]);
+    //     else
+    //         $ffprobe = FFProbe::create();
 
-                    for($i = 0; $i < $replay_times; $i++){
+    //     $file_duration = $ffprobe->format($songName)->get('duration'); 
 
-                        $start_time_of_the_loop_play = $startT->toTimeString(); 
+    //     $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
 
-                        $start_date_of_the_loop_play = $startT->toDateString(); 
+    //     $startT = new Carbon($startDate.' '.$startTime); //tạo định dạng ngày tháng
 
-                        $startT->addSeconds($file_duration);
+    //     if($endDate == NULL || $endDate == ''){ // nếu đặt trong ngày
 
-                        $end_time_of_the_loop_play = $startT->toTimeString(); 
+    //         //$endDate = '3000-05-10';
 
-                        $end_date_of_the_loop_play = $startT->toDateString(); 
+    //         if ($type == 1 || $type == 4) { // nếu là file phương tiện
 
-                        $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$end_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$end_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}';
+    //             foreach($devices as $device){
 
-                        if($i < $replay_times -1 ) $dataRequest .= ',';
-                    }        
-                    $dataRequest .= ']}\\\\\"}\"}';
+    //                 $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
 
-                    if($device != $devices[count($devices) - 1]) $dataRequest .= ',';
-                }
 
-                // nếu là đài FM hoặc tiếp sóng
-            } else {
+    //                 $startT = new Carbon($startDate.' '.$startTime);
+
+    //                 for($i = 0; $i < $replay_times; $i++){
+
+    //                     $start_time_of_the_loop_play = $startT->toTimeString(); 
+
+    //                     $start_date_of_the_loop_play = $startT->toDateString(); 
+
+    //                     $startT->addSeconds($file_duration);
+
+    //                     $end_time_of_the_loop_play = $startT->toTimeString(); 
+
+    //                     $end_date_of_the_loop_play = $startT->toDateString(); 
+
+    //                     $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$end_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$end_date_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}';
+
+    //                     if($i < $replay_times -1 ) $dataRequest .= ',';
+    //                 }        
+    //                 $dataRequest .= ']}\\\\\"}\"}';
+
+    //                 if($device != $devices[count($devices) - 1]) $dataRequest .= ',';
+    //             }
+
+    //             // nếu là đài FM hoặc tiếp sóng
+    //         } else {
                 
-                // $endTime = $this->addMinutesToTime($startTime, 5);
-                // Log::info('Start time ' .$startTime);
-                // Log::info('End time ' .$endTime);
+    //             // $endTime = $this->addMinutesToTime($startTime, 5);
+    //             // Log::info('Start time ' .$startTime);
+    //             // Log::info('End time ' .$endTime);
 
-                foreach($devices as $device){
+    //             foreach($devices as $device){
 
-                    $dataRequest .= '{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":3,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
+    //                 $dataRequest .= '{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startTime.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":3,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"},';
 
-                }
+    //             }
 
-            }
-        }
-        else{// nếu đặt hàng ngày
-            // $dates = [];
-            // $period = new DatePeriod( // lấy danh sách ngày phát
-            //     new DateTime($startDate),
-            //     new DateInterval('P1D'),
-            //     new DateTime($endDate)
-            // );
+    //         }
+    //     }
+    //     else{// nếu đặt hàng ngày
+    //         // $dates = [];
+    //         // $period = new DatePeriod( // lấy danh sách ngày phát
+    //         //     new DateTime($startDate),
+    //         //     new DateInterval('P1D'),
+    //         //     new DateTime($endDate)
+    //         // );
 
-            // $i = 0;
-            // foreach ($period as $key => $value) {
-            //     $dates[$i++] = $value->format('Y-m-d');
-            // }
+    //         // $i = 0;
+    //         // foreach ($period as $key => $value) {
+    //         //     $dates[$i++] = $value->format('Y-m-d');
+    //         // }
 
-            // $dates[$i] = $endDate;
+    //         // $dates[$i] = $endDate;
 
-            if ($type == 1 || $type == 4) { // nếu là file phương tiện
+    //         if ($type == 1 || $type == 4) { // nếu là file phương tiện
 
-                    foreach($devices as $device){ //set từng thiết bị
+    //                 foreach($devices as $device){ //set từng thiết bị
 
-                        $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
+    //                     $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
 
-                        $startT = new Carbon($startDate.' '.$startTime);
+    //                     $startT = new Carbon($startDate.' '.$startTime);
 
-                        for($i = 0; $i < $replay_times; $i++){
+    //                     for($i = 0; $i < $replay_times; $i++){
          
-                            $start_time_of_the_loop_play = $startT->toTimeString(); 
+    //                         $start_time_of_the_loop_play = $startT->toTimeString(); 
 
-                            $start_date_of_the_loop_play = $startT->toDateString(); 
+    //                         $start_date_of_the_loop_play = $startT->toDateString(); 
 
-                            $startT->addSeconds($file_duration);
+    //                         $startT->addSeconds($file_duration);
 
-                            $end_time_of_the_loop_play = $startT->toTimeString(); 
+    //                         $end_time_of_the_loop_play = $startT->toTimeString(); 
 
-                            $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$end_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}';
+    //                         $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$start_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$end_time_of_the_loop_play.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$startDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$endDate.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}';
 
-                            if($i < $replay_times - 1) $dataRequest .= ',';
-                        }
-                        $dataRequest .= ']}\\\\\"}\"}';
+    //                         if($i < $replay_times - 1) $dataRequest .= ',';
+    //                     }
+    //                     $dataRequest .= ']}\\\\\"}\"}';
 
-                    if($device != $devices[count($devices) - 1]) $dataRequest .= ',';
-                }
-            }
-        }
+    //                 if($device != $devices[count($devices) - 1]) $dataRequest .= ',';
+    //             }
+    //         }
+    //     }
         
 
-        $dataRequest .= ']}"}';
+    //     $dataRequest .= ']}"}';
 
-        if(env('APP_ENV') == 'local')
-            dd($dataRequest);
+    //     if(env('APP_ENV') == 'local')
+    //         dd($dataRequest);
 
-        $request = base64_encode($dataRequest);
+    //     $request = base64_encode($dataRequest);
 
-        // echo "request " . $request;
-        $urlRequest = "http://103.130.213.161:906/".$request;
+    //     // echo "request " . $request;
+    //     $urlRequest = "http://103.130.213.161:906/".$request;
 
-        // admin_toastr('$urlRequest', 'info');
+    //     // admin_toastr('$urlRequest', 'info');
 
-        // echo "XXX " . $urlRequest;
-        Log::info('Play schedule ' .$urlRequest);
+    //     // echo "XXX " . $urlRequest;
+    //     Log::info('Play schedule ' .$urlRequest);
 
-        //Log::info('Play schedule json' .$urlRequest);
+    //     //Log::info('Play schedule json' .$urlRequest);
 
 
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => $urlRequest,
-        //   CURLOPT_URL => "http://103.130.213.161:906/eyJEYXRhVHlwZSI6NCwiRGF0YSI6IntcIkNvbW1hbmRJdGVtX1RzXCI6W3tcIkRldmljZUlEXCI6XCIxMjM0NTY3ODlBQkNERjFcIixcIkNvbW1hbmRTZW5kXCI6XCJ7XFxcIkRhdGFcXFwiOlxcXCIxM1xcXCIsXFxcIlBhY2tldFR5cGVcXFwiOjE3fVwifV19In0=",
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_CONNECTTIMEOUT => 20,
-          CURLOPT_TIMEOUT => 30,
-          CURLOPT_FOLLOWLOCATION => false,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => "GET",
-        ));
+    //     curl_setopt_array($curl, array(
+    //       CURLOPT_URL => $urlRequest,
+    //     //   CURLOPT_URL => "http://103.130.213.161:906/eyJEYXRhVHlwZSI6NCwiRGF0YSI6IntcIkNvbW1hbmRJdGVtX1RzXCI6W3tcIkRldmljZUlEXCI6XCIxMjM0NTY3ODlBQkNERjFcIixcIkNvbW1hbmRTZW5kXCI6XCJ7XFxcIkRhdGFcXFwiOlxcXCIxM1xcXCIsXFxcIlBhY2tldFR5cGVcXFwiOjE3fVwifV19In0=",
+    //       CURLOPT_RETURNTRANSFER => true,
+    //       CURLOPT_ENCODING => "",
+    //       CURLOPT_MAXREDIRS => 10,
+    //       CURLOPT_CONNECTTIMEOUT => 20,
+    //       CURLOPT_TIMEOUT => 30,
+    //       CURLOPT_FOLLOWLOCATION => false,
+    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //       CURLOPT_CUSTOMREQUEST => "GET",
+    //     ));
         
-        $response = curl_exec($curl);
+    //     $response = curl_exec($curl);
 
-        $err = curl_error($curl);
+    //     $err = curl_error($curl);
         
-        curl_close($curl);
+    //     curl_close($curl);
 
-        $response = json_decode($response);
+    //     $response = json_decode($response);
 
-        // if(is_numeric($response->DataType))
-        //     return response()->success('Thành công')->refresh();
-        // else
-        //     return response()->fail('Không thành công')->refresh();
+    //     // if(is_numeric($response->DataType))
+    //     //     return response()->success('Thành công')->refresh();
+    //     // else
+    //     //     return response()->fail('Không thành công')->refresh();
         
-        // if ($err) {
-        //   echo "cURL Error #:" . $err;
-        // } else {
-        //   echo $response;
-        // } 
-    }   
+    //     // if ($err) {
+    //     //   echo "cURL Error #:" . $err;
+    //     // } else {
+    //     //   echo $response;
+    //     // } 
+    // }   
 
-    protected function sendFileToDevice($deviceCode, $songName) 
-    {
-        $curl = curl_init();
+    // protected function sendFileToDevice($deviceCode, $songName) 
+    // {
+    //     $curl = curl_init();
 
-        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":1,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"URLlist\\\\\\\\\\\\\":[\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"]}\\\\\"}\"}]}"}';
+    //     $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":1,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"URLlist\\\\\\\\\\\\\":[\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"]}\\\\\"}\"}]}"}';
         
-        $request = base64_encode($dataRequest);
+    //     $request = base64_encode($dataRequest);
 
-        // echo "request " . $request;
-        $urlRequest = "http://103.130.213.161:906/".$request;
+    //     // echo "request " . $request;
+    //     $urlRequest = "http://103.130.213.161:906/".$request;
 
-        Log::info('Send file ' . $urlRequest);
+    //     Log::info('Send file ' . $urlRequest);
 
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => $urlRequest,
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_CONNECTTIMEOUT => 20,
-          CURLOPT_TIMEOUT => 30,
-          CURLOPT_FOLLOWLOCATION => false,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => "GET",
-        ));
+    //     curl_setopt_array($curl, array(
+    //       CURLOPT_URL => $urlRequest,
+    //       CURLOPT_RETURNTRANSFER => true,
+    //       CURLOPT_ENCODING => "",
+    //       CURLOPT_MAXREDIRS => 10,
+    //       CURLOPT_CONNECTTIMEOUT => 20,
+    //       CURLOPT_TIMEOUT => 30,
+    //       CURLOPT_FOLLOWLOCATION => false,
+    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //       CURLOPT_CUSTOMREQUEST => "GET",
+    //     ));
         
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
+    //     $response = curl_exec($curl);
+    //     $err = curl_error($curl);
         
-        curl_close($curl);
-    }   
+    //     curl_close($curl);
+    // }   
 
-    protected function playOnline($type, $deviceCode, $songName) 
-    {
-        $curl = curl_init();
-        $dataRequest = "";
-        $deviceCode = explode(",",$deviceCode);
+    // protected function playOnline($type, $deviceCode, $songName) 
+    // {
+    //     $curl = curl_init();
+    //     $dataRequest = "";
+    //     $deviceCode = explode(",",$deviceCode);
 
-        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
+    //     $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        if ($type == 1 || $type == 4) { // nếu phát ngay file pt
+    //     if ($type == 1 || $type == 4) { // nếu phát ngay file pt
 
-            foreach($deviceCode as $device){
+    //         foreach($deviceCode as $device){
 
-                $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
-            }
+    //             $dataRequest .= '{\"DeviceID\":\"'.trim($device).'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$songName.'\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
+    //         }
 
-        } else {
+    //     } else {
 
-            $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"'.$songName.'\\\\\",\\\\\"PacketType\\\\\":11}\"}]}"}';
-        }
+    //         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"'.$songName.'\\\\\",\\\\\"PacketType\\\\\":11}\"}]}"}';
+    //     }
 
-        $dataRequest .= ']}"}';
+    //     $dataRequest .= ']}"}';
 
-        $request = base64_encode($dataRequest);
-        // echo "request " . $request;
-        $urlRequest = "http://103.130.213.161:906/".$request;
+    //     $request = base64_encode($dataRequest);
+    //     // echo "request " . $request;
+    //     $urlRequest = "http://103.130.213.161:906/".$request;
 
-        Log::info('Phat ngay ' . $urlRequest);
+    //     Log::info('Phat ngay ' . $urlRequest);
 
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => $urlRequest,
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_CONNECTTIMEOUT => 20,
-          CURLOPT_TIMEOUT => 30,
-          CURLOPT_FOLLOWLOCATION => false,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => "GET",
-        ));
+    //     curl_setopt_array($curl, array(
+    //       CURLOPT_URL => $urlRequest,
+    //       CURLOPT_RETURNTRANSFER => true,
+    //       CURLOPT_ENCODING => "",
+    //       CURLOPT_MAXREDIRS => 10,
+    //       CURLOPT_CONNECTTIMEOUT => 20,
+    //       CURLOPT_TIMEOUT => 30,
+    //       CURLOPT_FOLLOWLOCATION => false,
+    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //       CURLOPT_CUSTOMREQUEST => "GET",
+    //     ));
         
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
+    //     $response = curl_exec($curl);
+    //     $err = curl_error($curl);
         
-        curl_close($curl);
-    }   
+    //     curl_close($curl);
+    // }   
 
     // function addMinutesToTime( $time, $plusMinutes ) {
 
