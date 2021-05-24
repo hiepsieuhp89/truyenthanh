@@ -175,7 +175,7 @@ class ProgramController extends AdminController
             ->style('font-size:16px;')
             ->sortable();
 
-        $grid->column('fileVoice', 'Nội dung')->display(function ($fileVoice)
+        $grid->column('fileVoice', 'Nội dung/Kênh')->display(function ($fileVoice)
         {
             if ($this->type == 4 || $this->type == 1){
                 return "<audio controls><source src='" . config('filesystems.disks.upload.url') . $fileVoice . "' type='audio/wav'></audio>";
