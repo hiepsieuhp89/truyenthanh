@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
@@ -19,6 +20,7 @@ use App\Area;
 use App\Device;
 use App\DeviceInfo;
 use App\Document;
+
 
 class Api extends Model
 {
