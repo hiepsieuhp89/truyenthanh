@@ -110,6 +110,7 @@ class ProgramController extends AdminController
         {
 
             $actions->disableDelete();
+            $actions->disableView();
             $actions->add(new Delete);
         });
 
