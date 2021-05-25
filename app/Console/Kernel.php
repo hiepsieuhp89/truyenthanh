@@ -9,6 +9,7 @@ use App\DeviceInfo;
 use App\Document;
 use App\VoiceRecord;
 use App\Program;
+use App\Admin;
 
 class Kernel extends ConsoleKernel
 {
@@ -85,6 +86,8 @@ class Kernel extends ConsoleKernel
                       ]);
           }
         })->everyMinute();
+
+
         $schedule->call(function () {
 
             Program::where('volumeBooster', '<', 5)->update(['volumeBooster' => 10]);

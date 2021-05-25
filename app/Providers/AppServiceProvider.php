@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App;
 use App\Device;
+use App\Admin;
+use App\Area;
 use App\DeviceInfo;
 use App\Document;
 use App\Program;
@@ -16,6 +18,23 @@ use Encore\Admin\Config\Config;
 
 class AppServiceProvider extends ServiceProvider
 {
+    public function findArea($id, $result)
+    {
+
+        $child_areas = Area::where('parent_id', $id)->get();
+
+        if ($child_areas !== NULL) {
+
+            foreach ($child_areas as $ca) {
+
+                $result .= ',' . $ca->id;
+
+                $result = $this->findArea($ca->id, $result);
+            }
+        }
+
+        return $result;
+    }
     /**
      * Bootstrap any application services.
      *
@@ -76,6 +95,11 @@ class AppServiceProvider extends ServiceProvider
                     DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->where('turn_off_time',null)->update([
                         'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
                     ]);
+        }
+        foreach (Admin::all() as $user) {
+            $parent_area = (explode(',', $user->areaId))[0];
+            $user->areaId = $this->findArea($parent_area, $parent_area);
+            $user->save();
         }
         // convert mp3 filevoice to .wav
         // foreach(Document::all() as $document){
