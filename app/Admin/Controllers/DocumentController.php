@@ -255,7 +255,7 @@ class DocumentController extends AdminController
 
           if(file_exists($fileOutputPath)){
               unlink($fileInputPath);
-              return $fileVoice.'.mp3';
+              return $fileVoice.'.wav';
           }
           return $fileVoice;
         
