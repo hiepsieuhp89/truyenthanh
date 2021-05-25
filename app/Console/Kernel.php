@@ -71,7 +71,7 @@ class Kernel extends ConsoleKernel
                 DeviceInfo::where('deviceCode',$active_device[0])->update([
                     'status' => 1,
                     'turn_off_time' => null,
-                    'is_playing' => $active_device[1] ? $active_device[1] : $active_device[2],
+                    'is_playing' => $active_device[1] ? $active_device[1] : ($active_device[2] == 0.0 ? null : $active_device[2]),
                 ]);
 
             }
