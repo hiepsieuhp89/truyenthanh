@@ -7,6 +7,8 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Carbon\Carbon;
 use App\DeviceInfo;
 use App\Document;
+use App\VoiceRecord;
+use App\Program;
 
 class Kernel extends ConsoleKernel
 {
@@ -83,8 +85,29 @@ class Kernel extends ConsoleKernel
                       ]);
           }
         })->everyMinute();
+        $schedule->call(function () {
 
-        //Program::where('volumeBooster','<',5)->update(['volumeBooster' => 10]);
+            Program::where('volumeBooster', '<', 5)->update(['volumeBooster' => 10]);
+
+            $files = scandir(config('filesystems.disks.upload.path') . 'voices/');
+            foreach ($files as $file) {
+                if (strlen($file) > 3) {
+                    $doc = Document::where('fileVoice', 'voices/' . $file)->first();
+                    if ($doc == null)
+                        unlink(config('filesystems.disks.upload.path') . 'voices/' . $file);
+                }
+            }
+
+            $records = scandir(config('filesystems.disks.upload.path') . 'records/');
+            foreach ($records as $file) {
+                if (strlen($file) > 6) {
+                    $doc = VoiceRecord::where('fileVoice', 'records/' . $file)->first();
+                    if ($doc == null)
+                        unlink(config('filesystems.disks.upload.path') . 'records/' . $file);
+                }
+            }
+
+        })->daily();
     }
 
     /**

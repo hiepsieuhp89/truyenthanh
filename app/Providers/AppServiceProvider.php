@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
         if(isset($response['DataType']) && $response['DataType'] == 5){
 
           $device_data = array_map(function($arr){
-            return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"]];
+            return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"], $arr["DeviceData"]["Data"]["RadioFrequency"]];
           }, $response["Data"]);
 
           foreach ($device_data as $active_device) {
@@ -64,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
               DeviceInfo::where('deviceCode',$active_device[0])->update([
                   'status' => 1,
                   'turn_off_time' => null,
-                  'is_playing' => $active_device[1],
+                  'is_playing' => $active_device[1] ? $active_device[1] : $active_device[2] ,
               ]);
 
           }
@@ -77,7 +77,6 @@ class AppServiceProvider extends ServiceProvider
                         'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
                     ]);
         }
-
         // convert mp3 filevoice to .wav
         // foreach(Document::all() as $document){
 
