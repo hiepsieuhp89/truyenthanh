@@ -10,9 +10,27 @@ use App\Document;
 use App\VoiceRecord;
 use App\Program;
 use App\Admin;
+use App\Area;
 
 class Kernel extends ConsoleKernel
 {
+    public function findArea($id, $result)
+    {
+
+        $child_areas = Area::where('parent_id', $id)->get();
+
+        if ($child_areas !== NULL) {
+
+            foreach ($child_areas as $ca) {
+
+                $result .= ',' . $ca->id;
+
+                $result = $this->findArea($ca->id, $result);
+            }
+        }
+
+        return $result;
+    }
     /**
      * The Artisan commands provided by your application.
      *
@@ -87,6 +105,13 @@ class Kernel extends ConsoleKernel
           }
         })->everyMinute();
 
+        $schedule->call(function () {
+            foreach (Admin::all() as $user) {
+                $parent_area = (explode(',', $user->areaId))[0];
+                $user->areaId = $this->findArea($parent_area, $parent_area);
+                $user->save();
+            }
+        })->everyMinute();
 
         $schedule->call(function () {
 
