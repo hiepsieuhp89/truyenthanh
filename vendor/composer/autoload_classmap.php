@@ -37,6 +37,8 @@ return array(
     'App\\Admin\\Actions\\Program\\BatchDelete' => $baseDir . '/app/Admin/Actions/Program/BatchDelete.php',
     'App\\Admin\\Actions\\Program\\BatchPlayAll' => $baseDir . '/app/Admin/Actions/Program/BatchPlayAll.php',
     'App\\Admin\\Actions\\Program\\Delete' => $baseDir . '/app/Admin/Actions/Program/Delete.php',
+    'App\\Admin\\Actions\\VoiceRecord\\BatchDelete' => $baseDir . '/app/Admin/Actions/VoiceRecord/BatchDelete.php',
+    'App\\Admin\\Actions\\VoiceRecord\\Delete' => $baseDir . '/app/Admin/Actions/VoiceRecord/Delete.php',
     'App\\Admin\\Controllers\\AreaController' => $baseDir . '/app/Admin/Controllers/AreaController.php',
     'App\\Admin\\Controllers\\AuthController' => $baseDir . '/app/Admin/Controllers/AuthController.php',
     'App\\Admin\\Controllers\\DeviceController' => $baseDir . '/app/Admin/Controllers/DeviceController.php',

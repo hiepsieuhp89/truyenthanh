@@ -6,5 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class VoiceRecord extends Model
 {
-    //
+    public function creator()
+    {
+        return $this->belongsTo(Admin::class, 'creatorId');
+    }
 }

@@ -386,12 +386,20 @@ class ProgramController extends AdminController
                     'required|numeric', ['required' => "Cần nhập giá trị","numeric"=>"Cần nhập dạng số"]);
 
             })->when(4, function (Form $form){
-
-                $form->select('document_Id', trans('Chọn file văn bản'))->options(Document::all()->pluck('name', 'id'));
+                if(Admin::user()->can('*'))
+                    $docs = Document::all()->pluck('name', 'id');
+                else 
+                    $docs = Document::where('creatorId', Admin::user()->id)->pluck('name', 'id');
+            
+                $form->select('document_Id', trans('Chọn file văn bản'))->options($docs);
                     
             })->when(5, function (Form $form) {
+                if (Admin::user()->can('*'))
+                    $records = VoiceRecord::all()->pluck('name', 'id');
+                else
+                    $records = VoiceRecord::where('creatorId', Admin::user()->id)->pluck('name', 'id');
 
-                $form->select('record_Id', trans('Chọn file ghi âm'))->options(VoiceRecord::all()->pluck('name', 'id'));
+                $form->select('record_Id', trans('Chọn file ghi âm'))->options($records);
 
             })->rules('required', ['required' => "Cần nhập giá trị"]);
 

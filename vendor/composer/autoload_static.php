@@ -548,6 +548,8 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'App\\Admin\\Actions\\Program\\BatchDelete' => __DIR__ . '/../..' . '/app/Admin/Actions/Program/BatchDelete.php',
         'App\\Admin\\Actions\\Program\\BatchPlayAll' => __DIR__ . '/../..' . '/app/Admin/Actions/Program/BatchPlayAll.php',
         'App\\Admin\\Actions\\Program\\Delete' => __DIR__ . '/../..' . '/app/Admin/Actions/Program/Delete.php',
+        'App\\Admin\\Actions\\VoiceRecord\\BatchDelete' => __DIR__ . '/../..' . '/app/Admin/Actions/VoiceRecord/BatchDelete.php',
+        'App\\Admin\\Actions\\VoiceRecord\\Delete' => __DIR__ . '/../..' . '/app/Admin/Actions/VoiceRecord/Delete.php',
         'App\\Admin\\Controllers\\AreaController' => __DIR__ . '/../..' . '/app/Admin/Controllers/AreaController.php',
         'App\\Admin\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Admin/Controllers/AuthController.php',
         'App\\Admin\\Controllers\\DeviceController' => __DIR__ . '/../..' . '/app/Admin/Controllers/DeviceController.php',
