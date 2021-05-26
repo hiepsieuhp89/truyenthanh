@@ -243,19 +243,19 @@ class DocumentController extends AdminController
 
           file_put_contents('uploads/'.$fileVoice , $response);
 
-            $booster = $volumeBooster / 10;
+          $booster = $volumeBooster / 10;
 
-          $fileInputPath = config('filesystems.disks.upload.path').$fileVoice;
+          $fileInputPath = $fileVoice;
 
-          $fileOutputPath = config('filesystems.disks.upload.path').$fileVoice.'.wav';
+          $fileOutputPath = 'voices/'.md5($fileInputPath).'.mp3';
 
-          $cmd = 'ffmpeg -y -i '.$fileInputPath.' -filter:a "volume='.$booster.'" '.$fileOutputPath;
+          $cmd = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $fileInputPath.' -filter:a "volume='.$booster.'" ' . config('filesystems.disks.upload.path') . $fileOutputPath;
 
           exec($cmd);
 
-          if(file_exists($fileOutputPath)){
-              unlink($fileInputPath);
-              return $fileVoice.'.wav';
+          if(file_exists(config('filesystems.disks.upload.path') . $fileOutputPath)){
+              unlink(config('filesystems.disks.upload.path') . $fileInputPath);
+              return $fileOutputPath;
           }
           return $fileVoice;
         

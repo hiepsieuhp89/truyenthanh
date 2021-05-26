@@ -461,8 +461,8 @@ class ProgramController extends AdminController
             ->PLUCK('devices.name', 'devices.deviceCode');
 
         $form->listbox('devices', trans('Danh sách loa'))
-            ->options($device_auth)
-            ->rules('required',['required'=>"Cần nhập giá trị"]);
+            ->options($device_auth);
+            //->rules('required',['required'=>"Cần nhập giá trị"]);
 
         $states = ['off' => ['value' => 1, 'text' => 'Chưa duyệt', 'color' => 'danger'], 'on' => ['value' => 2, 'text' => 'Đã duyệt', 'color' => 'success'], ];
 
@@ -487,38 +487,28 @@ class ProgramController extends AdminController
             // đoạn code xử lý file
             if ($form->model()->type == 1)
             {
+                //convert to mp3
+                
+                $booster = (float)$form->model()->volumeBooster / 10;
+                $outputFile = 'files/' . md5($form->model()->fileVoice) . '.mp3';
+                $exec_to_convert_to_wav = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
 
-                if (!is_numeric(strpos($form->model()->fileVoice, '.wav', 1)) || !(strlen($form->model()
-                    ->fileVoice) - strpos($form->model()->fileVoice, '.wav', 1) == 4))
-                {
+                exec($exec_to_convert_to_wav);
 
-                    $booster = (double)$form->model()->volumeBooster / 10;
+                if (file_exists(config('filesystems.disks.upload.path') . $outputFile)) {
 
-                    $exec_to_convert_to_wav = 'ffmpeg -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . '.wav';
-
-                    exec($exec_to_convert_to_wav);
-
-                    if (file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice . '.wav'))
-                    {
-
-                        if (file_exists(config('filesystems.disks.upload.path') . $form->model()
-                            ->fileVoice))
-
+                    if (file_exists(config('filesystems.disks.upload.path') . $form->model()
+                        ->fileVoice))
                         unlink(config('filesystems.disks.upload.path') . $form->model()
                             ->fileVoice);
 
-                        $form->model()->fileVoice = $form->model()->fileVoice . '.wav';
+                    $form->model()->fileVoice = $outputFile;
 
-                        $form->model()
-                            ->save();
-                    }
-
+                    $form->model()->save();
                 }
             }
 
-            if ($form->model()->type == 4)
-            {
-
+            if ($form->model()->type == 4) {
                 $d = Document::where('id', $form->model()
                     ->document_Id)
                     ->first();
@@ -555,22 +545,17 @@ class ProgramController extends AdminController
             {
 
                 if ($form->model()->status == 1) // nếu không duyệt
-                $songPath = "";
+                    $songPath = "";
                 if ($form->model()->status == 2) // nếu duyệt
-                $songPath = config('filesystems.disks.upload.url') . $form->model()->fileVoice;
+                    $songPath = config('filesystems.disks.upload.url') . $form->model()->fileVoice;
 
-                if ($form->model()->mode == 4)
-                { // nếu phát ngay
+                if ($form->model()->mode == 4){ // nếu phát ngay
                     if ($form->model()->status == 2)
-
                     (new Api())->playOnline($form->model()->type, implode(',', $form->model()
                         ->devices) , $songPath);
 
                 }
-                else
-                { // nếu phát theo lịch
-                    // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
-                    // set schedule
+                else{ // nếu phát theo lịch
                     (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
