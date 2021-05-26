@@ -190,7 +190,7 @@ class ProgramController extends AdminController
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
                 ];
-                return $scope[$this->digiChannel];
+                return isset($scope[$this->digiChannel]) ? $scope[$this->digiChannel] : '';
             }
         });
         $grid->column('volumeBooster', __('Volume'))->display(function ($value)
@@ -488,7 +488,7 @@ class ProgramController extends AdminController
             if ($form->model()->type == 1)
             {
                 //convert to mp3
-                
+
                 $booster = (float)$form->model()->volumeBooster / 10;
                 $outputFile = 'files/' . md5($form->model()->fileVoice) . '.mp3';
                 $exec_to_convert_to_wav = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
