@@ -38,7 +38,8 @@ class Api extends Model
         $dataRequest .= ']}"}';
 
         //{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"'.$deviceCode.'\",\"CommandSend\":\"{\\\"Data\\\":\\\"'.$data.'\\\",\\\"PacketType\\\":11}\"}]}"}';
-        if (env('APP_ENV') == 'local') dd($dataRequest);
+        if (env('APP_ENV') == 'local') 
+            dd($dataRequest);
         $request = base64_encode($dataRequest);
 
         // echo "request " . $request;

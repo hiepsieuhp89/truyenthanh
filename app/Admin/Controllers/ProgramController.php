@@ -376,8 +376,9 @@ class ProgramController extends AdminController
                     //'https://vovstream.1cdn.vn/vovlive/vovGTHN.sdp_aac/playlist.m3u8' => 'VOV Giao thông HN',
                     //'https://vovstream.1cdn.vn/vovlive/vovGTHCM.sdp_aac/playlist.m3u8'
                     // => 'VOV Giao thông HCM',
-                
-                ]);
+
+                ])->rules('required', ['required' => "Cần nhập giá trị"]);
+
                 //$form->number('inteval', 'Thời lượng (Phút)')->rules('required');
 
             })->when(3, function (Form $form){
@@ -592,6 +593,7 @@ class ProgramController extends AdminController
             //         (new Api())->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
             //     }
             // }
+            
             // nếu phát đài FM
             if ($form->model()->type == 3)
             {
@@ -600,19 +602,22 @@ class ProgramController extends AdminController
                 $songPath = "";
                 if ($form->model()->status == 2) // nếu duyệt
                 $songPath = $form->model()->radioChannel;
+                
+                (new Api())
+                    ->setPlayFM($form->model()->type, implode(',', $form->model()
+                    ->devices), $songPath);
+                // if ($form->model()->mode == 4)
+                // {
 
-                if ($form->model()->mode == 4)
-                {
-
-                    (new Api())
-                        ->setPlayFM($form->model()->type, implode(',', $form->model()
-                        ->devices) , $songPath);
-                }
-                else
-                {
-                    (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
-                        ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
-                }
+                //     (new Api())
+                //         ->setPlayFM($form->model()->type, implode(',', $form->model()
+                //         ->devices) , $songPath);
+                // }
+                // else
+                // {
+                //     (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                //         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                // }
             }
 
             // nếu phát file văn bản
