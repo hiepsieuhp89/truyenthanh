@@ -101,7 +101,7 @@ class VoiceRecordController extends AdminController
 
             $actions->add(new BatchDelete());
         });
-
+        $grid->model()->orderBy('id', 'DESC');
         $grid->column('id', __('Mã số'))->hide();
         $grid->column('name', __('Tên bản ghi'));
         $grid->column('fileVoice', __('File ghi âm'))->display(function ($fileVoice) {
