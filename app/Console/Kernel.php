@@ -4,33 +4,12 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Carbon\Carbon;
-use App\DeviceInfo;
-use App\Document;
-use App\VoiceRecord;
-use App\Program;
-use App\Admin;
-use App\Area;
+use App\Jobs\UpdateDevicesStatus;
+use App\Jobs\UpdateAreaAccount;
+use App\Jobs\RemoveUnnecessaryFiles;
 
 class Kernel extends ConsoleKernel
 {
-    public function findArea($id, $result)
-    {
-
-        $child_areas = Area::where('parent_id', $id)->get();
-
-        if ($child_areas !== NULL) {
-
-            foreach ($child_areas as $ca) {
-
-                $result .= ',' . $ca->id;
-
-                $result = $this->findArea($ca->id, $result);
-            }
-        }
-
-        return $result;
-    }
     /**
      * The Artisan commands provided by your application.
      *
@@ -48,94 +27,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->job(new UpdateDevicesStatus())->everyMinute();
 
-        $schedule->call(function () {
-            $curl = curl_init();
+        $schedule->job(new UpdateAreaAccount())->everyMinute();
 
-            $dataRequest = "eyJEYXRhVHlwZSI6MjAsIkRhdGEiOiJHRVRfQUxMX0RFVklDRV9TVEFUVVMifQ==";
-            
-            curl_setopt_array($curl, array(
-              CURLOPT_URL => "http://103.130.213.161:906/".$dataRequest,
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_ENCODING => "",
-              CURLOPT_MAXREDIRS => 10,
-              CURLOPT_CONNECTTIMEOUT => 20,
-              CURLOPT_TIMEOUT => 30,
-              CURLOPT_FOLLOWLOCATION => false,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => "GET",
-            ));
-            
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            
-            curl_close($curl);
-            $response = str_replace(':"{', ":{", $response);
-            $response = str_replace(':"[{', ":[{", $response);
-            $response = str_replace('"}"', "}", $response);
-            $response = str_replace('"{"', "{", $response);
-            $response = str_replace(']"}', "]}", $response);
-            $response = json_decode($response,true);
-
-            if(isset($response['DataType']) && $response['DataType'] == 5){
-
-          $device_data = array_map(function($arr){
-            return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"], $arr["DeviceData"]["Data"]["RadioFrequency"]];
-            }, $response["Data"]);
-
-            foreach ($device_data as $active_device) {
-
-                DeviceInfo::where('deviceCode',$active_device[0])->update([
-                    'status' => 1,
-                    'turn_off_time' => null,
-                    'is_playing' => $active_device[1] ? $active_device[1] : ($active_device[2] == 0.0 ? null : $active_device[2]),
-                ]);
-
-            }
-
-                      DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->update([
-                          'status' => 0,
-                          'is_playing' => ''
-                      ]);
-                      DeviceInfo::whereNotIn('deviceCode',array_column($device_data, 0))->where('turn_off_time',null)->update([
-                          'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
-                      ]);
-          }
-        })->everyMinute();
-
-        $schedule->call(function () {
-            foreach (Admin::all() as $user) {
-                $parent_area = (explode(',', $user->areaId))[0];
-                $user->areaId = $this->findArea($parent_area, $parent_area);
-                $user->save();
-            }
-        })->everyMinute();
-
-        $schedule->call(function () {
-
-            Program::where('volumeBooster', '<', 5)->update(['volumeBooster' => 10]);
-
-            $files = scandir(config('filesystems.disks.upload.path') . 'voices/');
-            foreach ($files as $file) {
-                if (strlen($file) > 3) {
-                    $doc = Document::where('fileVoice', 'voices/' . $file)->first();
-                    if ($doc == null)
-                        unlink(config('filesystems.disks.upload.path') . 'voices/' . $file);
-                }
-            }
-
-            $records = scandir(config('filesystems.disks.upload.path') . 'records/');
-            foreach ($records as $file) {
-                if (strlen($file) > 6) {
-                    $doc = VoiceRecord::where('fileVoice', 'records/' . $file)->first();
-                    if ($doc == null)
-                        unlink(config('filesystems.disks.upload.path') . 'records/' . $file);
-                }
-            }
-
-        })->daily();
+        $schedule->job(new RemoveUnnecessaryFiles())->daily();
     }
 
     /**
