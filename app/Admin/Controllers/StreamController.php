@@ -42,7 +42,7 @@ class StreamController extends AdminController
      */
     protected function grid()
     {
-        $url = config('filesystems.disks.upload.url').'streams/'.(Request::all())['key'].'.m3u8';
+        $url = config('filesystems.disks.upload.url').'streams/hls/'.(Request::all())['key'].'.m3u8';
         return view('stream',['url'=>$url]);
     }
 }
