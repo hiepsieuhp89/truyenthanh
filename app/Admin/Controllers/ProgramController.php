@@ -189,6 +189,9 @@ class ProgramController extends AdminController
                 $scope = [
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+                    'https://vovstream.1cdn.vn/c79094bd96f5a32ed2a6819d7f66a8381622185785/vovlive/vovGTHN.sdp_aac/playlist.m3u8' => 'VOV Giao thông HN',
+                    'https://vovstream.1cdn.vn/5fbb9989c9939acf143267a572ca2dc91622185871/vovlive/vovGTHCM.sdp_aac/playlist.m3u8' => 'VOV Giao thông HCM',
+                    'http://103.130.213.150:8080/hls/livestream1.m3u8' => 'Phát trực tiếp'
                 ];
                 return isset($scope[$this->digiChannel]) ? $scope[$this->digiChannel] : '';
             }
@@ -373,9 +376,7 @@ class ProgramController extends AdminController
                 $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options([
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
-                    'https://vovstream.1cdn.vn/c79094bd96f5a32ed2a6819d7f66a8381622185785/vovlive/vovGTHN.sdp_aac/playlist.m3u8' => 'VOV Giao thông HN',
-                    'https://vovstream.1cdn.vn/5fbb9989c9939acf143267a572ca2dc91622185871/vovlive/vovGTHCM.sdp_aac/playlist.m3u8' => 'VOV Giao thông HCM',
-
+                    'http://103.130.213.150:8080/hls/livestream1.m3u8' => 'Phát trực tiếp'
                 ])->rules('required', ['required' => "Cần nhập giá trị"]);
 
                 //$form->number('inteval', 'Thời lượng (Phút)')->rules('required');

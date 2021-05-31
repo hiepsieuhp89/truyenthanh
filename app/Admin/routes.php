@@ -17,6 +17,7 @@ Route::group([
     $router->resource('docs', DocumentController::class);
     $router->resource('voice-records', VoiceRecordController::class);
     $router->resource('programs', ProgramController::class);
+    $router->resource('streams', StreamController::class);
     $router->resource('devicedata', DeviceInfoController::class, ['except' => ['create']]);
     
 
