@@ -374,7 +374,7 @@ class ProgramController extends AdminController
                 $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options([
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
-                    'http://103.130.213.150:8080/hls/livestream1.m3u8' => 'Phát trực tiếp nội bộ'
+                'http://103.130.213.150:8080/hls/livestream2.m3u8' => 'Phát trực tiếp 2'
                 ])->rules('required', ['required' => "Cần nhập giá trị"]);
 
                 //$form->number('inteval', 'Thời lượng (Phút)')->rules('required');
