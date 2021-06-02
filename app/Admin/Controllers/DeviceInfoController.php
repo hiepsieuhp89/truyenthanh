@@ -54,15 +54,22 @@ class DeviceInfoController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new DeviceInfo);
+        
 
         $grid->disableCreateButton(); 
 
-        $grid->disableBatchActions();   
-         
+        $grid->disableBatchActions();
         $grid->actions(function ($actions) {
-            if (!(new Admin)->user()->can('*')) {
-                $actions->disableDelete();
-            }
+
+            // $actions->disableDelete();
+
+            // $actions->disableEdit();
+
+            // $actions->disableView();
+
+            // if (!(new Admin)->user()->can('*')) {
+            //     $actions->disableDelete();
+            // }
         });
         // lấy thông tin thiết bị
         // $deviceStatus = $this->getDeviceStatus();
@@ -153,23 +160,6 @@ class DeviceInfoController extends AdminController
         $grid->column('updated_at', __('Updated at'))->hide();
 
         $grid->disableExport();
-
-        $grid->actions(function ($actions) {
-            $actions->disableDelete();
-            $actions->disableEdit();
-            $actions->disableView();
-
-            // $actions->add(new StopPlay);
-
-            // $actions->setupDeleteScript();
-            // $actions->disableView();
-
-             // append an action.
-            //  $actions->append('<a href=""><i class="fa fa-eye"></i></a>');
-
-            // prepend an action.
-            // $actions->prepend('<a href=""><i class="fa fa-paper-plane"></i></a>');
-        });
 
         return $grid;
     }
