@@ -61,15 +61,12 @@ class DeviceInfoController extends AdminController
         $grid->disableBatchActions();
         $grid->actions(function ($actions) {
 
-            // $actions->disableDelete();
+            $actions->disableDelete();
 
-            // $actions->disableEdit();
+            $actions->disableEdit();
 
-            // $actions->disableView();
+            $actions->disableView();
 
-            // if (!(new Admin)->user()->can('*')) {
-            //     $actions->disableDelete();
-            // }
         });
         // lấy thông tin thiết bị
         // $deviceStatus = $this->getDeviceStatus();
