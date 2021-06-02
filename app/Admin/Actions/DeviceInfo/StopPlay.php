@@ -19,7 +19,7 @@ class StopPlay extends RowAction
 
     public function display($stop)
     {
-        return  "Dừng phát";
+        return  '<span><i class="fas fa-stop-circle"></i> Dừng phát</span>';
     }
 
     protected function stopPlay($deviceCode) 
