@@ -192,7 +192,8 @@ class ProgramController extends AdminController
                     'http://103.130.213.150:8080/hls/livestream1.m3u8' => 'Phát trực tiếp 1',
                     'http://103.130.213.150:8080/hls/livestream2.m3u8' => 'Phát trực tiếp 2'
                 ];
-                return isset($scope[$this->digiChannel]) ? $scope[$this->digiChannel] : '';
+                $d = isset($scope[$this->digiChannel]) ? '<a href="'.env('APP_URL').'/admin/streams?url='.$this->digiChannel . '">' . $scope[$this->digiChannel] . '</a>' : '';
+                return $d;
             }
         });
         $grid->column('volumeBooster', __('Volume'))->display(function ($value)
