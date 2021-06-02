@@ -34,7 +34,6 @@
 
                     timeCount = setInterval(function(){
                         let time = moment(moment().diff(now)).format("mm:ss");
-
                         button.textContent = time ;
                     },1000);
                     

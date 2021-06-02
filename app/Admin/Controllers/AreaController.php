@@ -26,14 +26,17 @@ class AreaController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Area';
+    protected $title;
 
     // public function store()
     // {
     //     Log::info('Showing STORE DATA ');
     //     return $this->form()->store();
     // }
-
+    function __construct()
+    {
+        $this->title = trans('admin.deviceArea');
+    }
         /**
      * Index interface.
      *
@@ -74,8 +77,7 @@ class AreaController extends AdminController
                     $form->select('parent_id', trans('admin.area'))->options($menuModel::selectOptions());
                     $form->text('title', trans('Cụm loa'))->rules('required');
                     $form->text('address', trans('admin.address'))->rules('required');
-                    $form->text('lat', trans('admin.latitude'));
-                    $form->text('lon', trans('admin.longtitude'));
+                    $form->latlong('lat', 'lon', 'Vị trí')->height(300)->default(['lat' => 21.0277644, 'lng' => 105.8341598]);
                     // $form->hidden('_token')->default(csrf_token());
 
                     $form->hidden('order')->default(0);
@@ -163,11 +165,16 @@ class AreaController extends AdminController
         // $form->number('parent_id', trans('admin.parent_id'));
         $form->select('parent_id', trans('Khu vực'))->options($menuModel::selectOptions());
         $form->text('title', trans('Cụm loa'));    
-        $form->text('address', trans('Địa chỉ'));    
-        $form->text('lat', trans('Tọa độ lat'));    
-        $form->text('lon', trans('Tọa độ lon'));    
+        $form->text('address', trans('Địa chỉ'));
+        $form->latlong('lat', 'lon', 'Vị trí')->height(400)->default(['lat' => 21.0277644, 'lng' => 105.8341598]);
         $form->hidden('order', trans('order'));   
-        $form->hidden('status', trans('status'));   
+        $form->hidden('status', trans('status'));
+
+        $form->disableReset();
+        $form->disableViewCheck();
+        $form->disableEditingCheck();
+        $form->disableCreatingCheck();
+        
         return $form;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'deviceArea'            => 'Cụm loa',
     'status'                => 'Trạng thái',
     'deviceName'            => 'Tên thiết bị',
     'deviceCode'            => 'Mã thiết bị',
@@ -29,10 +30,10 @@ return [
     'create'                => 'Tạo',
     'delete'                => 'Xóa',
     'remove'                => 'Hủy bỏ',
-    'edit'                  => 'Cập nhật',
+    'edit'                  => 'Sửa',
     'view'                  => 'Xem',
-    'continue_editing'      => 'Cập nhật',
-    'continue_creating'     => 'Tạo mới',
+    'continue_editing'      => 'Tiếp tục chỉnh sửa',
+    'continue_creating'     => 'Tiếp tục tạo mới',
     'detail'                => 'Chi tiết',
     'browse'                => 'Mở xem',
     'reset'                 => 'Khởi tạo lại',
@@ -54,7 +55,7 @@ return [
     'description'           => 'Mô tả',
     'back'                  => 'Quay lại',
     'back_to_list'          => 'Quay lại danh sách',
-    'submit'                => 'Cập nhật',
+    'submit'                => 'Xác nhận',
     'menu'                  => 'Menu',
     'input'                 => 'Nhập',
     'succeeded'             => 'Thành công',
@@ -101,7 +102,7 @@ return [
     'current_page'          => 'Trang hiện tại',
     'selected_rows'         => 'Mục đã chọn',
     'upload'                => 'Tải lên',
-    'new_folder'            => 'New folder',
+    'new_folder'            => 'Tạo thư mục',
     'time'                  => 'Time',
     'size'                  => 'Size',
     'listbox'               => [
@@ -109,7 +110,7 @@ return [
         'text_empty'         => 'Danh sách trống',
         'filtered'           => '{0} / {1}',
         'filter_clear'       => 'Hiển thị tất cả',
-        'filter_placeholder' => 'Filter',
+        'filter_placeholder' => 'Lọc',
     ],
     'grid_items_selected'    => '{n} mục đã chọn',
 

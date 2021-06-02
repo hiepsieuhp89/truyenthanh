@@ -145,9 +145,9 @@ class VoiceRecordController extends AdminController
     {
         $form = new Form(new VoiceRecord());
 
-        $form->text('name', __('Tên bản ghi'));
+        $form->text('name', __('Tên bản ghi'))->rules('required',['required'=>'Cần nhập tên bản ghi']);
 
-        $form->record('fileVoice', __('File ghi âm'));
+        $form->record('fileVoice', __('File ghi âm'))->rules('required', ['required' => 'Chưa ghi âm']);
 
         $form->saving(function($form){
 
@@ -158,6 +158,9 @@ class VoiceRecordController extends AdminController
             $form->model()->creatorId = Admin::user()->id;
 
         });
+        $form->disableViewCheck();
+        $form->disableEditingCheck();
+        $form->disableCreatingCheck();
         return $form;
     }
 }
