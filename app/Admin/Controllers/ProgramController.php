@@ -189,7 +189,8 @@ class ProgramController extends AdminController
                 $scope = [
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
-                    'http://103.130.213.150:8080/hls/livestream1.m3u8' => 'Phát trực tiếp nội bộ'
+                    'http://103.130.213.150:8080/hls/livestream1.m3u8' => 'Phát trực tiếp 1',
+                    'http://103.130.213.150:8080/hls/livestream2.m3u8' => 'Phát trực tiếp 2'
                 ];
                 return isset($scope[$this->digiChannel]) ? $scope[$this->digiChannel] : '';
             }
