@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'status'                => 'Trạng thái',
+    'deviceName'            => 'Tên thiết bị',
+    'deviceCode'            => 'Mã thiết bị',
+    'address'               => 'Địa chỉ',
+    'volume'                => 'Âm lượng',
+    'latitude'              => 'Vĩ độ',
+    'longtitude'            => 'Kinh độ',
     'area'                  => 'Khu vực',
     'program'               => 'Chương trình',
     'device'                => 'Thiết bị',

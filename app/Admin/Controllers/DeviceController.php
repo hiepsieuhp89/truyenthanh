@@ -114,19 +114,19 @@ class DeviceController extends AdminController
 
         $grid->model()->orderBy('id', 'DESC');
 
-        $grid->column('id', trans('entity.id'));
+        $grid->column('id', trans('entity.id'))->hide();
 
-        $grid->column('name', trans('Tên thiết bị'))->label()->style('font-size:16px;');  
+        $grid->column('name', trans('admin.deviceName'))->label()->style('font-size:16px;');  
 
-        $grid->column('deviceCode', trans('Mã thiết bị'))->copyable(); 
+        $grid->column('deviceCode', trans('admin.deviceCode'))->copyable(); 
 
         $grid->column('area.title', trans('Cụm loa'))->label(' label-primary')->style('font-size:16px;');   
 
-        $grid->column('address', trans('Địa chỉ'))->label(' label-default')->style('font-size:16px;');
+        $grid->column('address', trans('admin.address'))->label(' label-default')->style('font-size:16px;');
 
-        $grid->column('lat', trans('Tọa độ lat'))->label(' label-info')->style('font-size:16px;')->hide();  
+        $grid->column('lat', trans('admin.latitude'))->label(' label-info')->style('font-size:16px;')->hide();  
 
-        $grid->column('lon', trans('Tọa độ lon'))->label(' label-info')->style('font-size:16px;')->hide();
+        $grid->column('lon', trans('admin.longtitude'))->label(' label-info')->style('font-size:16px;')->hide();
 
         $grid->column('DeviceInfo.status', trans('Trạng thái'))->display(function($value){
             if($value == 1) return "<b class=\"text-success\">Đang hoạt động</b>";
@@ -140,9 +140,9 @@ class DeviceController extends AdminController
         // $grid->column('rolling_reserve_days', trans('entity.gateway.rolling_reserve_days'));
         // $grid->column('rolling_reserve_percent', trans('entity.gateway.rolling_reserve_percent') . ' (%)');
 
-        $grid->column('created_at', trans('entity.created_at'));
+        $grid->column('created_at', trans('entity.created_at'))->hide();
 
-        $grid->column('updated_at', trans('entity.updated_at'));
+        $grid->column('updated_at', trans('entity.updated_at'))->hide();
         
         // $grid->actions(function (Grid\Displayers\Actions $actions) {
             // $actions->disableEdit();

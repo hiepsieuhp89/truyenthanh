@@ -70,7 +70,7 @@ class DeviceInfoController extends AdminController
 
         $grid->filter(function($filter){
 
-            $filter->scope('auth',trans('Giám sát thiết bị'))->whereHas('device', function ($query) {
+            $filter->scope('auth',trans('admin.deviceManager'))->whereHas('device', function ($query) {
 
                 $query->wherein('areaId',explode(',',Admin::user()->areaId));
             });
@@ -103,15 +103,15 @@ class DeviceInfoController extends AdminController
 
         //$grid->column('id', __('Id'));
 
-        $grid->column('device.name', __('Tên'))->label()->style('font-size:16px;'); 
+        $grid->column('device.name', trans('admin.deviceName'))->label()->style('font-size:16px;'); 
 
-        $grid->column('deviceCode', __('Mã thiết bị'))->copyable();
+        $grid->column('deviceCode', trans('admin.deviceCode'))->copyable();
 
         $grid->column('Dừng phát')->action(StopPlay::class);
 
         $grid->column('relay1', 'Relay 1')->action(RelayFirst::class);
 
-        $grid->column('volume', __('Volume'))->editable('select', [1 => 'Mức 1', 2 => 'Mức 2', 3 => 'Mức 3', 4 => 'Mức 4', 5 => 'Mức 5', 6 => 'Mức 6', 7 => 'Mức 7', 8 => 'Mức 8', 9 => 'Mức 9', 10 => 'Mức 10', 11 => 'Mức 11', 12 => 'Mức 12', 13 => 'Mức 13', 14 => 'Mức 14', 15 => 'Mức 15']);
+        $grid->column('volume', trans('admin.volume'))->editable('select', [1 => 'Mức 1', 2 => 'Mức 2', 3 => 'Mức 3', 4 => 'Mức 4', 5 => 'Mức 5', 6 => 'Mức 6', 7 => 'Mức 7', 8 => 'Mức 8', 9 => 'Mức 9', 10 => 'Mức 10', 11 => 'Mức 11', 12 => 'Mức 12', 13 => 'Mức 13', 14 => 'Mức 14', 15 => 'Mức 15']);
         
         $grid->column('ip', __('IP'))->editable();
 
@@ -119,7 +119,7 @@ class DeviceInfoController extends AdminController
             'off' => ['value' => 0, 'text' => 'Không hoạt động', 'color' => 'danger'],
             'on' => ['value' => 1, 'text' => 'Hoạt động', 'color' => 'primary'],
         ];
-        $grid->column('status', 'Trạng thái')->display(function($value){
+        $grid->column('status', trans('admin.status'))->display(function($value){
             if($value == 1) return "<b class=\"text-success\">Đang hoạt động</b>";
             return "<b class=\"text-danger\">Không hoạt động</b>";
         });
@@ -138,9 +138,9 @@ class DeviceInfoController extends AdminController
             return '';   
         });
 
-        $grid->column('created_at', __('Created at'));
+        $grid->column('created_at', __('Created at'))->hide();
 
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('updated_at', __('Updated at'))->hide();
 
         $grid->disableExport();
 
@@ -175,11 +175,11 @@ class DeviceInfoController extends AdminController
         $show = new Show(DeviceInfo::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('deviceCode', __('DeviceCode'));
-        $show->field('status', __('Status'));
-        $show->field('volume', __('Volume'));
-        $show->field('ip', __('Ip'));
-        $show->field('version', __('Version'));
+        $show->field('deviceCode', trans('admin.deviceCode'));
+        $show->field('status', trans('admin.status'));
+        $show->field('volume', trans('admin.volume'));
+        $show->field('ip', trans('admin.ipAddress'));
+        $show->field('version', trans('admin.version'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 

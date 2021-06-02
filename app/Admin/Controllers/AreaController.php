@@ -71,11 +71,11 @@ class AreaController extends AdminController
                     //     $form->select('permission', trans('admin.permission'))->options($permissionModel::pluck('name', 'slug'));
                     // }
 
-                    $form->select('parent_id', trans('Khu vực'))->options($menuModel::selectOptions());
+                    $form->select('parent_id', trans('admin.area'))->options($menuModel::selectOptions());
                     $form->text('title', trans('Cụm loa'))->rules('required');
-                    $form->text('address', trans('Địa chỉ'))->rules('required');
-                    $form->text('lat', trans('Tọa độ lat'));
-                    $form->text('lon', trans('Tọa độ lon'));
+                    $form->text('address', trans('admin.address'))->rules('required');
+                    $form->text('lat', trans('admin.latitude'));
+                    $form->text('lon', trans('admin.longtitude'));
                     // $form->hidden('_token')->default(csrf_token());
 
                     $form->hidden('order')->default(0);
