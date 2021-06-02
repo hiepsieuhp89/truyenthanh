@@ -103,7 +103,17 @@ class DeviceInfoController extends AdminController
 
         //$grid->column('id', __('Id'));
 
-        $grid->column('device.name', trans('admin.deviceName'))->label()->style('font-size:16px;'); 
+        $grid->column('device.name', trans('admin.deviceName'))->display(function () {
+            $name = isset($this->device->name) ? $this->device->name : '';
+            if($this->status){
+                if (trim($this->playing) == '')
+                    return '<span class="label label-success">' . $name . '</span>';
+                else
+                    return '<span class="label label-success">' . $name . '</span><i style="float:right;color: cornflowerblue;" class="fas fa-volume-up"></i>';
+            }
+            else
+                return '<span class="label label-danger">' . $name . '</span>';
+        })->style('font-size:16px;'); 
 
         $grid->column('deviceCode', trans('admin.deviceCode'))->copyable();
 
@@ -130,7 +140,7 @@ class DeviceInfoController extends AdminController
 
             return "<b class=\"text-danger\">Không</b>";
             
-        });
+        })->hide();
 
         $grid->column('turn_off_time','Tắt lúc')->display(function($value){
             if($value !== NULL)
