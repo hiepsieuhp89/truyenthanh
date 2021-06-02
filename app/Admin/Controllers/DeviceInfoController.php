@@ -55,19 +55,10 @@ class DeviceInfoController extends AdminController
     {
         $grid = new Grid(new DeviceInfo);
         
-
         $grid->disableCreateButton(); 
-
         $grid->disableBatchActions();
-        $grid->actions(function ($actions) {
-
-            $actions->disableDelete();
-
-            $actions->disableEdit();
-
-            $actions->disableView();
-
-        });
+        $grid->disableActions();
+        
         // lấy thông tin thiết bị
         // $deviceStatus = $this->getDeviceStatus();
         // Log::info("device list " . $deviceStatus);
