@@ -6,6 +6,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\Hash;
+use Str;
 use App\Area;
 
 class UserController extends AdminController
@@ -40,11 +41,13 @@ class UserController extends AdminController
 
             return $area? $area->title : "";
 
-        })->label(' label-primary')->style('font-size:16px;');   
+        })->label(' label-primary')->style('font-size:16px;');
 
-        $grid->column('created_at', trans('admin.created_at'));
+        $grid->column('stream_key', trans('admin.streamKey'));
 
-        $grid->column('updated_at', trans('admin.updated_at'));
+        $grid->column('created_at', trans('admin.created_at'))->hide();
+
+        $grid->column('updated_at', trans('admin.updated_at'))->hide();
 
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             if ($actions->getKey() == 1) {
@@ -89,6 +92,7 @@ class UserController extends AdminController
             $roleModel = config('admin.database.roles_model');
             return $roleModel::findOrFail($r[0]->id)->permissions->pluck('name');
         })->label();
+        $show->field('stream_key', trans('admin.streamKey'));
         $show->field('area.title', trans('admin.area'));
         $show->field('created_at', trans('admin.created_at'));
         $show->field('updated_at', trans('admin.updated_at'));
@@ -127,13 +131,16 @@ class UserController extends AdminController
 
         $form->ignore(['password_confirmation']);
 
-        $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'));
+        $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'))->rules('required');
 
-        $form->select('areaId', trans('admin.area'))->options(Area::selectOptions());
+        //$form->text('stream_key', trans('admin.streamKey'));
+
+        $form->select('areaId', trans('admin.area'))->options(Area::selectOptions())->rules('required');
 
         // $form->multipleSelect('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
 
         $form->display('created_at', trans('admin.created_at'));
+        
         $form->display('updated_at', trans('admin.updated_at'));
 
         $form->saving(function (Form $form) {
@@ -143,7 +150,26 @@ class UserController extends AdminController
             if ($form->password && $form->model()->password != $form->password) {
 
                 $form->password = Hash::make($form->password);
+
             }
+        });
+        $form->saved(function (Form $form) {
+
+            //not admin
+            if(!$form->model()->can('*') && $form->areaId != 0){
+
+                $area = Area::find($form->areaId);
+
+                $form->model()->stream_key = str_slug($area->title . '-' . $area->id);
+
+            }
+            //is admin
+            if($form->model()->can('*')   
+                $form->model()->stream_key = 'admin-stream';
+
+            $form->model()->stream_url = env('APP_STREAM_URL') . $form->model()->stream_key . '.m3u8';
+
+            $form->model()->save();
         });
 
         return $form;

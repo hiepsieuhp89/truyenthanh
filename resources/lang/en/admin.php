@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'deviceManager'            => 'Giám sát thiết bị',
+    'streamKey'             => 'Stream Key',
+    'deviceManager'         => 'Giám sát thiết bị',
     'deviceArea'            => 'Cụm loa',
     'status'                => 'Trạng thái',
     'deviceName'            => 'Tên thiết bị',
