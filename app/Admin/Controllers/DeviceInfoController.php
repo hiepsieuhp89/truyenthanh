@@ -102,7 +102,7 @@ class DeviceInfoController extends AdminController
             $name = isset($this->device->name) ? $this->device->name : '';
             if($this->status){
                 if (trim($this->is_playing) == '')
-                    return '<span class="label label-success">' . $name . '</span>';
+                    return '<span class="label label-success">' . $name . '</span><i style="float:right;color: cornflowerblue;animation: scale-1-3 0.5s ease infinite;" class="fas fa-volume-up hidden"></i>';
                 else
                     return '<span class="label label-success">' . $name . '</span><i style="float:right;color: cornflowerblue;animation: scale-1-3 0.5s ease infinite;" class="fas fa-volume-up"></i>';
             }

@@ -4,29 +4,35 @@ for (var i = 0; i < a.length; i++) {
         location.reload(true);
     });
 }
-$.ajax({
-    type: 'get',
-    crossDomain: true,
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    url: 'https://truyenthanh.org.vn/admin/devices-status',
-    success: function(data) {
-        let infor = data;
-        console.log(infor);
-    }
-});
-// setInterval(function() {
-//     $.ajax({
-//         type: 'get',
-//         crossDomain: true,
-//         headers: {
-//             'Content-Type': 'application/x-www-form-urlencoded'
-//         },
-//         url: 'http://103.130.213.161:906/eyJEYXRhVHlwZSI6MjAsIkRhdGEiOiJHRVRfQUxMX0RFVklDRV9TVEFUVVMifQ==',
-//         success: function(data) {
-//             let infor = data.replace(':"{', ":{").replace(':"[{', ":[{").replace('"}"', "}").replace('"{"', "{").replace(']"}', "]}");
-//             console.log(infor.DataType);
-//         }
-//     });
-// }, 5000);
+
+setInterval(function() {
+    $.ajax({
+        type: 'get',
+        url: 'http://localhost:8000/truyenthanh/public/admin/devices-status',
+        success: function(res) {
+            console.log(res);
+            $.each(res.Data, function(i, n) {
+
+                let device_row = $('[data-content="' + n.DeviceID + '"]').parent().parent();
+
+                if (n.DeviceData.Data.PlayURL != "" || n.DeviceData.Data.RadioFrequency != 0)
+                    device_row.find('.column-device-name').find('i').removeClass('hidden');
+                else
+                    device_row.find('.column-device-name').find('i').addClass('hidden');
+
+                device_row.find('.column-status').html('<b class="text-success">Đang hoạt động</b>');
+
+            });
+            let deviceCodes = $.map(res.Data, function(n) {
+                return n.DeviceID;
+            });
+            $.map($('tbody tr'), function(n) {
+                if (jQuery.inArray(($(n).find('.column-deviceCode a')).attr('data-content'), deviceCodes) !== -1) {
+                    $(n).find('.column-device-name').find('span').removeClass('label-success').addClass('label-danger');
+                    $(n).find('.column-device-name').find('i').addClass('hidden');
+                    $(n).find('.column-status').html('<b class="text-danger">Không hoạt động</b>');
+                }
+            });
+        }
+    });
+}, 5000);
