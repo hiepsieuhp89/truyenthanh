@@ -21,7 +21,7 @@ setInterval(function() {
                     device_row.find('.column-device-name').find('i').addClass('hidden');
 
                 device_row.find('.column-status').html('<b class="text-success">Đang hoạt động</b>');
-
+                device_row.find('.column-turn_off_time').html('');
             });
             let deviceCodes = $.map(res.Data, function(n) {
                 return n.DeviceID;
