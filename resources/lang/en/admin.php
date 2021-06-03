@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'deviceManager'            => 'Giám sát thiết bị',
     'deviceArea'            => 'Cụm loa',
     'status'                => 'Trạng thái',
     'deviceName'            => 'Tên thiết bị',
