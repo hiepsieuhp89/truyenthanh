@@ -101,7 +101,7 @@ class DeviceInfoController extends AdminController
         $grid->column('device.name', trans('admin.deviceName'))->display(function () {
             $name = isset($this->device->name) ? $this->device->name : '';
             if($this->status){
-                if (trim($this->playing) == '')
+                if (trim($this->is_playing) == '')
                     return '<span class="label label-success">' . $name . '</span>';
                 else
                     return '<span class="label label-success">' . $name . '</span><i style="float:right;color: cornflowerblue;" class="fas fa-volume-up"></i>';
