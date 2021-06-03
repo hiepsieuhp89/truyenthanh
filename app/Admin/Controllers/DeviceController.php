@@ -128,10 +128,10 @@ class DeviceController extends AdminController
 
         $grid->column('lon', trans('admin.longtitude'))->label(' label-info')->style('font-size:16px;')->hide();
 
-        $grid->column('DeviceInfo.status', trans('Trạng thái'))->display(function($value){
-            if($value == 1) return "<b class=\"text-success\">Đang hoạt động</b>";
-            return "<b class=\"text-danger\">Không hoạt động</b>";
-        });   
+        // $grid->column('DeviceInfo.status', trans('Trạng thái'))->display(function($value){
+        //     if($value == 1) return "<b class=\"text-success\">Đang hoạt động</b>";
+        //     return "<b class=\"text-danger\">Không hoạt động</b>";
+        // });   
 
         // $grid->column('payment_fee', trans('entity.gateway.payment_fee') . ' (%)');
         // $grid->column('transaction_fee', trans('entity.gateway.transaction_fee') . ' (VNĐ)');

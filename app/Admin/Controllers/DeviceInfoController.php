@@ -107,7 +107,7 @@ class DeviceInfoController extends AdminController
                     return '<span class="label label-success">' . $name . '</span><i style="float:right;color: cornflowerblue;animation: scale-1-3 0.5s ease infinite;" class="fas fa-volume-up"></i>';
             }
             else
-                return '<span class="label label-danger">' . $name . '</span>';
+                return '<span class="label label-danger">' . $name . '</span><i style="float:right;color: cornflowerblue;animation: scale-1-3 0.5s ease infinite;" class="fas fa-volume-up hidden"></i>';
         })->style('font-size:16px;'); 
 
         $grid->column('deviceCode', trans('admin.deviceCode'))->copyable();
