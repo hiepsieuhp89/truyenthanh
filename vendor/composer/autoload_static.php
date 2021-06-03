@@ -107,6 +107,10 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
             'League\\Flysystem\\' => 17,
             'Laravel\\Tinker\\' => 15,
         ),
+        'K' => 
+        array (
+            'KevinSoft\\MultiLanguage\\' => 24,
+        ),
         'J' => 
         array (
             'Jxlwqq\\EnvManager\\' => 18,
@@ -356,6 +360,10 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'Laravel\\Tinker\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/tinker/src',
+        ),
+        'KevinSoft\\MultiLanguage\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel-admin-extensions/multi-language/src',
         ),
         'Jxlwqq\\EnvManager\\' => 
         array (
@@ -2998,6 +3006,11 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'Jxlwqq\\EnvManager\\EnvManager' => __DIR__ . '/..' . '/jxlwqq/env-manager/src/EnvManager.php',
         'Jxlwqq\\EnvManager\\EnvManagerServiceProvider' => __DIR__ . '/..' . '/jxlwqq/env-manager/src/EnvManagerServiceProvider.php',
         'Jxlwqq\\EnvManager\\Http\\Controllers\\EnvManagerController' => __DIR__ . '/..' . '/jxlwqq/env-manager/src/Http/Controllers/EnvManagerController.php',
+        'KevinSoft\\MultiLanguage\\Http\\Controllers\\MultiLanguageController' => __DIR__ . '/..' . '/laravel-admin-extensions/multi-language/src/Http/Controllers/MultiLanguageController.php',
+        'KevinSoft\\MultiLanguage\\Middlewares\\MultiLanguageMiddleware' => __DIR__ . '/..' . '/laravel-admin-extensions/multi-language/src/Middlewares/MultiLanguageMiddleware.php',
+        'KevinSoft\\MultiLanguage\\MultiLanguage' => __DIR__ . '/..' . '/laravel-admin-extensions/multi-language/src/MultiLanguage.php',
+        'KevinSoft\\MultiLanguage\\MultiLanguageServiceProvider' => __DIR__ . '/..' . '/laravel-admin-extensions/multi-language/src/MultiLanguageServiceProvider.php',
+        'KevinSoft\\MultiLanguage\\Widgets\\LanguageMenu' => __DIR__ . '/..' . '/laravel-admin-extensions/multi-language/src/Widgets/LanguageMenu.php',
         'Laravel\\Tinker\\ClassAliasAutoloader' => __DIR__ . '/..' . '/laravel/tinker/src/ClassAliasAutoloader.php',
         'Laravel\\Tinker\\Console\\TinkerCommand' => __DIR__ . '/..' . '/laravel/tinker/src/Console/TinkerCommand.php',
         'Laravel\\Tinker\\TinkerCaster' => __DIR__ . '/..' . '/laravel/tinker/src/TinkerCaster.php',

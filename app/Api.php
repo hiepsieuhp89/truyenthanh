@@ -20,7 +20,7 @@ use App\Device;
 use App\DeviceInfo;
 use App\Document;
 
-class Api extends Model
+trait Api
 {
     public function setPlayFM($type, $deviceCode, $data)
     {

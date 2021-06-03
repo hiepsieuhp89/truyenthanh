@@ -37,6 +37,7 @@ use FFMpeg\FFProbe;
 
 class ProgramController extends AdminController
 {
+    use Api;
     /**
      * Title for current resource.
      *
@@ -353,8 +354,9 @@ class ProgramController extends AdminController
                 2 => 'Tải lên file mới'])->when(2, function (Form $form)
                 {
 
-                    $form->file('fileVoice', 'Chọn file')
-                        ->uniqueName();
+                    $form->file('fileVoice', 'Chọn file')->name(function ($file) {
+                        return md5($file->getClientOriginalName()) . $file->guessExtension();
+                    });
 
                     $form->select('volumeBooster', 'Tăng giảm Volume')
                         ->options([5 => '0.5 lần (Giảm volume)', 10 => '1 lần', 20 => '2 lần', ])
@@ -476,6 +478,9 @@ class ProgramController extends AdminController
 
         $form->saving(function ($form)
         {
+            // if($form->type == 1){
+            //     $form->fileVoice = 1;
+            // }
             $form->radioChannel = (double) $form->radioChannel;
 
             $form->model()->creatorId = Admin::user()->id;
@@ -485,28 +490,42 @@ class ProgramController extends AdminController
 
         $form->saved(function ($form)
         {
+            // dd($form->model()->fileVoice);
             // đoạn code xử lý file
             if ($form->model()->type == 1)
             {
                 //convert to mp3
-
                 $booster = (float)$form->model()->volumeBooster / 10;
-                $outputFile = 'files/' . md5($form->model()->fileVoice) . '.mp3';
-                $exec_to_convert_to_wav = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
 
-                exec($exec_to_convert_to_wav);
+                $outputFile = 'files/' . md5($form->model()->fileVoice.$booster) . '.mp3';
 
-                if (file_exists(config('filesystems.disks.upload.path') . $outputFile)) {
+                if (!file_exists(config('filesystems.disks.upload.path') . $outputFile)){
 
+                    $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
+
+                    exec($exec_to_convert_to_mp3);
+
+                    if (file_exists(config('filesystems.disks.upload.path') . $outputFile)) {
+
+                        if (file_exists(config('filesystems.disks.upload.path') . $form->model()
+                        ->fileVoice))
+                            unlink(config('filesystems.disks.upload.path') . $form->model()
+                            ->fileVoice);
+
+                        $form->model()->fileVoice = $outputFile;
+
+                        $form->model()->save();
+                    }
+                }
+                else{
                     if (file_exists(config('filesystems.disks.upload.path') . $form->model()
                         ->fileVoice))
-                        unlink(config('filesystems.disks.upload.path') . $form->model()
-                            ->fileVoice);
+                        unlink(config('filesystems.disks.upload.path') . $form->model()->fileVoice);
 
                     $form->model()->fileVoice = $outputFile;
 
                     $form->model()->save();
-                }
+                }             
             }
 
             if ($form->model()->type == 4) {
@@ -552,12 +571,12 @@ class ProgramController extends AdminController
 
                 if ($form->model()->mode == 4){ // nếu phát ngay
                     if ($form->model()->status == 2)
-                    (new Api())->playOnline($form->model()->type, implode(',', $form->model()
+                    $this->playOnline($form->model()->type, implode(',', $form->model()
                         ->devices) , $songPath);
 
                 }
                 else{ // nếu phát theo lịch
-                    (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                    $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
 
@@ -570,13 +589,13 @@ class ProgramController extends AdminController
                     $songPath = $form->model()->digiChannel;
 
                 if ($form->model()->mode == 4) { // nếu phát ngay
-                    if ($form->model()->status == 2) 
-                    (new Api())->playOnline($form->model()->type, implode(',', $form->model()
+                    if ($form->model()->status == 2)
+                    $this->playOnline($form->model()->type, implode(',', $form->model()
                             ->devices), $songPath);
                 } else { // nếu phát theo lịch
                     // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                     // set schedule
-                    (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                    $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
                         ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
             }
@@ -603,9 +622,7 @@ class ProgramController extends AdminController
                 if ($form->model()->status == 2) // nếu duyệt
                 $songPath = $form->model()->radioChannel;
                 
-                (new Api())
-                    ->setPlayFM($form->model()->type, implode(',', $form->model()
-                    ->devices), $songPath);
+                $this->setPlayFM($form->model()->type, implode(',', $form->model()->devices), $songPath);
                 // if ($form->model()->mode == 4)
                 // {
 
@@ -634,13 +651,12 @@ class ProgramController extends AdminController
                 // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                 if ($form->model()->mode == 4)
                 {
-                    (new Api())
-                        ->playOnline($form->model()->type, implode(',', $form->model()
+                    $this->playOnline($form->model()->type, implode(',', $form->model()
                         ->devices) , $songPath);
                 }
                 else
                 {
-                    (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                    $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
             }
@@ -655,11 +671,10 @@ class ProgramController extends AdminController
 
                 // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                 if ($form->model()->mode == 4) {
-                    (new Api())
-                        ->playOnline($form->model()->type, implode(',', $form->model()
+                    $this->playOnline($form->model()->type, implode(',', $form->model()
                             ->devices), $songPath);
                 } else {
-                    (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                    $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
                         ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
             }
