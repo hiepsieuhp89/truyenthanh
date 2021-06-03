@@ -5,21 +5,19 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
-use Encore\Admin\Controllers\Dashboard;
-use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
-use Encore\Admin\Layout\Row;
-use Encore\Admin\Form;
-use Encore\Admin\Grid;
-use Encore\Admin\Show;
+use App\Api;
 
 
 class HomeController extends Controller
 {
+    use Api;
     public function index(Content $content)
     {
         return $content->title('Mạng lưới phát thanh kỹ thuật số')->body($this->show());
+    }
+    public function getDevicesStatus(){
+        return response($this->getDevicesStatus());
     }
     protected function show()
     {

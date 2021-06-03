@@ -35,7 +35,6 @@ Admin::style('
   from {transform: scale(1);opacity:0.8;}
   to {transform: scale(1.3);opacity:1;}
 }
-
 ');
 Admin::js(env('APP_URL').'/js/custom.js');
 Admin::js("https://kit.fontawesome.com/12065bbb1f.js");

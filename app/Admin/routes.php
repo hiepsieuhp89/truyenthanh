@@ -11,7 +11,10 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('admin.home');
+    $router->get('/devices-status', 'HomeController@getDevicesStatus');
+
     $router->post('/language-change','HomeController@changeLanguage')->middleware('localization')->name('admin-change-language');
+
     $router->resource('areas', AreaController::class, ['except' => ['create']]);
     $router->resource('devices', DeviceController::class);
     $router->resource('docs', DocumentController::class);
