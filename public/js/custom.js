@@ -8,7 +8,7 @@ for (var i = 0; i < a.length; i++) {
 setInterval(function() {
     $.ajax({
         type: 'get',
-        url: 'http://localhost:8000/truyenthanh/public/admin/devices-status',
+        url: 'https://truyenthanh.org.vn/admin/devices-status',
         success: function(res) {
             console.log(res);
             $.each(res.Data, function(i, n) {
