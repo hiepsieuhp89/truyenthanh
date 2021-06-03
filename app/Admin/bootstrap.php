@@ -24,7 +24,19 @@ Encore\Admin\Form::extend('record', App\Admin\Extensions\RecordVoice::class);
 
 
 Admin::favicon(env("APP_URL").'/images/icon-s.png');
-Admin::style('.w-100{width:100%;} .h-100{height:100%;} .h-400px{height:400px;} .p-0{padding:0;} .d-flex{display:flex;} .d-initial{display:initial;}');
+Admin::style('
+.w-100{width:100%;} 
+.h-100{height:100%;} 
+.h-400px{height:400px;} 
+.p-0{padding:0;} 
+.d-flex{display:flex;} 
+.d-initial{display:initial;} 
+@keyframes scale-1-3 {
+  from {transform: scale(1);opacity:0.8;}
+  to {transform: scale(1.3);opacity:1;}
+}
+
+');
 Admin::js(env('APP_URL').'/js/custom.js');
 Admin::js("https://kit.fontawesome.com/12065bbb1f.js");
 

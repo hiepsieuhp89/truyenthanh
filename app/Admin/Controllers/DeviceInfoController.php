@@ -104,7 +104,7 @@ class DeviceInfoController extends AdminController
                 if (trim($this->is_playing) == '')
                     return '<span class="label label-success">' . $name . '</span>';
                 else
-                    return '<span class="label label-success">' . $name . '</span><i style="float:right;color: cornflowerblue;" class="fas fa-volume-up"></i>';
+                    return '<span class="label label-success">' . $name . '</span><i style="float:right;color: cornflowerblue;animation: scale-1-3 0.5s ease infinite;" class="fas fa-volume-up"></i>';
             }
             else
                 return '<span class="label label-danger">' . $name . '</span>';
