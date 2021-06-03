@@ -14,8 +14,8 @@ class AddStreamkeyToAdminUsers extends Migration
     public function up()
     {
         Schema::table('admin_users', function (Blueprint $table) {
-            $table->text('stream_url')->default('');
-            $table->text('stream_key')->default('');
+            $table->text('stream_url')->nullable();
+            $table->text('stream_key')->nullable();
         });
     }
 
