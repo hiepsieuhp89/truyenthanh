@@ -164,7 +164,7 @@ class UserController extends AdminController
 
             }
             //is admin
-            if($form->model()->can('*')   
+            if($form->model()->can('*'))
                 $form->model()->stream_key = 'admin-stream';
 
             $form->model()->stream_url = env('APP_STREAM_URL') . $form->model()->stream_key . '.m3u8';
