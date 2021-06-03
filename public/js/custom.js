@@ -27,7 +27,7 @@ setInterval(function() {
                 return n.DeviceID;
             });
             $.map($('tbody tr'), function(n) {
-                if (jQuery.inArray(($(n).find('.column-deviceCode a')).attr('data-content'), deviceCodes) !== -1) {
+                if (jQuery.inArray(($(n).find('.column-deviceCode a')).attr('data-content'), deviceCodes) == -1) {
                     $(n).find('.column-device-name').find('span').removeClass('label-success').addClass('label-danger');
                     $(n).find('.column-device-name').find('i').addClass('hidden');
                     $(n).find('.column-status').html('<b class="text-danger">Không hoạt động</b>');
