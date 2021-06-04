@@ -8,12 +8,9 @@ use App\Device;
 use App\DeviceInfo;
 use App\Area;
 
-use App\Admin\Actions\Device\PlayMedia;
 use App\Admin\Actions\Device\Delete;
-use App\Admin\Actions\Device\BatchPlayMedia;
 
 use Encore\Admin\Controllers\AdminController;
-use Encore\Admin\Controllers\Dashboard;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -37,7 +34,7 @@ class DeviceController extends AdminController
      */
     public function map(){
         $devices = Device::join('device_infos', 'device_infos.deviceCode', '=', 'devices.deviceCode')
-                ->select('devices.id','devices.name','devices.address','devices.lat','devices.lon','device_infos.status')->get();
+                ->select('devices.id','devices.name','devices.address','devices.lat','devices.lon','device_infos.status')->wherein('areaId', array_diff(explode(",", Admin::user()->areaId), array("")))->get();
                 
         return response()->view('map',['devices'=>$devices])->header('Content-Type', 'text/xml');
 

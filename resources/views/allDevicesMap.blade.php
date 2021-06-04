@@ -39,9 +39,11 @@
 <div id="map"></div>
 <script>
     function initMap() {
+    var la = {{ $area->lat }};
+    var lo = {{ $area->lon }};
     var map = new google.maps.Map(document.getElementById('map'), {
-        center: new google.maps.LatLng(21.0227387, 105.8194541),
-        zoom: 14,
+        center: new google.maps.LatLng(la, lo),
+        zoom: 10,
         mapTypeId: 'roadmap'
     });
     const image = '{{ env("APP_URL")."/images/icon_map.png" }}';

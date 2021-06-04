@@ -19,7 +19,6 @@ use App\VoiceRecord;
 use App\Api;
 
 use App\Admin\Actions\Program\Delete;
-use App\Admin\Actions\Program\BatchPlayAll;
 use App\Admin\Actions\Program\BatchDelete;
 
 use Encore\Admin\Controllers\AdminController;
@@ -31,9 +30,6 @@ use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Actions\BatchAction;
-
-use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
 
 class ProgramController extends AdminController
 {
@@ -373,7 +369,7 @@ class ProgramController extends AdminController
                 //$form->multipleFile('fileVoice', 'Chọn file')->removable();
                 
             })->when(2, function (Form $form) {
-                
+
                 if(Admin::user()->stream_key == '')
                     $kenh = [
                         'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Encore\Admin\Layout\Content;
+use Encore\Admin\Facades\Admin;
 use App\Api;
+use App\Area;
 
 
 class HomeController extends Controller
@@ -49,7 +51,9 @@ class HomeController extends Controller
     }
     protected function show()
     {
-    	return view('allDevicesMap',["areaId" => 1]);
+        $areaId = Admin::user()->can('*')? 1 : (array_diff(explode(",", Admin::user()->areaId), array("")))[0];
+        $area = Area::find($areaId);
+    	return view('allDevicesMap',["area" => $area]);
     }
     public function changeLanguage(Request $req){
         Session::put('lan', $req->lang);
