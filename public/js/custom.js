@@ -5,8 +5,8 @@ for (var i = 0; i < a.length; i++) {
     });
 }
 var e;
-if (window.location.href.indexOf("devicedata") > -1 || window.location.href.indexOf("devices") > -1) {
-    e = setInterval(function() {
+e = setInterval(function() {
+    if (window.location.href.indexOf("devicedata") > -1 || window.location.href.indexOf("devices") > -1) {
         $.ajax({
             type: 'get',
             url: 'https://truyenthanh.org.vn/admin/devices-status',
@@ -36,6 +36,5 @@ if (window.location.href.indexOf("devicedata") > -1 || window.location.href.inde
                 });
             }
         });
-    }, 5000);
-} else
-    clearInterval(e);
+    }
+}, 5000);
