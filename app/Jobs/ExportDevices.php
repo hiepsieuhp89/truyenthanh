@@ -23,7 +23,9 @@ class ExportDevices implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        foreach (Device::select('deviceCode')->get() as $device) {
+            Excel::store(new DevicesExport($device->deviceCode), $device->deviceCode . '.xlsx', 'export.devices.statistical');
+        }
     }
 
     /**
@@ -33,8 +35,6 @@ class ExportDevices implements ShouldQueue
      */
     public function handle()
     {
-        foreach(Device::select('deviceCode')->get() as $device){
-            Excel::store(new DevicesExport($device->deviceCode), $device->deviceCode.'.xlsx', 'export.devices.statistical');
-        }
+        
     }
 }

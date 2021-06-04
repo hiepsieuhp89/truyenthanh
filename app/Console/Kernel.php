@@ -39,6 +39,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new RemoveUnnecessaryFiles())->daily();
 
         $schedule->job(new UpdateDeviceInfo())->daily();
+        
     }
 
     /**
