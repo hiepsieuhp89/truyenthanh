@@ -160,12 +160,12 @@ class UserController extends AdminController
 
                 $area = Area::find($form->areaId);
 
-                $form->model()->stream_key = str_slug($area->title . '-' . $area->id);
+                $form->model()->stream_key = str_slug($area->title . '-' . $form->model()->username);
 
             }
             //is admin
             if($form->model()->can('*'))
-                $form->model()->stream_key = 'admin-stream';
+                $form->model()->stream_key = str_slug('ad-' . $form->model()->username);
 
             $form->model()->stream_url = env('APP_STREAM_URL') . $form->model()->stream_key . '.m3u8';
 
