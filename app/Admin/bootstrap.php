@@ -31,6 +31,12 @@ Admin::style('
 .p-0{padding:0;} 
 .d-flex{display:flex;} 
 .d-initial{display:initial;} 
+.bootstrap-switch-handle-on, .bootstrap-switch-handle-off{
+    white-space: nowrap;
+}
+body{
+    font-family:system-ui;
+}
 @keyframes scale-1-3 {
   from {transform: scale(1);opacity:0.8;}
   to {transform: scale(1.3);opacity:1;}
