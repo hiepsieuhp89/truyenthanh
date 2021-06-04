@@ -27,8 +27,23 @@ class UserController extends AdminController
     protected function grid()
     {
         $userModel = config('admin.database.users_model');
+        
 
         $grid = new Grid(new $userModel());
+        $grid->filter(function ($filter) {
+            $filter->expand();
+            $roleModel = config('admin.database.roles_model');
+            $filter->disableIdFilter();
+
+            $filter->equal('roles.id', 'Chức vụ')
+            ->select(
+                (new $roleModel())->pluck('name','id')
+            );
+
+            $filter->like('username', 'Tên Tài khoản');
+        });
+
+        $grid->model()->orderBy('id', 'DESC');
 
         $grid->column('id', 'ID')->sortable();
         $grid->column('username', trans('admin.username'));
