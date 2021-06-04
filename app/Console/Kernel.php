@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\UpdateDevicesStatus;
 use App\Jobs\UpdateAreaAccount;
+use App\Jobs\UpdateDeviceInfo;
 use App\Jobs\RemoveUnnecessaryFiles;
 
 class Kernel extends ConsoleKernel
@@ -32,6 +33,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UpdateAreaAccount())->everyMinute();
 
         $schedule->job(new RemoveUnnecessaryFiles())->daily();
+
+        $schedule->job(new UpdateDeviceInfo())->daily();
     }
 
     /**
