@@ -78,6 +78,17 @@ return [
             'url' => env('APP_URL').'/uploads/',
             'visibility' =>'public',
         ],
+        'export' => [
+            'devices'=>[
+                'statistical'=>[
+                    'driver' => 'local',
+                    'root' => public_path('export') . '/devices/statistical',
+                    'path' => public_path('export'). '/devices/statistical',
+                    'url' => env('APP_URL') . '/export/devices/statistical',
+                    'visibility' => 'public',
+                ],
+            ],
+        ],
 
         's3' => [
             'driver' => 's3',

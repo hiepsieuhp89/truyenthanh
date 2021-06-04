@@ -9,6 +9,8 @@ use App\Jobs\UpdateAreaAccount;
 use App\Jobs\UpdateDeviceInfo;
 use App\Jobs\RemoveUnnecessaryFiles;
 
+use App\Jobs\ExportDevices;
+
 class Kernel extends ConsoleKernel
 {
     /**
@@ -31,6 +33,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UpdateDevicesStatus())->everyMinute();
 
         $schedule->job(new UpdateAreaAccount())->everyMinute();
+
+        $schedule->job(new ExportDevices())->everyMinute();
 
         $schedule->job(new RemoveUnnecessaryFiles())->daily();
 
