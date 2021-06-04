@@ -496,7 +496,7 @@ class ProgramController extends AdminController
 
                 $outputFile = 'files/' . md5($form->model()->fileVoice.$booster) . '.mp3';
 
-                if (!file_exists(config('filesystems.disks.upload.path') . $outputFile)){
+                if (!file_exists(config('filesystems.disks.upload.path') . $outputFile) && file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice)){
 
                     $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
 
@@ -537,7 +537,6 @@ class ProgramController extends AdminController
 
                     $form->model()
                         ->save();
-
                 }
 
             }
