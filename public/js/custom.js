@@ -18,7 +18,7 @@ e = setInterval(function() {
 
                     let device_row = $('[data-content="' + n.DeviceID + '"]').parent().parent();
 
-                    if (n.DeviceData.Data.PlayURL != "" || n.DeviceData.Data.RadioFrequency != 0)
+                    if (n.DeviceData.Data.AudioOutState != 0)
                         device_row.find('.column-device-name').find('i').removeClass('hidden');
                     else
                         device_row.find('.column-device-name').find('i').addClass('hidden');
