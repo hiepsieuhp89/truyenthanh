@@ -152,6 +152,13 @@ class UserController extends AdminController
 
         $form->select('areaId', trans('admin.area'))->options(Area::selectOptions())->rules('required');
 
+        $states = [
+            'off' => ['value' => 0, 'text' => 'Không', 'color' => 'danger'], 
+            'on' => ['value' => 1, 'text' => 'Có', 'color' => 'success'],
+        ];
+
+        $form->switch('stream_key', 'Cấp quyền phát trực tiếp')->states($states)->default(1);
+
         // $form->multipleSelect('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
 
         $form->display('created_at', trans('admin.created_at'));
@@ -170,21 +177,26 @@ class UserController extends AdminController
         });
         $form->saved(function (Form $form) {
 
-            //not admin
-            if(!$form->model()->can('*') && $form->areaId != 0){
+            if($form->model()->stream_key){
+                //not admin
+                if (!$form->model()->can('*') && $form->areaId != 0) {
 
-                $area = Area::find($form->areaId);
+                    $area = Area::find($form->areaId);
 
-                $form->model()->stream_key = str_slug($area->title . '-' . $form->model()->username);
+                    $form->model()->stream_key = str_slug($area->title . '-' . $form->model()->username);
+                }
+                //is admin
+                if ($form->model()->can('*'))
+                    $form->model()->stream_key = str_slug('ad-' . $form->model()->username);
 
+                $form->model()->stream_url = env('APP_STREAM_URL') . $form->model()->stream_key . '.m3u8';
+
+                $form->model()->save();
             }
-            //is admin
-            if($form->model()->can('*'))
-                $form->model()->stream_key = str_slug('ad-' . $form->model()->username);
-
-            $form->model()->stream_url = env('APP_STREAM_URL') . $form->model()->stream_key . '.m3u8';
-
-            $form->model()->save();
+            else {
+                $form->model()->stream_key = '';
+                $form->model()->save();
+            }      
         });
 
         return $form;

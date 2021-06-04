@@ -373,12 +373,20 @@ class ProgramController extends AdminController
                 //$form->multipleFile('fileVoice', 'Chọn file')->removable();
                 
             })->when(2, function (Form $form) {
+                
+                if(Admin::user()->stream_key == '')
+                    $kenh = [
+                        'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
+                        'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+                    ];
+                else
+                    $kenh = [
+                        'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
+                        'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+                        Admin::user()->stream_url => 'Phát trực tiếp (' . Admin::user()->stream_key . ')',
+                    ];
 
-                $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options([
-                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
-                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
-                    Admin::user()->stream_url => 'Phát trực tiếp ('. Admin::user()->stream_key.')',
-                ])->rules('required', ['required' => "Cần nhập giá trị"]);
+                $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options($kenh)->rules('required', ['required' => "Cần nhập giá trị"]);
                 
             })->when(3, function (Form $form){
 
