@@ -124,10 +124,7 @@ class ProgramController extends AdminController
             $filter->disableIdFilter();
 
             $filter->scope('auth', trans('Chương trình'))
-                ->where('creatorId', Admin::user()
-                ->id)
-                ->orwhere('approvedId', Admin::user()
-                ->id);
+                ->where('creatorId', Admin::user()->id);
 
             $filter->equal('mode', 'Kiểu phát')
                 ->select([1 => 'Trong ngày', 2 => 'Hàng ngày', 3 => 'Hàng tuần', 4 => 'Phát ngay']);
