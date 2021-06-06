@@ -39,8 +39,9 @@ class DevicesExport implements FromCollection, ShouldAutoSize
             $pre = (new DevicesImport)->toCollection($this->code . '.xlsx', 'export.devices.statistical');
         } catch (Exception $e) {
             $pre = new Collection();
-        }
-    
+        
+        if(!isset($pre))
+            $pre = new Collection();
         $d = DeviceInfo::select('deviceCode', 'status', 'volume', 'is_playing')->where('deviceCode', $this->code)->get();
 
         foreach($d as $d_info){
