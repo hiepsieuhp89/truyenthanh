@@ -20,6 +20,7 @@ class ExportDevices implements ShouldQueue
      */
     public function __construct()
     {
+        (new FeatureController())->exportDeviceInfo();
     }
 
     /**
@@ -29,6 +30,6 @@ class ExportDevices implements ShouldQueue
      */
     public function handle()
     {
-        (new FeatureController())->exportDeviceInfo();
+        
     }
 }
