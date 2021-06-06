@@ -8,10 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-use App\Device;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\DevicesExport;
-
+use App\Admin\Controllers\FeatureController;
 class ExportDevices implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -23,9 +20,6 @@ class ExportDevices implements ShouldQueue
      */
     public function __construct()
     {
-        foreach (Device::select('deviceCode')->get() as $device) {
-            Excel::store(new DevicesExport($device->deviceCode), $device->deviceCode . '.xlsx', 'export.devices.statistical');
-        }
     }
 
     /**
@@ -35,6 +29,6 @@ class ExportDevices implements ShouldQueue
      */
     public function handle()
     {
-        
+        (new FeatureController())->exportDeviceInfo();
     }
 }

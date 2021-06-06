@@ -12,6 +12,7 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('admin.home');
     $router->get('/devices-status', 'HomeController@getDevicesStatus');
+    $router->get('/export/deviceinfo', 'FeatureController@exportDeviceInfo')->name('admin.home');
 
     $router->post('/language-change','HomeController@changeLanguage')->middleware('localization')->name('admin-change-language');
 
