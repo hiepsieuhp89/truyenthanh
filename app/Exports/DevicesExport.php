@@ -36,12 +36,16 @@ class DevicesExport implements FromCollection, ShouldAutoSize
     public function collection()
     {
         try{
-            $pre = (new DevicesImport)->toCollection($this->code . '.xlsx', 'export.devices.statistical');
+            if(file_exists(config('filesystems.disks.export.devices.statistical.path') . $this->code . '.xlsx')){
+                $pre = (new DevicesImport)->toCollection($this->code . '.xlsx', 'export.devices.statistical');
+                unlink(config('filesystems.disks.export.devices.statistical.path'). $this->code . '.xlsx');
+            }
         } catch (Exception $e) {
             $pre = new Collection();
-        
+        }
         if(!isset($pre))
             $pre = new Collection();
+
         $d = DeviceInfo::select('deviceCode', 'status', 'volume', 'is_playing')->where('deviceCode', $this->code)->get();
 
         foreach($d as $d_info){

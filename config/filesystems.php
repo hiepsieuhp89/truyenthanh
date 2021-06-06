@@ -82,9 +82,9 @@ return [
             'devices'=>[
                 'statistical'=>[
                     'driver' => 'local',
-                    'root' => public_path('uploads') . '/export/devices/statistical',
-                    'path' => public_path('uploads'). '/export/devices/statistical',
-                    'url' => env('APP_URL') . '/uploads/export/devices/statistical',
+                    'root' => public_path('uploads') . '/export/devices/statistical/',
+                    'path' => public_path('uploads'). '/export/devices/statistical/',
+                    'url' => env('APP_URL') . '/uploads/export/devices/statistical/',
                     'visibility' => 'public',
                 ],
             ],
