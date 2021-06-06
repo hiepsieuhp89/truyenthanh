@@ -38,7 +38,6 @@ class DevicesExport implements FromCollection, ShouldAutoSize
         try{
             if(file_exists(config('filesystems.disks.export.devices.statistical.path') . $this->code . '.xlsx')){
                 $pre = (new DevicesImport)->toCollection($this->code . '.xlsx', 'export.devices.statistical');
-                unlink(config('filesystems.disks.export.devices.statistical.path'). $this->code . '.xlsx');
             }
         } catch (Exception $e) {
             $pre = new Collection();
