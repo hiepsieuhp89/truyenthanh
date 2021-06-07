@@ -79,6 +79,11 @@ return [
             'visibility' =>'public',
         ],
         'export' => [
+            'driver' => 'local',
+            'root' => public_path('uploads') . '/export/',
+            'path' => public_path('uploads') . '/export/',
+            'url' => env('APP_URL') . '/uploads/export/',
+            'visibility' => 'public',
             'devices'=>[
                 'statistical'=>[
                     'driver' => 'local',

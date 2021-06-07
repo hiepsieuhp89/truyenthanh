@@ -47,15 +47,15 @@ class AppServiceProvider extends ServiceProvider
         if(isset($response['DataType']) && $response['DataType'] == 5){
 
           $device_data = array_map(function($arr){
-            return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"], $arr["DeviceData"]["Data"]["RadioFrequency"]];
+            return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["PlayURL"], $arr["DeviceData"]["Data"]["RadioFrequency"], $arr["DeviceData"]["Data"]["Volume"]];
           }, $response["Data"]);
 
           foreach ($device_data as $active_device) {
-
               DeviceInfo::where('deviceCode',$active_device[0])->update([
                   'status' => 1,
                   'turn_off_time' => null,
                     'is_playing' => $active_device[1] ? $active_device[1] : ($active_device[2] == 0.0 ? null : $active_device[2]),
+                    'volume' => $active_device[3],
               ]);
 
           }

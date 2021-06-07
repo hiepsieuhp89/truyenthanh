@@ -578,6 +578,7 @@ class ProgramController extends AdminController
                 }
 
             }
+            // nếu phát tiếp sóng
             if ($form->model()->type == 2) {
 
                 if ($form->model()->status == 1) // nếu không duyệt
@@ -595,21 +596,7 @@ class ProgramController extends AdminController
                     $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
                         ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
-            }
-            // if ($form->model()->type == 2) {
-            //     if ($form->model()->status == 1) // nếu không duyệt
-            //         $songPath = "";
-            //     if ($form->model()->status == 2) // nếu duyệt
-            //         $songPath = $form->model()->digiChannel;
-            //     if ($form->model()->mode == 4) {
-            //         // play online
-            //         (new Api())->setPlayFM($form->model()->type, implode(',',$form->model()->devices),$songPath);
-            //     } else {
-            //         // play schedule
-            //         (new Api())->setPlaySchedule($form->model()->type, implode(',',$form->model()->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
-            //     }
-            // }
-            
+            }  
             // nếu phát đài FM
             if ($form->model()->type == 3)
             {
@@ -633,7 +620,6 @@ class ProgramController extends AdminController
                 //         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 // }
             }
-
             // nếu phát file văn bản
             if ($form->model()->type == 4)
             {
@@ -657,6 +643,7 @@ class ProgramController extends AdminController
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
             }
+            // nếu phát ghi âm
             if ($form->model()->type == 5) {
                 $voiceModel = VoiceRecord::findOrFail($form->model()
                     ->record_Id);
