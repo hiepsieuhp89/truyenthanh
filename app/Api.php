@@ -109,10 +109,9 @@ trait Api
         if($type != 3){
             $file_duration = $this->getFileDuration($songName,$replay_delay);
         }
+        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
         if ($type == 1 || $type == 4 || $type == 5) { // nếu là phát phương tiện
-
-            $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
-
+            
             foreach ($devices as $device) { //set từng thiết bị
 
                 $startT = new Carbon($startDate . ' ' . $startTime);
