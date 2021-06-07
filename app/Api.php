@@ -1,27 +1,38 @@
 <?php
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
-use Request;
-use Helper;
-use DB;
-use DateTime;
-use DatePeriod;
-use DateInterval;
+use App\Schedule;
 use Carbon\Carbon;
 
-use App\Program;
-use App\Area;
-use App\Device;
-use App\DeviceInfo;
-use App\Document;
+// use Illuminate\Database\Eloquent\Model;
+// use FFMpeg\FFMpeg;
+// use Request;
+// use Helper;
+// use DB;
+// use DateTime;
+// use DatePeriod;
+// use DateInterval;
+// use App\Program;
+// use App\Area;
+// use App\Device;
+// use App\DeviceInfo;
+
+// use App\Document;
 
 trait Api
 {
+    public function getSchedule($deviceCode){
+        $schedules = Schedule::where('deviceCode', $deviceCode)->get();
+        $return = '';
+        if(count($schedules) > 0)
+            foreach ($schedules as $schedule) {
+                $return .= $schedule->get_schedule_of_device();
+            }
+        return $return;   
+    }
     public function getDevicesStatus(){
         
         $curl = curl_init();
@@ -95,6 +106,7 @@ trait Api
 
                 foreach ($devices as $device)// foreach add device
                 {
+                    $schedule = $this->getSchedule($device);
 
                     $startT = new Carbon($startDate . ' ' . $startTime);
 
@@ -113,12 +125,20 @@ trait Api
 
                         $end_date_of_the_loop_play = $startT->toDateString();
 
-                        $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}';
+                        $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1},';
 
-                        if ($i < $replay_times - 1) $dataRequest .= ',';
+                        $schedule = new Schedule();
+                        $schedule->deviceCode = $device;
+                        $schedule->type = $type;
+                        $schedule->fileVoice = $songName;
+                        $schedule->startDate = $start_date_of_the_loop_play;
+                        $schedule->endDate = $end_date_of_the_loop_play;
+                        $schedule->time = $start_time_of_the_loop_play;
+                        $schedule->endtime = $end_time_of_the_loop_play;
+                        $schedule->save();
                     }
 
-                    $dataRequest .= ']}\\\\\"}\"}';
+                    $dataRequest .= ']}\\\\\"}\"},';
 
                     if ($device != $devices[count($devices) - 1]) $dataRequest .= ',';
                 }
@@ -129,34 +149,21 @@ trait Api
         }
         else{ // nếu đặt hàng ngày
 
-            $dates = [];
-
-            $period = new DatePeriod( // lấy danh sách ngày phát
-                new DateTime($startDate),
-                new DateInterval('P1D'),
-                new DateTime($endDate)
-            );
-            $i = 0;
-            foreach ($period as $key => $value) {
-                $dates[$i++] = $value->format('Y-m-d');
-            }
-            $dates[$i] = $endDate;
-
             if ($type == 1 || $type == 4 || $type == 5){ // nếu là phát phương tiện
-
-                foreach($dates as $date){
-
-                    //$time = new Carbon($date . ' ' . $startTime);
 
                     $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
                     foreach ($devices as $device) { //set từng thiết bị
 
-                        $startT = new Carbon($date . ' ' . $startTime);
+                    $schedule = $this->getSchedule($device);
 
-                        $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';  
+                    $startT = new Carbon($startDate . ' ' . $startTime);
 
-                        for ($i = 0; $i < $replay_times; $i++) {
+                    $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
+                        
+                    $dataRequest .= $schedule;
+
+                    for ($i = 0; $i < $replay_times; $i++) {
 
                             $start_time_of_the_loop_play = $startT->toTimeString();
 
@@ -168,17 +175,21 @@ trait Api
 
                             $end_date_of_the_loop_play = $endDate;
 
-                            $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}';
+                            $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1},';
 
-                            if ($i < $replay_times - 1) $dataRequest .= ',';
-                        }
-                        $dataRequest .= ']}\\\\\"}\"}';
-
-                        if ($device != $devices[count($devices) - 1]) $dataRequest .= ',';
+                            //insert new in schedule_table
+                            $schedule = new Schedule();
+                            $schedule->deviceCode = $device;
+                            $schedule->type = $type;
+                            $schedule->fileVoice = $songName;
+                            $schedule->startDate = $start_date_of_the_loop_play;
+                            $schedule->endDate = $end_date_of_the_loop_play;
+                            $schedule->time = $start_time_of_the_loop_play;
+                            $schedule->endtime = $end_time_of_the_loop_play;
+                            $schedule->save();
                     }
-                    
-                    
-                }
+                    $dataRequest .= ']}\\\\\"}\"},';
+                }    
             }
             $dataRequest .= ']}"}';
 
@@ -188,7 +199,6 @@ trait Api
 
     public function sendFileToDevice($deviceCode, $songName)
     {
-
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"' . $deviceCode . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":1,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"URLlist\\\\\\\\\\\\\":[\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\"]}\\\\\"}\"}]}"}';
 
         $this->curl_to_server($dataRequest);

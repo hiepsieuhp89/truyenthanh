@@ -8,8 +8,11 @@ use Carbon\Carbon;
 use App\Device;
 use App\DeviceInfo;
 use App\Area;
+use App\Schedule;
 
+use Illuminate\Support\Collection;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Widgets\Table;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -17,7 +20,6 @@ use Encore\Admin\Layout\Content;
 use Illuminate\Support\Facades\Log;
 use App\Admin\Actions\DeviceInfo\StopPlay;
 use App\Admin\Actions\DeviceInfo\RelayFirst;
-use App\Admin\Actions\DeviceInfo\RelaySecond;
 use Encore\Admin\Facades\Admin;
 
 class DeviceInfoController extends AdminController
@@ -108,7 +110,7 @@ class DeviceInfoController extends AdminController
             }
             else
                 return '<span class="label label-danger">' . $name . '</span><i style="float:right;color: cornflowerblue;animation: scale-1-3 0.5s ease infinite;" class="fas fa-volume-up hidden"></i>';
-        })->style('font-size:16px;'); 
+        })->style('font-size:16px;');
 
         $grid->column('deviceCode', trans('admin.deviceCode'))->copyable();
 
@@ -124,11 +126,6 @@ class DeviceInfoController extends AdminController
             'off' => ['value' => 0, 'text' => 'Không hoạt động', 'color' => 'danger'],
             'on' => ['value' => 1, 'text' => 'Hoạt động', 'color' => 'primary'],
         ];
-        $grid->column('status', trans('admin.status'))->display(function($value){
-            if($value == 1) return "<b class=\"text-success\">Đang hoạt động</b>";
-            return "<b class=\"text-danger\">Không hoạt động</b>";
-        })->hide();
-
         $grid->column('is_playing', 'Đang phát')->display(function($value){
 
             if(trim($value) != '') return "<b class=\"text-success\"><a href=\"". $value ."\" class=\"text-success\">Có</a></b>";
@@ -143,6 +140,25 @@ class DeviceInfoController extends AdminController
             return '';   
         });
 
+        $grid->column('status', trans('Xem lịch phát'))->display(function () {
+            return "Nhấn để xem";
+        })->expand(function ($model) {
+            $schedules = Schedule::select('fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->get();
+
+            if (count($schedules) == 0)
+                $schedules = new Collection();
+            else
+                $schedules = $schedules->map(function($schedule){
+                    return [
+                        'fileVoice' => '<audio controls=""><source src="'. $schedule->fileVoice.'" type="audio/wav"></audio>',
+                        'startDate' => $schedule->startDate,
+                        'time' => $schedule->time,
+                        'endDate' => $schedule->endDate,
+                    ];
+                });
+
+            return new Table(['Nội dung', 'Ngày bắt đầu', 'Thời gian', 'Ngày kết thúc'], $schedules->toArray());
+        });
         $grid->column('created_at', __('Created at'))->hide();
 
         $grid->column('updated_at', __('Updated at'))->hide();
