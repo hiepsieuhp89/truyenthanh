@@ -143,9 +143,7 @@ class DeviceInfoController extends AdminController
         $grid->column('id', trans('Xem lịch phát'))->display(function () {
             return "Nhấn để xem";
         })->expand(function ($model) {
-            $schedules = Schedule::select('fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->orderby('id','DESC')->get();
-
-
+            $schedules = Schedule::select('fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->orderby('startDate','ASC')->orderby('time', 'ASC')->get();
                 $schedules = $schedules->map(function($schedule){
                     return [
                         'fileVoice' => '<audio controls=""><source src="'. $schedule->fileVoice.'" type="audio/wav"></audio>',
