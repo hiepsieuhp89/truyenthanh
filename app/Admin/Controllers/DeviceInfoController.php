@@ -145,9 +145,7 @@ class DeviceInfoController extends AdminController
         })->expand(function ($model) {
             $schedules = Schedule::select('fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->orderby('id','DESC')->get();
 
-            if (count($schedules) == 0)
-                $schedules = new Collection();
-            else
+
                 $schedules = $schedules->map(function($schedule){
                     return [
                         'fileVoice' => '<audio controls=""><source src="'. $schedule->fileVoice.'" type="audio/wav"></audio>',
