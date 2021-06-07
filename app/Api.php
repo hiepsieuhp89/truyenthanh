@@ -87,7 +87,6 @@ trait Api
 
             $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
         }
-
         if ($endDate == NULL || $endDate == ''){ // nếu đặt trong ngày
 
             $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
@@ -161,15 +160,15 @@ trait Api
 
                             $start_time_of_the_loop_play = $startT->toTimeString();
 
-                            $start_date_of_the_loop_play = $startT->toDateString();
+                            $start_date_of_the_loop_play = $startDate;
 
                             $startT->addSeconds($file_duration);
                             
                             $end_time_of_the_loop_play = $startT->toTimeString();
 
-                            $end_date_of_the_loop_play = $startT->toDateString();
+                            $end_date_of_the_loop_play = $endDate;
 
-                            $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}';
+                            $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}';
 
                             if ($i < $replay_times - 1) $dataRequest .= ',';
                         }
@@ -178,15 +177,13 @@ trait Api
                         if ($device != $devices[count($devices) - 1]) $dataRequest .= ',';
                     }
                     
-                    $dataRequest .= ']}"}';
-
-                    $this->curl_to_server($dataRequest);
+                    
                 }
             }
-        }
-       
+            $dataRequest .= ']}"}';
 
-        $this->curl_to_server($dataRequest);
+            $this->curl_to_server($dataRequest);
+        }
     }
 
     public function sendFileToDevice($deviceCode, $songName)
