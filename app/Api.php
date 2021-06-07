@@ -185,7 +185,7 @@ trait Api
         $this->curl_to_server($dataRequest);
     }
     public function curl_to_server($dataRequest){
-        
+        dd($dataRequest);
         if (env('APP_ENV') == 'local') 
             dd($dataRequest);
 
