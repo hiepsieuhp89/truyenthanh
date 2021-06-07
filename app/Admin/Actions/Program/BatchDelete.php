@@ -6,6 +6,7 @@ use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Encore\Admin\Actions\Response;
 use Illuminate\Support\Facades\DB;
+use App\Schedule;
 
 class BatchDelete extends BatchAction
 {
@@ -20,7 +21,16 @@ class BatchDelete extends BatchAction
         foreach ($collection as $model) {
             try {
 	            DB::transaction(function () use ($model) {
+                    
 	                $model->delete();
+
+                    Schedule::wherein('deviceCode', $model->devices)
+                    ->where('fileVoice', config('filesystems.disks.upload.url') . $model->fileVoice)
+                    ->where('startDate', $model->startDate)
+                    ->where('time', $model->time)
+                    ->where('endDate', $model->endDate)
+                    ->delete();
+
 	                // if($model->type == 1 && isset($model->fileVoice)){
 	                //     $file_path = 'uploads/'.$model->fileVoice;
 	                //     if(file_exists($file_path))

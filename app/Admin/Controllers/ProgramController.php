@@ -525,7 +525,6 @@ class ProgramController extends AdminController
                     $form->model()->save();
                 }             
             }
-
             if ($form->model()->type == 4) {
                 $d = Document::where('id', $form->model()
                     ->document_Id)
@@ -557,6 +556,10 @@ class ProgramController extends AdminController
             }
             //kết thúc đoạn code xử lý file
             
+            if($form->model()->mode == 1){
+                $form->model()->endDate = $form->model()->startDate;
+                $form->model()->save();
+            }
             // nếu phát file phương tiện
             if ($form->model()->type == 1)
             {

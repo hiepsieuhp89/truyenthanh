@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use FFMpeg\FFProbe;
 use App\Schedule;
 use Carbon\Carbon;
+use Exception;
 
 // use Illuminate\Database\Eloquent\Model;
 // use FFMpeg\FFMpeg;
@@ -32,6 +33,23 @@ trait Api
                 $return .= $schedule->get_schedule_of_device();
             }
         return $return;   
+    }
+    public function getFileDuration($songName, $replay_delay = 30){
+        try{
+                
+            if (env('APP_ENV') == 'local') $ffprobe = FFProbe::create(['ffmpeg.binaries' => 'D:\ffmpeg\bin\ffmpeg.exe', 'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe']);
+
+            else $ffprobe = FFProbe::create();
+
+            $file_duration = $ffprobe->format($songName)->get('duration');
+
+            $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
+
+            return $file_duration;
+
+        } catch (Exception $e) {
+            return $this->getFileDuration($songName, $replay_delay);
+        }
     }
     public function getDevicesStatus(){
         
@@ -89,112 +107,54 @@ trait Api
         $startT = new Carbon($startDate . ' ' . $startTime); //tạo định dạng ngày tháng
 
         if($type != 3){
-
-        	if (env('APP_ENV') == 'local') $ffprobe = FFProbe::create(['ffmpeg.binaries' => 'D:\ffmpeg\bin\ffmpeg.exe', 'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe']);
-        	
-            else $ffprobe = FFProbe::create();
-
-            $file_duration = $ffprobe->format($songName)->get('duration');
-
-            $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
+            $file_duration = $this->getFileDuration($songName,$replay_delay);
         }
-        if ($endDate == NULL || $endDate == ''){ // nếu đặt trong ngày
+        if ($type == 1 || $type == 4 || $type == 5) { // nếu là phát phương tiện
 
             $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
-            
-            if ($type == 1 || $type == 4 || $type == 5 || $type == 2){ // nếu là file phương tiện
 
-                foreach ($devices as $device)// foreach add device
-                {
-                    $schedule = $this->getSchedule($device);
+            foreach ($devices as $device) { //set từng thiết bị
 
-                    $startT = new Carbon($startDate . ' ' . $startTime);
+                $startT = new Carbon($startDate . ' ' . $startTime);
 
-                    $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
+                $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
 
-                    for ($i = 0;$i < $replay_times;$i++) // foreach add songname
-                    {
+                for ($i = 0; $i < $replay_times; $i++) {
 
-                        $start_time_of_the_loop_play = $startT->toTimeString();
+                    $start_time_of_the_loop_play = $startT->toTimeString();
 
-                        $start_date_of_the_loop_play = $startT->toDateString();
+                    $start_date_of_the_loop_play = $startDate;
 
-                        $startT->addSeconds($file_duration);
+                    $startT->addSeconds($file_duration);
 
-                        $end_time_of_the_loop_play = $startT->toTimeString();
+                    $end_time_of_the_loop_play = $startT->toTimeString();
 
-                        $end_date_of_the_loop_play = $startT->toDateString();
+                    $end_date_of_the_loop_play = $endDate;
 
-                        $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1},';
+                    //insert new in schedule_table
+                    Schedule::where('deviceCode', $device)
+                    ->where('startDate', $start_date_of_the_loop_play)
+                    ->where('time', $start_time_of_the_loop_play)
+                    ->delete();
 
-                        $schedule = new Schedule();
-                        $schedule->deviceCode = $device;
-                        $schedule->type = $type;
-                        $schedule->fileVoice = $songName;
-                        $schedule->startDate = $start_date_of_the_loop_play;
-                        $schedule->endDate = $end_date_of_the_loop_play;
-                        $schedule->time = $start_time_of_the_loop_play;
-                        $schedule->endtime = $end_time_of_the_loop_play;
-                        $schedule->save();
-                    }
-
-                    $dataRequest .= ']}\\\\\"}\"},';
-
-                    if ($device != $devices[count($devices) - 1]) $dataRequest .= ',';
+                    $schedule = new Schedule();
+                    $schedule->deviceCode = $device;
+                    $schedule->type = $type;
+                    $schedule->fileVoice = $songName;
+                    $schedule->startDate = $start_date_of_the_loop_play;
+                    $schedule->endDate = $end_date_of_the_loop_play;
+                    $schedule->time = $start_time_of_the_loop_play;
+                    $schedule->endtime = $end_time_of_the_loop_play;
+                    $schedule->save();
                 }
+                $schedule = $this->getSchedule($device);
+                $dataRequest .= $schedule;
+                $dataRequest .= ']}\\\\\"}\"},';
             }
-            $dataRequest .= ']}"}';
-    
-            $this->curl_to_server($dataRequest);
         }
-        else{ // nếu đặt hàng ngày
+        $dataRequest .= ']}"}';
 
-            if ($type == 1 || $type == 4 || $type == 5){ // nếu là phát phương tiện
-
-                    $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
-
-                    foreach ($devices as $device) { //set từng thiết bị
-
-                    $schedule = $this->getSchedule($device);
-
-                    $startT = new Carbon($startDate . ' ' . $startTime);
-
-                    $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
-                        
-                    $dataRequest .= $schedule;
-
-                    for ($i = 0; $i < $replay_times; $i++) {
-
-                            $start_time_of_the_loop_play = $startT->toTimeString();
-
-                            $start_date_of_the_loop_play = $startDate;
-
-                            $startT->addSeconds($file_duration);
-                            
-                            $end_time_of_the_loop_play = $startT->toTimeString();
-
-                            $end_date_of_the_loop_play = $endDate;
-
-                            $dataRequest .= '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_time_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $start_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $end_date_of_the_loop_play . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1},';
-
-                            //insert new in schedule_table
-                            $schedule = new Schedule();
-                            $schedule->deviceCode = $device;
-                            $schedule->type = $type;
-                            $schedule->fileVoice = $songName;
-                            $schedule->startDate = $start_date_of_the_loop_play;
-                            $schedule->endDate = $end_date_of_the_loop_play;
-                            $schedule->time = $start_time_of_the_loop_play;
-                            $schedule->endtime = $end_time_of_the_loop_play;
-                            $schedule->save();
-                    }
-                    $dataRequest .= ']}\\\\\"}\"},';
-                }    
-            }
-            $dataRequest .= ']}"}';
-
-            $this->curl_to_server($dataRequest);
-        }
+        $this->curl_to_server($dataRequest);
     }
 
     public function sendFileToDevice($deviceCode, $songName)
