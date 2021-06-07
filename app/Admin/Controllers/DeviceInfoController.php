@@ -140,7 +140,7 @@ class DeviceInfoController extends AdminController
             return '';   
         });
 
-        $grid->column('status', trans('Xem lịch phát'))->display(function () {
+        $grid->column('id', trans('Xem lịch phát'))->display(function () {
             return "Nhấn để xem";
         })->expand(function ($model) {
             $schedules = Schedule::select('fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->get();
