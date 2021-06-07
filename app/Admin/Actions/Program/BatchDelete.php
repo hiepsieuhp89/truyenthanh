@@ -21,11 +21,11 @@ class BatchDelete extends BatchAction
             try {
 	            DB::transaction(function () use ($model) {
 	                $model->delete();
-	                if($model->type == 1 && isset($model->fileVoice)){
-	                    $file_path = 'uploads/'.$model->fileVoice;
-	                    if(file_exists($file_path))
-	                        unlink($file_path);
-	                }
+	                // if($model->type == 1 && isset($model->fileVoice)){
+	                //     $file_path = 'uploads/'.$model->fileVoice;
+	                //     if(file_exists($file_path))
+	                //         unlink($file_path);
+	                // }
 	            });
 	        } catch (\Exception $exception) {
 	            return $this->response()->error("{$trans['failed']} : {$exception->getMessage()}");
