@@ -143,7 +143,7 @@ class DeviceInfoController extends AdminController
         $grid->column('id', trans('Xem lịch phát'))->display(function () {
             return "Nhấn để xem";
         })->expand(function ($model) {
-            $schedules = Schedule::select('fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->get();
+            $schedules = Schedule::select('fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->orderby('id','DESC')->get();
 
             if (count($schedules) == 0)
                 $schedules = new Collection();
