@@ -127,7 +127,7 @@ class DeviceInfoController extends AdminController
         $grid->column('status', trans('admin.status'))->display(function($value){
             if($value == 1) return "<b class=\"text-success\">Đang hoạt động</b>";
             return "<b class=\"text-danger\">Không hoạt động</b>";
-        });
+        })->hide();
 
         $grid->column('is_playing', 'Đang phát')->display(function($value){
 
