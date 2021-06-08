@@ -135,8 +135,16 @@ class DeviceInfoController extends AdminController
         })->hide();
 
         $grid->column('turn_off_time','Tắt lúc')->display(function($value){
-            if($value !== NULL)
-                return Carbon::create($value)->diffForHumans(Carbon::now());     
+            if($value !== NULL){
+                $diff = Carbon::create($value)->diff(Carbon::now());
+                $year = $diff->y == 0 ? '': $diff->y.' năm ';
+                $month = $diff->m == 0 ? '' : $diff->m . ' tháng ';
+                $day = $diff->d == 0 ? '' : $diff->d . ' ngày ';
+                $hour = $diff->h == 0 ? '' : $diff->h . ' giờ ';
+                $minute= $diff->i == 0 ? '' : $diff->i . ' phút ';
+                //$second = $diff->s == 0 ? '' : $diff->s . ' giây ';
+                return $year.$month.$day.$hour.$minute.' trước';
+            }    
             return '';   
         });
 
