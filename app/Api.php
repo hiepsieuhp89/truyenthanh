@@ -28,10 +28,9 @@ trait Api
     public function getSchedule($deviceCode){
         $schedules = Schedule::where('deviceCode', $deviceCode)->get();
         $return = '';
-        if(count($schedules) > 0)
-            foreach ($schedules as $schedule) {
-                $return .= $schedule->get_schedule_of_device();
-            }
+        foreach ($schedules as $schedule) {
+            $return .= $schedule->get_schedule_of_device();
+        }
         return $return;   
     }
     public function getFileDuration($songName, $replay_delay = 30){
@@ -185,7 +184,7 @@ trait Api
         $this->curl_to_server($dataRequest);
     }
     public function curl_to_server($dataRequest){
-        
+        dd($dataRequest);
         if (env('APP_ENV') == 'local') 
             dd($dataRequest);
 
