@@ -2,15 +2,8 @@
 namespace App\Admin\Controllers;
 
 use Request;
-use Helper;
-use DB;
-use DateTime;
-use DatePeriod;
-use DateInterval;
-use Carbon\Carbon;
 
 use App\Program;
-use App\Area;
 use App\Device;
 use App\DeviceInfo;
 use App\Document;
@@ -29,7 +22,6 @@ use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
-use Encore\Admin\Actions\BatchAction;
 
 class ProgramController extends AdminController
 {
@@ -109,6 +101,7 @@ class ProgramController extends AdminController
 
             $actions->disableDelete();
             $actions->disableView();
+            $actions->disableEdit();
             $actions->add(new Delete);
         });
 
