@@ -6,8 +6,6 @@ for (var i = 0; i < a.length; i++) {
 }
 var e;
 e = setInterval(function() {
-    console.log(window.location.href.indexOf("devicedata"));
-    console.log(window.location.href.indexOf("devices"));
     if (window.location.href.indexOf("devicedata") > -1 || window.location.href.indexOf("devices") > -1) {
         $.ajax({
             type: 'get',
