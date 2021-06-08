@@ -186,7 +186,9 @@ class ProgramController extends AdminController
         {
             return (double)$value / 10;
         })->hide();
-        $grid->column('replay', 'Số lần lặp');
+        $grid->column('replay', 'Phát liên tiếp')->display(function($value){
+            return $value . ' lần';
+        });
         $grid->column('mode', __('Kiểu phát'))
             ->using([1 => 'Trong ngày', 2 => 'Hàng ngày', 3 => 'Hàng tuần', 4 => 'Phát ngay'])
             ->label('default')

@@ -27,7 +27,7 @@
 
             function startRecording() {
                 recorder.start().then((e) => {
-
+                    $(':input[type="submit"]').prop('disabled', true);
                     document.querySelector('#playlist').innerHTML = '';
                     var now = moment();
                     button.classList.toggle('btn-danger');
@@ -46,6 +46,7 @@
 
             function stopRecording() {
             recorder.stop().getMp3().then(([buffer, blob]) => {
+                $(':input[type="submit"]').prop('disabled', false);
                 clearInterval(timeCount);
                 console.log(buffer, blob);
                 const file = new File(buffer, 'record_'+ moment().format('DD_MM_YYYY__HH_mm_ss') +'.wav', {

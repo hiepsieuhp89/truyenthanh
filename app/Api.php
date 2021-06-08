@@ -109,7 +109,6 @@ trait Api
         $this->curl_to_server($dataRequest);
         
     }
-
     public function setPlaySchedule($type, $deviceCode, $startDate, $endDate, $startTime, $songName, $replay_times, $replay_delay = 30)
     {
         $devices = explode(',', $deviceCode);
