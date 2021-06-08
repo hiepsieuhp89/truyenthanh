@@ -6,10 +6,12 @@ use Encore\Admin\Actions\Response;
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Api;
 use App\Schedule;
 
 class Delete extends RowAction
 {
+    use Api;
     public $name = 'Xóa';
 
     public function handle(Model $model)
@@ -23,13 +25,9 @@ class Delete extends RowAction
             DB::transaction(function () use ($model) {
                 
                 $model->delete();
-                
-                Schedule::wherein('deviceCode', $model->devices)
-                ->where('fileVoice', config('filesystems.disks.upload.url') . $model->fileVoice)
-                ->where('startDate',$model->startDate)
-                ->where('time', $model->time)
-                ->where('endDate', $model->endDate)
-                ->delete();
+
+                $this->deleteSchedule($model);
+                $this->resetSchedule(implode(',', $model->devices), $model->type);
 
                 // if($model->type == 1 && isset($model->fileVoice)){
                 //     $file_path = 'uploads/'.$model->fileVoice;

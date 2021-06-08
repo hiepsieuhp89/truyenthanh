@@ -59,32 +59,32 @@ class ProgramController extends AdminController
 
     }
 
-    public function show($id, Content $content)
-    {
-        $program = Program::where('id', $id)->first();
+    // public function show($id, Content $content)
+    // {
+    //     $program = Program::where('id', $id)->first();
 
-        if (Admin::user()
-            ->can('*') || Request::get('_scope_') == 'auth' || !isset($program->creatorId) || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()
-            ->id) return $content->title($this->title())
-            ->description($this->description['show']??trans('admin.show'))
-            ->body($this->detail($id));
+    //     if (Admin::user()
+    //         ->can('*') || Request::get('_scope_') == 'auth' || !isset($program->creatorId) || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()
+    //         ->id) return $content->title($this->title())
+    //         ->description($this->description['show']??trans('admin.show'))
+    //         ->body($this->detail($id));
 
-        return redirect()->intended($this->path);
-    }
+    //     return redirect()->intended($this->path);
+    // }
 
-    public function edit($id, Content $content)
-    {
-        $program = Program::where('id', $id)->first();
+    // public function edit($id, Content $content)
+    // {
+    //     $program = Program::where('id', $id)->first();
 
-        if (Admin::user()
-            ->can('*') || Request::get('_scope_') == 'auth' || !isset($program->creatorId) || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()
-            ->id) return $content->title($this->title())
-            ->description($this->description['edit']??trans('admin.edit'))
-            ->body($this->form()
-            ->edit($id));
+    //     if (Admin::user()
+    //         ->can('*') || Request::get('_scope_') == 'auth' || !isset($program->creatorId) || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()
+    //         ->id) return $content->title($this->title())
+    //         ->description($this->description['edit']??trans('admin.edit'))
+    //         ->body($this->form()
+    //         ->edit($id));
 
-        return redirect()->intended($this->path);
-    }
+    //     return redirect()->intended($this->path);
+    // }
 
     /**
      * Make a grid builder.
@@ -227,86 +227,86 @@ class ProgramController extends AdminController
         return $grid;
     }
 
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        $model = Program::findOrFail($id);
-        $show = new Show($model);
+    // /**
+    //  * Make a show builder.
+    //  *
+    //  * @param mixed $id
+    //  * @return Show
+    //  */
+    // protected function detail($id)
+    // {
+    //     $model = Program::findOrFail($id);
+    //     $show = new Show($model);
 
-        //$show->field('id', __('Id'));
-        $show->field('name', __('Tên chương trình'));
-        $show->field('type', __('Loại phát sóng'))
-            ->using(['1' => 'Bản tin', '2' => 'Tiếp sóng', '3' => 'Thu phát FM', '4' => 'Bản tin văn bản']);
-        // $show->fileVoice()->as(function ($fileVoice) {
-        //     if ($fileVoice != "")
-        //     return "<{$fileVoice}>";
-        // })->link();
-        // $show->field('fileVoice', __('FileVoice'))->as(function($fileVoices){
-        //     $html = '';
-        //     foreach($fileVoices as $file){
-        //         $html .= '<audio controls=""><source src="'.config('filesystems.disks.upload.url').trim($file,'"').'"></audio>';
-        //     }
-        //     return $html;
-        // })->badge();
-        $show->field('fileVoice', __('FileVoice'))->as(function () use ($model)
-        {
-            if ($model->type == 4) return $model
-                ->document->fileVoice;
-            if ($model->type == 1) return $model->fileVoice;
-        })
-            ->audio();
+    //     //$show->field('id', __('Id'));
+    //     $show->field('name', __('Tên chương trình'));
+    //     $show->field('type', __('Loại phát sóng'))
+    //         ->using(['1' => 'Bản tin', '2' => 'Tiếp sóng', '3' => 'Thu phát FM', '4' => 'Bản tin văn bản']);
+    //     // $show->fileVoice()->as(function ($fileVoice) {
+    //     //     if ($fileVoice != "")
+    //     //     return "<{$fileVoice}>";
+    //     // })->link();
+    //     // $show->field('fileVoice', __('FileVoice'))->as(function($fileVoices){
+    //     //     $html = '';
+    //     //     foreach($fileVoices as $file){
+    //     //         $html .= '<audio controls=""><source src="'.config('filesystems.disks.upload.url').trim($file,'"').'"></audio>';
+    //     //     }
+    //     //     return $html;
+    //     // })->badge();
+    //     $show->field('fileVoice', __('FileVoice'))->as(function () use ($model)
+    //     {
+    //         if ($model->type == 4) return $model
+    //             ->document->fileVoice;
+    //         if ($model->type == 1) return $model->fileVoice;
+    //     })
+    //         ->audio();
 
-        // $show->field('priority', __('Priority'));
-        $show->field('mode', __('Chế độ phát'))
-            ->using(['1' => 'Trong ngày', '2' => 'Hàng ngày', '3' => 'Hàng tuần', '4' => 'Phát ngay']);
+    //     // $show->field('priority', __('Priority'));
+    //     $show->field('mode', __('Chế độ phát'))
+    //         ->using(['1' => 'Trong ngày', '2' => 'Hàng ngày', '3' => 'Hàng tuần', '4' => 'Phát ngay']);
 
-        $show->field('startDate', __('Ngày bắt đầu'));
+    //     $show->field('startDate', __('Ngày bắt đầu'));
 
-        $show->field('endDate', __('Ngày kết thúc'));
+    //     $show->field('endDate', __('Ngày kết thúc'));
 
-        $show->field('time', __('Khung giờ phát'));
+    //     $show->field('time', __('Khung giờ phát'));
 
-        $show->field('replay', 'Số lần lặp');
+    //     $show->field('replay', 'Số lần lặp');
 
-        $show->devices('Danh sách thiết bị phát')->as(function ($devices)
-        {
-            $html = '';
-            foreach ($devices as $b)
-            {
-                $deviceinfo = DeviceInfo::where('deviceCode', $b)->first();
-                $html .= isset($deviceinfo->device) ? "<pre style=\"margin:10px;\">{$deviceinfo
-                    ->device->name}</pre>" : "NULL";
-            }
-            return $html;
-        })->badge(' w-100 p-0 d-initial')
-            ->style('font-size:16px;');
+    //     $show->devices('Danh sách thiết bị phát')->as(function ($devices)
+    //     {
+    //         $html = '';
+    //         foreach ($devices as $b)
+    //         {
+    //             $deviceinfo = DeviceInfo::where('deviceCode', $b)->first();
+    //             $html .= isset($deviceinfo->device) ? "<pre style=\"margin:10px;\">{$deviceinfo
+    //                 ->device->name}</pre>" : "NULL";
+    //         }
+    //         return $html;
+    //     })->badge(' w-100 p-0 d-initial')
+    //         ->style('font-size:16px;');
 
-        // $show->field('days', __('Ngày phát'))->using(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật']);
-        // $show->field('devices', __('Danh sách loa'));
-        $show->field('creatorId', __('Người tạo'))->as(function ($creator_id) use ($id)
-        {
-            $n = Program::find($id)
-                ->creator->name ? Program::find($id)
-                ->creator->name : "";
-            return $n;
-        });
-        $show->field('approvedId', __('Người phê duyệt'))->as(function ($approver_id) use ($id)
-        {
-            $n = Program::find($id)
-                ->approver->name ? Program::find($id)
-                ->approver->name : "";
-            return $n;
-        });
-        $show->field('created_at', __('Ngày tạo'));
-        $show->field('updated_at', __('Ngày cập nhật'));
+    //     // $show->field('days', __('Ngày phát'))->using(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật']);
+    //     // $show->field('devices', __('Danh sách loa'));
+    //     $show->field('creatorId', __('Người tạo'))->as(function ($creator_id) use ($id)
+    //     {
+    //         $n = Program::find($id)
+    //             ->creator->name ? Program::find($id)
+    //             ->creator->name : "";
+    //         return $n;
+    //     });
+    //     $show->field('approvedId', __('Người phê duyệt'))->as(function ($approver_id) use ($id)
+    //     {
+    //         $n = Program::find($id)
+    //             ->approver->name ? Program::find($id)
+    //             ->approver->name : "";
+    //         return $n;
+    //     });
+    //     $show->field('created_at', __('Ngày tạo'));
+    //     $show->field('updated_at', __('Ngày cập nhật'));
 
-        return $show;
-    }
+    //     return $show;
+    // }
 
     /**
      * Make a form builder.
@@ -587,7 +587,6 @@ class ProgramController extends AdminController
                     $this->playOnline($form->model()->type, implode(',', $form->model()
                             ->devices), $songPath);
                 } else { // nếu phát theo lịch
-                    // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                     // set schedule
                     $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
                         ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
@@ -679,7 +678,6 @@ class ProgramController extends AdminController
             $this->attributes['fileVoice'] = json_encode($fileVoice);
         }
     }
-
     public function getFileVoiceAttribute($fileVoice)
     {
         return json_decode($fileVoice, true);

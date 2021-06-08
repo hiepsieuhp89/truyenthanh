@@ -165,28 +165,6 @@ class DeviceInfoController extends AdminController
     }
 
     /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        $show = new Show(DeviceInfo::findOrFail($id));
-
-        $show->field('id', __('Id'));
-        $show->field('deviceCode', trans('admin.deviceCode'));
-        $show->field('status', trans('admin.status'));
-        $show->field('volume', trans('admin.volume'));
-        $show->field('ip', trans('admin.ipAddress'));
-        $show->field('version', trans('admin.version'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-
-        return $show;
-    }
-
-    /**
      * Make a form builder.
      *
      * @return Form

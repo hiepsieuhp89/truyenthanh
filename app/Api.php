@@ -35,6 +35,15 @@ trait Api
         }
         return $return;   
     }
+    public function deleteSchedule($model)
+    {
+        Schedule::wherein('deviceCode', $model->devices)
+            ->where('fileVoice', config('filesystems.disks.upload.url') . $model->fileVoice)
+            ->where('startDate', $model->startDate)
+            ->where('time', $model->time)
+            ->where('endDate', $model->endDate)
+            ->delete();
+    }
     public function getFileDuration($songName, $replay_delay = 30){
         try{
                 
@@ -161,7 +170,30 @@ trait Api
 
         $this->curl_to_server($dataRequest);
     }
+    public function resetSchedule($deviceCode, $type){
 
+        $devices = explode(',', $deviceCode);
+        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
+        if ($type == 1 || $type == 4 || $type == 5) { // nếu là phát phương tiện
+
+            foreach ($devices as $device) { //set từng thiết bị
+
+                $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
+
+                $schedule = $this->getSchedule($device);
+
+                $dataRequest .= $schedule;
+
+                $dataRequest .= ']}\\\\\"}\"}';
+
+                if ($device != $devices[count($devices) - 1])
+                    $dataRequest .= ',';
+            }
+        }
+        $dataRequest .= ']}"}';
+
+        $this->curl_to_server($dataRequest);
+    }
     public function sendFileToDevice($deviceCode, $songName)
     {
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"' . $deviceCode . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":1,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"URLlist\\\\\\\\\\\\\":[\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\"]}\\\\\"}\"}]}"}';
@@ -221,8 +253,6 @@ trait Api
         ));
 
         $response = curl_exec($curl);
-
-        $err = curl_error($curl);
 
         curl_close($curl);
 
