@@ -142,8 +142,9 @@ class DeviceInfoController extends AdminController
                 $day = $diff->d == 0 ? '' : $diff->d . ' ngày ';
                 $hour = $diff->h == 0 ? '' : $diff->h . ' giờ ';
                 $minute= $diff->i == 0 ? '' : $diff->i . ' phút ';
-                //$second = $diff->s == 0 ? '' : $diff->s . ' giây ';
-                return $year.$month.$day.$hour.$minute.' trước';
+                $f_time = $year . $month . $day . $hour . $minute;
+                $f_time = trim($f_time)==''? 'Vài giây trước': $f_time . ' trước';
+                return $f_time;
             }    
             return '';   
         });
