@@ -30,6 +30,8 @@ trait Api
         $return = '';
         foreach ($schedules as $schedule) {
             $return .= $schedule->get_schedule_of_device();
+            if($schedule != $schedules[count($schedules)-1])   
+                $return .= ',';
         }
         return $return;   
     }
@@ -146,8 +148,13 @@ trait Api
                     $schedule->save();
                 }
                 $schedule = $this->getSchedule($device);
+
                 $dataRequest .= $schedule;
-                $dataRequest .= ']}\\\\\"}\"},';
+
+                $dataRequest .= ']}\\\\\"}\"}';
+
+                if($device != $devices[count($devices)-1])
+                    $dataRequest .= ',';
             }
         }
         $dataRequest .= ']}"}';
@@ -184,7 +191,7 @@ trait Api
         $this->curl_to_server($dataRequest);
     }
     public function curl_to_server($dataRequest){
-        dd($dataRequest);
+        //dd($dataRequest);
         if (env('APP_ENV') == 'local') 
             dd($dataRequest);
 
