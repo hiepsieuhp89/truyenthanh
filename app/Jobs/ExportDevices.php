@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,6 +23,7 @@ class ExportDevices implements ShouldQueue
     public function __construct()
     {
         (new FeatureController())->exportDeviceInfo();
+        file_put_contents(config('filesystems.disks.export.path') . 'hello.txt', 'anh yeu em ' . Carbon::now());
     }
 
     /**
@@ -30,6 +33,5 @@ class ExportDevices implements ShouldQueue
      */
     public function handle()
     {
-        
     }
 }
