@@ -684,6 +684,7 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'App\\Admin_role' => __DIR__ . '/../..' . '/app/Admin_role.php',
         'App\\Api' => __DIR__ . '/../..' . '/app/Api.php',
         'App\\Area' => __DIR__ . '/../..' . '/app/Area.php',
+        'App\\Console\\Commands\\ExportDevices' => __DIR__ . '/../..' . '/app/Console/Commands/ExportDevices.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Device' => __DIR__ . '/../..' . '/app/Device.php',
         'App\\DeviceInfo' => __DIR__ . '/../..' . '/app/DeviceInfo.php',

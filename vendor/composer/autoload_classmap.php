@@ -55,6 +55,7 @@ return array(
     'App\\Admin_role' => $baseDir . '/app/Admin_role.php',
     'App\\Api' => $baseDir . '/app/Api.php',
     'App\\Area' => $baseDir . '/app/Area.php',
+    'App\\Console\\Commands\\ExportDevices' => $baseDir . '/app/Console/Commands/ExportDevices.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Device' => $baseDir . '/app/Device.php',
     'App\\DeviceInfo' => $baseDir . '/app/DeviceInfo.php',

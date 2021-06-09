@@ -142,12 +142,25 @@ class DocumentController extends AdminController
         $form = new Form(new Document);
         $form->text('name', trans('Tên bài'))->rules('required')->autofocus();
         $form->textarea('content')->rows(15)->rules('required');
-        $form->select('volumeBooster','Tăng giảm âm lượng')->options([
+
+        $form->select('volumeBooster', 'Tăng giảm âm lượng')->options([
           5 => '0.5 lần (Giảm volume)',
           10 => '1 lần',
           20 => '2 lần',
           30 => '3 lần',
         ])->default(10);
+
+        $form->select('voice', 'Chọn giọng nói')->options([
+          'hn_female_ngochuyen_news_48k-d' => 'HN - Ngọc Huyền - Đọc báo nâng cao',
+          'hn_male_manhdung_news_48k-d' => 'HN - Mạnh Dũng - Đọc báo nâng cao',
+        ])->default('hn_female_ngochuyen_news_48k-d');
+
+        $form->select('rate', 'Tốc độ đọc')->options([
+          '0.8' => '0.8 lần',
+          '0.9' => '0.9 lần',
+          '1.0'=> '1 lần',
+          '1.1' => '1.1 lần',
+        ])->default('1.0');
 
         $form->disableViewCheck();
         $form->disableEditingCheck();
@@ -190,7 +203,7 @@ class DocumentController extends AdminController
 
             $file_temp = 'voices/'.md5($form->model()->content.(Carbon::now())).".mp3";
 
-            $form->model()->fileVoice = $this->createVoice($form->model()->content, $file_temp, $form->model()->volumeBooster);
+            $form->model()->fileVoice = $this->createVoice($form->model()->content, $file_temp, $form->model()->volumeBooster, $form->model()->voice, $form->model()->rate);
 
             //$form->model()->fileVoice = $file_temp;
 
@@ -200,7 +213,7 @@ class DocumentController extends AdminController
         return $form;
     }
 
-    protected function createVoice($content, $fileVoice, $volumeBooster) 
+    protected function createVoice($content, $fileVoice, $volumeBooster, $voice, $rate) 
     {
         ini_set('max_execution_time', 0);
         $curl = curl_init();
@@ -217,12 +230,12 @@ class DocumentController extends AdminController
           CURLOPT_CUSTOMREQUEST => "POST",
           CURLOPT_POSTFIELDS => http_build_query(array(
             "input_text" => $content,
-            "app_id" => "3d8acb12742eea52a36253f8",
-            "key" => "5b6f8cf8b4e23b56658f1ed8bf770543",
-            "time" => "1620265374558",
-            "voice" => "hn_female_ngochuyen_news_48k-thg",
-            "rate" => 1,
-            "user_id" => "1633",
+            "app_id" => env('MOBIFONE_TEXT_2_SPEECH_APP_ID'),
+            "key" => env('MOBIFONE_TEXT_2_SPEECH_KEY'),
+            "time" => env('MOBIFONE_TEXT_2_SPEECH_TIME'),
+            "voice" => $voice,
+            "rate" => $rate,
+            "user_id" => env('MOBIFONE_TEXT_2_SPEECH_USER_ID'),
             CURLOPT_HTTPHEADER => array(
               "Content-Type: application/x-www-form-urlencoded"
             ),
