@@ -14,7 +14,7 @@ class AddRateAndVoiceToDocuments extends Migration
     public function up()
     {
         Schema::table('documents', function (Blueprint $table) {
-            $table->text('voice')->default('hn_female_ngochuyen_news_48k-thg');
+            $table->text('voice');
             $table->double('rate')->default(1.0);
         });
     }
