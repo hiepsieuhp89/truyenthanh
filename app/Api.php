@@ -53,7 +53,10 @@ trait Api
             return $file_duration;
 
         } catch (Exception $e) {
+            dd($e);
+
             return $this->getFileDuration($songName, $replay_delay);
+            
         }
     }
     public function getDevicesStatus(){
@@ -111,7 +114,7 @@ trait Api
         $startT = new Carbon($startDate . ' ' . $startTime); //tạo định dạng ngày tháng
 
         if($type != 3){
-            $file_duration = $this->getFileDuration($songName,$replay_delay);
+            $file_duration = $this->getFileDuration(config('filesystems.disks.upload.path') . $songName,$replay_delay);
         }
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
         if ($type == 1 || $type == 4 || $type == 5) { // nếu là phát phương tiện
@@ -145,7 +148,7 @@ trait Api
                     $schedule->program_id = $program_id;
                     $schedule->deviceCode = $device;
                     $schedule->type = $type;
-                    $schedule->fileVoice = $songName;
+                    $schedule->fileVoice = config('filesystems.disks.upload.url').$songName;
                     $schedule->startDate = $start_date_of_the_loop_play;
                     $schedule->endDate = $end_date_of_the_loop_play;
                     $schedule->time = $start_time_of_the_loop_play;
