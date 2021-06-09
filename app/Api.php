@@ -117,6 +117,8 @@ trait Api
         }
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
         if ($type == 1 || $type == 4 || $type == 5) { // nếu là phát phương tiện
+
+            Schedule::where('program_id', $program_id)->delete();
             
             foreach ($devices as $device) { //set từng thiết bị
 
@@ -141,7 +143,6 @@ trait Api
                     ->where('startDate', $start_date_of_the_loop_play)
                     ->where('time', $start_time_of_the_loop_play)
                     ->delete();
-                    Schedule::where('program_id', $program_id)->where('deviceCode', $device)->delete();
 
                     $schedule = new Schedule();
                     $schedule->program_id = $program_id;
