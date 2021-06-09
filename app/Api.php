@@ -53,7 +53,6 @@ trait Api
             return $file_duration;
 
         } catch (Exception $e) {
-            dd($e);
 
             return $this->getFileDuration($songName, $replay_delay);
             
@@ -142,7 +141,7 @@ trait Api
                     ->where('startDate', $start_date_of_the_loop_play)
                     ->where('time', $start_time_of_the_loop_play)
                     ->delete();
-                    Schedule::where('program_id', $program_id)->delete();
+                    Schedule::where('program_id', $program_id)->where('deviceCode', $device)->delete();
 
                     $schedule = new Schedule();
                     $schedule->program_id = $program_id;
