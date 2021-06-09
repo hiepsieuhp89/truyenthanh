@@ -571,7 +571,7 @@ class ProgramController extends AdminController
 
                 }
                 else{ // nếu phát theo lịch
-                    $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                    $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
 
@@ -590,7 +590,7 @@ class ProgramController extends AdminController
                             ->devices), $songPath);
                 } else { // nếu phát theo lịch
                     // set schedule
-                    $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                    $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
                         ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
             }  
@@ -636,7 +636,7 @@ class ProgramController extends AdminController
                 }
                 else
                 {
-                    $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                    $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
             }
@@ -655,7 +655,7 @@ class ProgramController extends AdminController
                     $this->playOnline($form->model()->type, implode(',', $form->model()
                             ->devices), $songPath);
                 } else {
-                    $this->setPlaySchedule($form->model()->type, implode(',', $form->model()
+                    $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
                         ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
                 }
             }

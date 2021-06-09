@@ -37,12 +37,7 @@ trait Api
     }
     public function deleteSchedule($model)
     {
-        Schedule::wherein('deviceCode', $model->devices)
-            ->where('fileVoice', config('filesystems.disks.upload.url') . $model->fileVoice)
-            ->where('startDate', $model->startDate)
-            ->where('time', $model->time)
-            ->where('endDate', $model->endDate)
-            ->delete();
+        Schedule::where('program_id', $model->id)->delete();
     }
     public function getFileDuration($songName, $replay_delay = 30){
         try{
@@ -109,7 +104,7 @@ trait Api
         $this->curl_to_server($dataRequest);
         
     }
-    public function setPlaySchedule($type, $deviceCode, $startDate, $endDate, $startTime, $songName, $replay_times, $replay_delay = 30)
+    public function setPlaySchedule($program_id, $type, $deviceCode, $startDate, $endDate, $startTime, $songName, $replay_times, $replay_delay = 30)
     {
         $devices = explode(',', $deviceCode);
 
@@ -146,6 +141,7 @@ trait Api
                     ->delete();
 
                     $schedule = new Schedule();
+                    $schedule->program_id = $program_id;
                     $schedule->deviceCode = $device;
                     $schedule->type = $type;
                     $schedule->fileVoice = $songName;
