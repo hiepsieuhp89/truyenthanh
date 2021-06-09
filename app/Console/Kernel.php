@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(new UpdateAreaAccount())->everyMinute();
 
-        $schedule->job(new ExportDevices())->everyMinute();
+        //$schedule->job(new ExportDevices())->everyMinute();
 
         $schedule->job(new RemoveUnnecessaryFiles())->daily();
 
