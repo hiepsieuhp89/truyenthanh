@@ -100,11 +100,9 @@ class DocumentController extends AdminController
             $filter->like('name', trans('Tên bài'));
         });
         $grid->model()->orderBy('id', 'DESC');
-
-        $grid->column('id', trans('entity.id'));
         $grid->column('name', trans('Tên bài')); 
 
-        $grid->column('fileVoice', 'File')->display(function ($fileVoice) {
+        $grid->column('fileVoice', 'Nội dung')->display(function ($fileVoice) {
             return "<audio controls><source src='".config('filesystems.disks.upload.url')."/$fileVoice' type='audio/mpeg'></audio>";
         });
         $grid->column('creator.name', trans('Người tạo')); 
