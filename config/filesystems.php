@@ -48,12 +48,12 @@ return [
         // ],
         'admin' =>[
             'driver' => 'local',
-            'root' => public_path('public/admin'),
+            'root' => public_path('admin'),
         ],
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('public/data'),
+            'root' => public_path('data'),
         ],
 
         'public' => [
@@ -65,7 +65,7 @@ return [
 
         'media' => [
             'driver' => 'local',
-            'root' => storage_path('public'),
+            'root' => public_path(),
             // 'root' => 'public/voices'),
             'url' => env('APP_URL'),
             'visibility' => 'public',
