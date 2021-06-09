@@ -22,7 +22,7 @@ class ExportDevices implements ShouldQueue
      */
     public function __construct()
     {
-        (new FeatureController())->exportDeviceInfo();
+        //(new FeatureController())->exportDeviceInfo();
         file_put_contents(config('filesystems.disks.export.path') . 'hello.txt', 'anh yeu em ' . Carbon::now());
     }
 
