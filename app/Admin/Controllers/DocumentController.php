@@ -122,7 +122,6 @@ class DocumentController extends AdminController
     protected function detail($id)
     {
         $show = new Show(Document::findOrFail($id));
-        $show->field('id', trans('entity.id'));
         $show->field('name', trans('Tên bài'));
         $show->field('content', trans('Nội dung'));
         $show->field('fileVoice', trans('File nghe'));
@@ -141,7 +140,7 @@ class DocumentController extends AdminController
     {
         $form = new Form(new Document);
         $form->text('name', trans('Tên bài'))->rules('required')->autofocus();
-        $form->textarea('content')->rows(15)->rules('required');
+        $form->textarea('content', 'Nội dung')->rows(15)->rules('required');
 
         $form->select('volumeBooster', 'Tăng giảm âm lượng')->options([
           5 => '0.5 lần (Giảm volume)',

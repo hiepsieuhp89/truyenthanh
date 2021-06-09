@@ -33,33 +33,25 @@ class RemoveUnnecessaryFiles implements ShouldQueue
      */
     public function handle()
     {
-        Program::where('volumeBooster', '<', 5)->update(['volumeBooster' => 10]);
+        //Program::where('volumeBooster', '<', 5)->update(['volumeBooster' => 10]);
 
         $files = scandir(config('filesystems.disks.upload.path') . 'files/');
         foreach ($files as $file) {
-            if (strlen($file) > 3) {
-                $doc = Program::where('fileVoice', 'files/' . $file)->first();
-                if ($doc == null)
-                    unlink(config('filesystems.disks.upload.path') . 'files/' . $file);
-            }
+            if (strlen($file) > 3 && count(Program::where('fileVoice', 'files/' . $file)->get()) == 0)
+                unlink(config('filesystems.disks.upload.path') . 'files/' . $file);
         }
 
         $voices = scandir(config('filesystems.disks.upload.path') . 'voices/');
         foreach ($voices as $voice) {
-            if (strlen($voice) > 3) {
-                $doc = Document::where('fileVoice', 'voices/' . $voice)->first();
-                if ($doc == null)
-                    unlink(config('filesystems.disks.upload.path') . 'voices/' . $voice);
-            }
+            if (strlen($voice) > 3 && count(Document::where('fileVoice', 'voices/' . $voice)->get()) == 0)
+                unlink(config('filesystems.disks.upload.path') . 'voices/' . $voice);
         }
 
         $records = scandir(config('filesystems.disks.upload.path') . 'records/');
         foreach ($records as $file) {
-            if (strlen($file) > 6) {
-                $doc = VoiceRecord::where('fileVoice', 'records/' . $file)->first();
-                if ($doc == null)
-                    unlink(config('filesystems.disks.upload.path') . 'records/' . $file);
-            }
+            if (strlen($file) > 6 && count(VoiceRecord::where('fileVoice', 'records/' . $file)->get()) == 0) 
+                unlink(config('filesystems.disks.upload.path') . 'records/' . $file);
+            
         }
     }
 }
