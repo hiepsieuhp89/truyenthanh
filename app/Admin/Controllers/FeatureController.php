@@ -11,7 +11,7 @@ class FeatureController extends Controller
 {
     public function exportDeviceInfo(){
         foreach (Device::select('deviceCode')->get() as $device) {
-            Excel::store(new DevicesExport($device->deviceCode), $device->deviceCode . '.xlsx', 'export.devices.statistical');
+            Excel::store(new DevicesExport($device->deviceCode), $device->deviceCode . '.xlsx', 'export');
         }
     }
 }
