@@ -8,6 +8,7 @@ use App\Device;
 use App\DeviceInfo;
 use App\Document;
 use App\VoiceRecord;
+use App\Schedule;
 
 use App\Api;
 
@@ -72,19 +73,19 @@ class ProgramController extends AdminController
     //     return redirect()->intended($this->path);
     // }
 
-    // public function edit($id, Content $content)
-    // {
-    //     $program = Program::where('id', $id)->first();
+    public function edit($id, Content $content)
+    {
+        $program = Program::where('id', $id)->first();
 
-    //     if (Admin::user()
-    //         ->can('*') || Request::get('_scope_') == 'auth' || !isset($program->creatorId) || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()
-    //         ->id) return $content->title($this->title())
-    //         ->description($this->description['edit']??trans('admin.edit'))
-    //         ->body($this->form()
-    //         ->edit($id));
+        if (Admin::user()
+            ->can('*') || Request::get('_scope_') == 'auth' || !isset($program->creatorId) || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()
+            ->id) return $content->title($this->title())
+            ->description($this->description['edit']??trans('admin.edit'))
+            ->body($this->form()
+            ->edit($id));
 
-    //     return redirect()->intended($this->path);
-    // }
+        return redirect()->intended($this->path);
+    }
 
     /**
      * Make a grid builder.
@@ -101,7 +102,7 @@ class ProgramController extends AdminController
 
             $actions->disableDelete();
             $actions->disableView();
-            $actions->disableEdit();
+            //$actions->disableEdit();
             $actions->add(new Delete);
         });
 
@@ -212,7 +213,6 @@ class ProgramController extends AdminController
             }
             return $html . '</div>';
         });
-
         $grid->column('time', __('Khung giờ phát'))
             ->hide();
 
@@ -558,7 +558,6 @@ class ProgramController extends AdminController
             // nếu phát file phương tiện
             if ($form->model()->type == 1)
             {
-
                 if ($form->model()->status == 1) // nếu không duyệt
                     $songPath = "";
                 if ($form->model()->status == 2) // nếu duyệt
@@ -573,8 +572,8 @@ class ProgramController extends AdminController
                 else{ // nếu phát theo lịch
                     $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                    
                 }
-
             }
             // nếu phát tiếp sóng
             if ($form->model()->type == 2) {

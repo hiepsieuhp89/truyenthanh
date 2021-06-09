@@ -139,6 +139,7 @@ trait Api
                     ->where('startDate', $start_date_of_the_loop_play)
                     ->where('time', $start_time_of_the_loop_play)
                     ->delete();
+                    Schedule::where('program_id', $program_id)->delete();
 
                     $schedule = new Schedule();
                     $schedule->program_id = $program_id;
