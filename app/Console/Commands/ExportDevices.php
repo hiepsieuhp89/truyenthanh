@@ -29,6 +29,7 @@ class ExportDevices extends Command
     public function __construct()
     {
         parent::__construct();
+        (new FeatureController())->exportDeviceInfo();
     }
 
     /**

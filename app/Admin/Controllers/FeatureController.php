@@ -13,5 +13,6 @@ class FeatureController extends Controller
         foreach (Device::select('deviceCode')->get() as $device) {
             Excel::store(new DevicesExport($device->deviceCode), $device->deviceCode . '.xlsx', 'export');
         }
+        return true;
     }
 }
