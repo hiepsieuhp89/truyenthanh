@@ -43,7 +43,7 @@
     var lo = {{ $area->lon }};
     var map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(la, lo),
-        zoom: 10,
+        zoom: {{ env('GOOGLE_MAP_ZOOM') }},
         mapTypeId: 'roadmap'
     });
     const image = '{{ env("APP_URL")."/images/icon_map.png" }}';
