@@ -103,7 +103,7 @@ class DeviceInfoController extends AdminController
         $grid->column('device.name', trans('admin.deviceName'))->display(function () {
             $name = isset($this->device->name) ? $this->device->name : '';
             if($this->status){
-                if (trim($this->is_playing) == '')
+                if ($this->is_playing == 0)
                     return '<span class="label label-success">' . $name . '</span><i style="float:right;color: cornflowerblue;animation: scale-1-3 0.5s ease infinite;" class="fas fa-volume-up hidden"></i>';
                 else
                     return '<span class="label label-success">' . $name . '</span><i style="float:right;color: cornflowerblue;animation: scale-1-3 0.5s ease infinite;" class="fas fa-volume-up"></i>';
@@ -126,13 +126,13 @@ class DeviceInfoController extends AdminController
             'off' => ['value' => 0, 'text' => 'Không hoạt động', 'color' => 'danger'],
             'on' => ['value' => 1, 'text' => 'Hoạt động', 'color' => 'primary'],
         ];
-        $grid->column('is_playing', 'Đang phát')->display(function($value){
+        // $grid->column('is_playing', 'Đang phát')->display(function($value){
 
-            if(trim($value) != '') return "<b class=\"text-success\"><a href=\"". $value ."\" class=\"text-success\">Có</a></b>";
+        //     if(trim($value) != '') return "<b class=\"text-success\"><a href=\"". $value ."\" class=\"text-success\">Có</a></b>";
 
-            return "<b class=\"text-danger\">Không</b>";
+        //     return "<b class=\"text-danger\">Không</b>";
             
-        })->hide();
+        // })->hide();
 
         $grid->column('turn_off_time','Tắt lúc')->display(function($value){
             if($value !== NULL){
