@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Illuminate\Support\Facades\Log;
@@ -25,23 +26,25 @@ use Exception;
 
 trait Api
 {
-    public function getSchedule($deviceCode){
+    public function getSchedule($deviceCode)
+    {
         $schedules = Schedule::where('deviceCode', $deviceCode)->get();
         $return = '';
         foreach ($schedules as $schedule) {
             $return .= $schedule->get_schedule_of_device();
-            if($schedule != $schedules[count($schedules)-1])   
+            if ($schedule != $schedules[count($schedules) - 1])
                 $return .= ',';
         }
-        return $return;   
+        return $return;
     }
     public function deleteSchedule($model)
     {
         Schedule::where('program_id', $model->id)->delete();
     }
-    public function getFileDuration($songName, $replay_delay = 30){
-        try{
-                
+    public function getFileDuration($songName, $replay_delay = 30)
+    {
+        try {
+
             if (env('APP_ENV') == 'local') $ffprobe = FFProbe::create(['ffmpeg.binaries' => 'D:\ffmpeg\bin\ffmpeg.exe', 'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe']);
 
             else $ffprobe = FFProbe::create();
@@ -51,15 +54,14 @@ trait Api
             $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
 
             return $file_duration;
-
         } catch (Exception $e) {
 
             return $this->getFileDuration($songName, $replay_delay);
-            
         }
     }
-    public function getDevicesStatus(){
-        
+    public function getDevicesStatus()
+    {
+
         $curl = curl_init();
 
         $dataRequest = "eyJEYXRhVHlwZSI6MjAsIkRhdGEiOiJHRVRfQUxMX0RFVklDRV9TVEFUVVMifQ==";
@@ -75,7 +77,7 @@ trait Api
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
         ));
-        
+
         $response = curl_exec($curl);
         $err = curl_error($curl);
 
@@ -86,9 +88,8 @@ trait Api
         $response = str_replace('"{"', "{", $response);
         $response = str_replace(']"}', "]}", $response);
         $response = json_decode($response, true);
-           
-        return $response;
 
+        return $response;
     }
     public function setPlayFM($type, $deviceCode, $data)
     {
@@ -96,15 +97,13 @@ trait Api
 
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        foreach ($deviceCode as $device)
-        {
+        foreach ($deviceCode as $device) {
             $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"' . $data . '\\\\\",\\\\\"PacketType\\\\\":11}\"},';
         }
 
         $dataRequest .= ']}"}';
 
         $this->curl_to_server($dataRequest);
-        
     }
     public function setPlaySchedule($program_id, $type, $deviceCode, $startDate, $endDate, $startTime, $songName, $replay_times, $replay_delay = 30)
     {
@@ -112,14 +111,14 @@ trait Api
 
         $startT = new Carbon($startDate . ' ' . $startTime); //tạo định dạng ngày tháng
 
-        if($type != 3){
-            $file_duration = $this->getFileDuration(config('filesystems.disks.upload.path') . $songName,$replay_delay);
+        if ($type != 3) {
+            $file_duration = $this->getFileDuration(config('filesystems.disks.upload.path') . $songName, $replay_delay);
         }
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
         if ($type == 1 || $type == 4 || $type == 5) { // nếu là phát phương tiện
 
             Schedule::where('program_id', $program_id)->delete();
-            
+
             foreach ($devices as $device) { //set từng thiết bị
 
                 $startT = new Carbon($startDate . ' ' . $startTime);
@@ -140,15 +139,15 @@ trait Api
 
                     //insert new in schedule_table
                     Schedule::where('deviceCode', $device)
-                    ->where('startDate', $start_date_of_the_loop_play)
-                    ->where('time', $start_time_of_the_loop_play)
-                    ->delete();
+                        ->where('startDate', $start_date_of_the_loop_play)
+                        ->where('time', $start_time_of_the_loop_play)
+                        ->delete();
 
                     $schedule = new Schedule();
                     $schedule->program_id = $program_id;
                     $schedule->deviceCode = $device;
                     $schedule->type = $type;
-                    $schedule->fileVoice = config('filesystems.disks.upload.url').$songName;
+                    $schedule->fileVoice = config('filesystems.disks.upload.url') . $songName;
                     $schedule->startDate = $start_date_of_the_loop_play;
                     $schedule->endDate = $end_date_of_the_loop_play;
                     $schedule->time = $start_time_of_the_loop_play;
@@ -161,7 +160,7 @@ trait Api
 
                 $dataRequest .= ']}\\\\\"}\"}';
 
-                if($device != $devices[count($devices)-1])
+                if ($device != $devices[count($devices) - 1])
                     $dataRequest .= ',';
             }
         }
@@ -169,7 +168,8 @@ trait Api
 
         $this->curl_to_server($dataRequest);
     }
-    public function resetSchedule($deviceCode, $type){
+    public function resetSchedule($deviceCode, $type)
+    {
 
         $devices = explode(',', $deviceCode);
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
@@ -202,28 +202,27 @@ trait Api
 
     public function playOnline($type, $deviceCode, $songName)
     {
+        $songName = config('filesystems.disks.upload.url') . $songName;
         $dataRequest = "";
         $deviceCode = explode(",", $deviceCode);
 
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        if ($type == 1 || $type == 4 || $type == 5 || $type == 2)
-        { // nếu phát ngay file pt
-            foreach ($deviceCode as $device)
-            {
+        if ($type == 1 || $type == 4 || $type == 5 || $type == 2) { // nếu phát ngay file pt
+            foreach ($deviceCode as $device) {
 
                 $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"},';
             }
-
         }
 
         $dataRequest .= ']}"}';
 
         $this->curl_to_server($dataRequest);
     }
-    public function curl_to_server($dataRequest){
+    public function curl_to_server($dataRequest)
+    {
         //dd($dataRequest);
-        if (env('APP_ENV') == 'local') 
+        if (env('APP_ENV') == 'local')
             dd($dataRequest);
 
         $request = base64_encode($dataRequest);
@@ -238,7 +237,7 @@ trait Api
         //Log::info('Play schedule json' .$urlRequest);
 
         $curl = curl_init();
-        
+
         curl_setopt_array($curl, array(
             CURLOPT_URL => $urlRequest,
             CURLOPT_RETURNTRANSFER => true,
