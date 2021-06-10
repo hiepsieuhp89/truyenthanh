@@ -202,13 +202,14 @@ trait Api
 
     public function playOnline($type, $deviceCode, $songName)
     {
-        $songName = config('filesystems.disks.upload.url') . $songName;
+        if($type != 2)
+            $songName = config('filesystems.disks.upload.url') . $songName;
         $dataRequest = "";
         $deviceCode = explode(",", $deviceCode);
 
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        if ($type == 1 || $type == 4 || $type == 5 || $type == 2) { // nếu phát ngay file pt
+        if ($type == 1 || $type == 4 || $type == 5 || $type == 2) { // nếu khong phai phat fm
             foreach ($deviceCode as $device) {
                 $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"}';
 
