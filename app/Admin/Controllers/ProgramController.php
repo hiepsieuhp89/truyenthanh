@@ -471,14 +471,11 @@ class ProgramController extends AdminController
 
         $form->saving(function ($form)
         {
-            // if($form->type == 1){
-            //     $form->fileVoice = 1;
-            // }
             $form->radioChannel = (double) $form->radioChannel;
 
-            $form->model()->creatorId = Admin::user()->id;
+            $form->model()->creatorId = $form->model()->creatorId ? $form->model()->creatorId : Admin::user()->id;
 
-            $form->model()->approvedId = Admin::user()->id;
+            $form->model()->approvedId = $form->model()->approvedId ? $form->model()->approvedId : Admin::user()->id;
         });
 
         $form->saved(function ($form)
