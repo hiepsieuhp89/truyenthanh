@@ -225,9 +225,6 @@ trait Api
     }
     public function curl_to_server($dataRequest)
     {
-        //dd($dataRequest);
-        if (Admin::user()->can('*'))
-            dd($dataRequest);
         if (env('APP_ENV') == 'local')
             dd($dataRequest);
 
