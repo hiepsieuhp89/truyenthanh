@@ -2,12 +2,11 @@
 
 namespace App\Admin\Actions\Program;
 
-use Encore\Admin\Actions\Response;
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Program;
 use App\Api;
-use App\Schedule;
 
 class Delete extends RowAction
 {
@@ -26,14 +25,16 @@ class Delete extends RowAction
                 
                 $model->delete();
 
-                $this->deleteSchedule($model);
-                $this->resetSchedule(implode(',', $model->devices), $model->type);
+                if($model->mode != 4){
+                    $this->deleteSchedule($model);
+                    $this->resetSchedule(implode(',', $model->devices), $model->type);
+                }
 
-                // if($model->type == 1 && isset($model->fileVoice)){
-                //     $file_path = 'uploads/'.$model->fileVoice;
-                //     if(file_exists($file_path))
-                //         unlink($file_path);
-                // }
+                if($model->type == 1 && isset($model->fileVoice) && count(Program::where('fileVoice', $model->fileVoice)->get()) == 0){
+                    $file_path = 'uploads/'.$model->fileVoice;
+                    if(file_exists($file_path))
+                        unlink($file_path);
+                }
             });
         } catch (\Exception $exception) {
             return $this->response()->error("{$trans['failed']} : {$exception->getMessage()}");
