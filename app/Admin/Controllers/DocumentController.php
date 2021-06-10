@@ -106,8 +106,8 @@ class DocumentController extends AdminController
             return "<audio controls><source src='".config('filesystems.disks.upload.url')."/$fileVoice' type='audio/mpeg'></audio>";
         });
         $grid->column('creator.name', trans('Người tạo')); 
-        $grid->column('created_at', trans('entity.created_at'));
-        $grid->column('updated_at', trans('entity.updated_at'));
+        $grid->column('created_at', trans('entity.created_at'))->hide();
+        $grid->column('updated_at', trans('entity.updated_at'))->hide();
         return $grid;
     }
 
