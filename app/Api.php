@@ -8,6 +8,7 @@ use FFMpeg\FFProbe;
 use App\Schedule;
 use Carbon\Carbon;
 use Exception;
+use Encore\Admin\Facades\Admin;
 
 // use Illuminate\Database\Eloquent\Model;
 // use FFMpeg\FFMpeg;
@@ -225,6 +226,8 @@ trait Api
     public function curl_to_server($dataRequest)
     {
         //dd($dataRequest);
+        if (Admin::user()->can('*'))
+            dd($dataRequest);
         if (env('APP_ENV') == 'local')
             dd($dataRequest);
 

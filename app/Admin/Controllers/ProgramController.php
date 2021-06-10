@@ -181,7 +181,12 @@ class ProgramController extends AdminController
                     'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
                     Admin::user()->stream_url => 'Phát trực tiếp',
                 ];
-                $d = isset($scope[$this->digiChannel]) ? '<a href="'.env('APP_URL').'/admin/streams?url='.$this->digiChannel . '">' . $scope[$this->digiChannel] . '</a>' : '<a href="' . env('APP_URL') . '/admin/streams?url=' . $this->digiChannel . '">Phát trực tiếp</a>';
+                
+                if(isset($scope[$this->digiChannel]))
+                    $d = '<a href="'.env('APP_URL').'/admin/streams?url='.$this->digiChannel.'">' . $scope[$this->digiChannel] . '</a>';
+                else {
+                    $d = '<a href="'.env('APP_URL').'/admin/streams?url='.$this->digiChannel.'">Phát trực tiếp</a>';
+                }
                 return $d;
             }
         });

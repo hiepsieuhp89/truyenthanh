@@ -14,6 +14,4 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/stream', function () {
-    return view('stream');
-})->name('stream');
+Route::get('/video', 'VideoController@link')->name('playVideo');

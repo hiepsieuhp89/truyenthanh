@@ -45,7 +45,6 @@ class AppServiceProvider extends ServiceProvider
         $response = json_decode($response, true);
         
         if(isset($response['DataType']) && $response['DataType'] == 5){
-
           $device_data = array_map(function($arr){
             return [$arr['DeviceID'], $arr["DeviceData"]["Data"]["AudioOutState"], $arr["DeviceData"]["Data"]["Volume"]];
           }, $response["Data"]);

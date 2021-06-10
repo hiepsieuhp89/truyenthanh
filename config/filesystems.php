@@ -77,6 +77,28 @@ return [
             'path' => public_path('uploads/'),
             'url' => env('APP_URL').'/uploads/',
             'visibility' =>'public',
+            'files' => [
+                'driver' => 'local',
+                'root' => public_path('uploads/files'),
+                'path' => public_path('uploads/files'),
+                'url' => env('APP_URL') . '/uploads/files/',
+                'visibility' => 'public',
+
+            ],
+            'streams' => [
+                'driver' => 'local',
+                'root' => public_path('uploads/streams'),
+                'path' => public_path('uploads/streams'),
+                'url' => env('APP_URL') . '/uploads/streams/',
+                'visibility' => 'public',
+                'hls' => [
+                    'driver' => 'local',
+                    'root' => public_path('uploads/streams/hls'),
+                    'path' => public_path('uploads/streams/hls'),
+                    'url' => env('APP_URL') . '/uploads/streams/hls',
+                    'visibility' => 'public',
+                ],
+            ],
         ],
         'export' => [
             'driver' => 'local',
