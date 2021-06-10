@@ -103,14 +103,16 @@ class ProgramController extends AdminController
             $actions->disableDelete();
             $actions->disableView();
             //$actions->disableEdit();
-            $actions->add(new Delete);
+            if(Admin::user()->can('*'))
+                $actions->add(new Delete);
         });
 
         $grid->batchActions(function ($batch)
         {
 
             $batch->disableDelete();
-            $batch->add(new BatchDelete());
+            if (Admin::user()->can('*'))
+                $batch->add(new BatchDelete());
         });
         $grid->filter(function ($filter)
         {
