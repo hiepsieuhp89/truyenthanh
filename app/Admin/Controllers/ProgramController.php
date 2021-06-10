@@ -562,39 +562,41 @@ class ProgramController extends AdminController
             // nếu phát file phương tiện
             if ($form->model()->type == 1)
             {
-                if ($form->model()->status == 1) // nếu không duyệt
-                    $songPath = "";
-                if ($form->model()->status == 2) // nếu duyệt
-                    $songPath = $form->model()->fileVoice;
+                $songPath = $form->model()->fileVoice;
+                $this->deleteSchedule($form->model());
 
                 if ($form->model()->mode == 4){ // nếu phát ngay
-                    if ($form->model()->status == 2)
-                    $this->playOnline($form->model()->type, implode(',', $form->model()
-                        ->devices) , $songPath);
 
+                    if ($form->model()->status == 2)
+                        $this->playOnline($form->model()->type, implode(',', $form->model()
+                        ->devices) , $songPath);
                 }
                 else{ // nếu phát theo lịch
-                    $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
-                        ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                    $devices = implode(',', $form->model()->devices);
+                    if ($form->model()->status == 2)
+                        $this->setPlaySchedule($form->model()->id, $form->model()->type, $devices , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                    else 
+                        $this->resetSchedule($devices,$form->model()->type);
                     
                 }
             }
             // nếu phát tiếp sóng
             if ($form->model()->type == 2) {
 
-                if ($form->model()->status == 1) // nếu không duyệt
-                    $songPath = "";
-                if ($form->model()->status == 2) // nếu duyệt
-                    $songPath = $form->model()->digiChannel;
+                $songPath = $form->model()->digiChannel;
+                $this->deleteSchedule($form->model());
 
                 if ($form->model()->mode == 4) { // nếu phát ngay
                     if ($form->model()->status == 2)
-                    $this->playOnline($form->model()->type, implode(',', $form->model()
+                        $this->playOnline($form->model()->type, implode(',', $form->model()
                             ->devices), $songPath);
                 } else { // nếu phát theo lịch
-                    // set schedule
-                    $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
+
+                    if ($form->model()->status == 2)
+                        $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
                         ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                    else
+                        $this->resetSchedule($devices, $form->model()->type);
                 }
             }  
             // nếu phát đài FM
@@ -623,49 +625,46 @@ class ProgramController extends AdminController
             // nếu phát file văn bản
             if ($form->model()->type == 4)
             {
-                $docModel = Document::findOrFail($form->model()
-                    ->document_Id);
-
-                if ($form->model()->status == 1) // nếu không duyệt
-                $songPath = "";
-                if ($form->model()->status == 2) // nếu duyệt
+                $docModel = Document::findOrFail($form->model()->document_Id);
                 $songPath = $docModel->fileVoice;
+                $this->deleteSchedule($form->model());
 
-                // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                 if ($form->model()->mode == 4)
                 {
-                    $this->playOnline($form->model()->type, implode(',', $form->model()
+                    if ($form->model()->status == 2)
+                        $this->playOnline($form->model()->type, implode(',', $form->model()
                         ->devices) , $songPath);
                 }
                 else
                 {
-                    $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
+                    if ($form->model()->status == 2)
+                        $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
                         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                    else
+                        $this->resetSchedule($devices, $form->model()->type);
                 }
             }
             // nếu phát ghi âm
             if ($form->model()->type == 5) {
-                $voiceModel = VoiceRecord::findOrFail($form->model()
-                    ->record_Id);
 
-                if ($form->model()->status == 1) // nếu không duyệt
-                    $songPath = "";
-                if ($form->model()->status == 2) // nếu duyệt
-                    $songPath = config('filesystems.disks.upload.url') . $voiceModel->fileVoice;
+                $voiceModel = VoiceRecord::findOrFail($form->model()->record_Id);
+                $songPath = $voiceModel->fileVoice;
+                $this->deleteSchedule($form->model());
 
-                // $this->sendFileToDevice(implode(',',$form->model()->devices), $songPath);
                 if ($form->model()->mode == 4) {
-                    $this->playOnline($form->model()->type, implode(',', $form->model()
+                    if ($form->model()->status == 2)
+                        $this->playOnline($form->model()->type, implode(',', $form->model()
                             ->devices), $songPath);
                 } else {
-                    $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
+                    if ($form->model()->status == 2)
+                        $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
                         ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                    else
+                        $this->resetSchedule($devices, $form->model()->type);
                 }
             }
 
             Log::info('Song name ' . $songPath);
-
-            // setPlaySchedule($type, $deviceCode, $data, $startDate, $endDate, $startTime, $endTime, $songName)
             
         });
 
