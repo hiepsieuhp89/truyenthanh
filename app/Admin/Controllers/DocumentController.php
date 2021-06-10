@@ -153,10 +153,12 @@ class DocumentController extends AdminController
         ])->default('hn_female_ngochuyen_news_48k-d');
 
         $form->select('rate', 'Tốc độ đọc')->options([
-          '0.8' => '0.8 lần',
-          '0.9' => '0.9 lần',
+          '0.6' => '0,6 lần',
+          '0.8' => '0,8 lần',
           '1.0'=> '1 lần',
-          '1.1' => '1.1 lần',
+          '1.2' => '1,2 lần',
+          '1.4' => '1,4 lần',
+          '1.6' => '1,6 lần',
         ])->default('1.0');
 
         $form->disableViewCheck();
