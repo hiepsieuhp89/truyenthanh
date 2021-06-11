@@ -39,13 +39,23 @@
 <div id="map"></div>
 <script>
     function initMap() {
+
     var la = {{ $area->lat }};
     var lo = {{ $area->lon }};
-    var map = new google.maps.Map(document.getElementById('map'), {
+
+    var mapOptions = {
         center: new google.maps.LatLng(la, lo),
         zoom: {{ env('GOOGLE_MAP_ZOOM') }},
-        mapTypeId: 'roadmap'
-    });
+        backgroundColor:"#eeeeee",
+        mapTypeId: 'roadmap',
+    };
+    var style = [{ "elementType": "geometry", "stylers": [{ "saturation": -100 }]}];
+    var mapType = new google.maps.StyledMapType(style, {name:"Grayscale"});
+
+    var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    map.mapTypes.set('grey', mapType);
+    map.setMapTypeId('grey');
+
     const image = '{{ env("APP_URL")."/images/icon_map.png" }}';
     const image_off = '{{ env("APP_URL")."/images/icon_map_off.png" }}';
 

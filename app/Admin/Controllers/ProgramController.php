@@ -172,6 +172,7 @@ class ProgramController extends AdminController
 
         $grid->column('type', __('Loại phát sóng'))
             ->using($this->programtype)
+            ->label(' label-primary')
             ->style('font-size:16px;')
             ->sortable();
 
