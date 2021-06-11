@@ -38,196 +38,98 @@
 </div> --}}
 <div id="map"></div>
 <script>
-    function initMap() {
+    $(document).on('ready pjax:end',function(){
+        function initMap() {
+            var la = {{ $area->lat }};
+            var lo = {{ $area->lon }};
+            var mapOptions = {
+                center: new google.maps.LatLng(la, lo),
+                zoom: {{ env('GOOGLE_MAP_ZOOM') }},
+                backgroundColor:"#eeeeee",
+                mapTypeId: 'roadmap',
+            };
+            var style=[{featureType:"administrative",elementType:"geometry",stylers:[{visibility:"off"}]},{featureType:"administrative.land_parcel",stylers:[{visibility:"off"}]},{featureType:"administrative.neighborhood",stylers:[{visibility:"off"}]},{featureType:"poi",stylers:[{visibility:"off"}]},{featureType:"road",elementType:"labels",stylers:[{visibility:"off"}]},{featureType:"road",elementType:"labels.icon",stylers:[{visibility:"off"}]},{featureType:"road.arterial",elementType:"labels",stylers:[{visibility:"off"}]},{featureType:"road.highway",elementType:"labels",stylers:[{visibility:"off"}]},{featureType:"road.local",stylers:[{visibility:"off"}]},{featureType:"transit",stylers:[{visibility:"off"}]},{featureType:"water",elementType:"labels.text",stylers:[{visibility:"off"}]}];
 
-    var la = {{ $area->lat }};
-    var lo = {{ $area->lon }};
+            var mapType = new google.maps.StyledMapType(style, {name:"Grayscale"});
+            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            console.log(map);
+            map.mapTypes.set('grey', mapType);
+            map.setMapTypeId('grey');
 
-    var mapOptions = {
-        center: new google.maps.LatLng(la, lo),
-        zoom: {{ env('GOOGLE_MAP_ZOOM') }},
-        backgroundColor:"#eeeeee",
-        mapTypeId: 'roadmap',
-    };
-    var style = [
-  {
-    "featureType": "administrative",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.neighborhood",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road.arterial",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  }
-];
+            const image = '{{ env("APP_URL")."/images/icon_map.png" }}';
+            const image_off = '{{ env("APP_URL")."/images/icon_map_off.png" }}';
+            
+            var customImg = {
+                1: { // Trạng thái bật
+                    image: image
+                },
+                0: { // Trạng thái tắt
+                    image: image_off
+                }
+            };
 
-    var mapType = new google.maps.StyledMapType(style, {name:"Grayscale"});
-    var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-    map.mapTypes.set('grey', mapType);
-    map.setMapTypeId('grey');
+            var infoWindow = new google.maps.InfoWindow;
 
-    const image = '{{ env("APP_URL")."/images/icon_map.png" }}';
-    const image_off = '{{ env("APP_URL")."/images/icon_map_off.png" }}';
+                // Change this depending on the name of your PHP or XML file
+                downloadUrl('{{env('APP_URL').'/admin/xml/map'}}', function(data) {
 
-    var customImg = {
-        1: { // Trạng thái bật
-            image: image
-        },
-        0: { // Trạng thái tắt
-            image: image_off
-        }
-    };
+                    var xml = data.responseXML;
+                    var markers = xml.documentElement.getElementsByTagName('marker');
 
-    var infoWindow = new google.maps.InfoWindow;
+                    Array.prototype.forEach.call(markers, function(markerElem) {
+                        var id = markerElem.getAttribute('id');
+                        var name = markerElem.getAttribute('name');
+                        var address = markerElem.getAttribute('address');
+                        var type = markerElem.getAttribute('type');
+                        var point = new google.maps.LatLng(
 
-        // Change this depending on the name of your PHP or XML file
-        downloadUrl('{{env('APP_URL').'/admin/xml/map'}}', function(data) {
+                            parseFloat(markerElem.getAttribute('lat')),
+                            parseFloat(markerElem.getAttribute('lng')));
 
-            var xml = data.responseXML;
-            var markers = xml.documentElement.getElementsByTagName('marker');
+                        var infowincontent = document.createElement('div');
+                        var strong = document.createElement('strong');
+                        strong.textContent = name
+                        infowincontent.appendChild(strong);
+                        infowincontent.appendChild(document.createElement('br'));
 
-            Array.prototype.forEach.call(markers, function(markerElem) {
-                var id = markerElem.getAttribute('id');
-                var name = markerElem.getAttribute('name');
-                var address = markerElem.getAttribute('address');
-                var type = markerElem.getAttribute('type');
-                var point = new google.maps.LatLng(
+                        var text = document.createElement('text');
+                        text.textContent = address;
 
-                    parseFloat(markerElem.getAttribute('lat')),
-                    parseFloat(markerElem.getAttribute('lng')));
+                        infowincontent.appendChild(text);
 
-                var infowincontent = document.createElement('div');
-                var strong = document.createElement('strong');
-                strong.textContent = name
-                infowincontent.appendChild(strong);
-                infowincontent.appendChild(document.createElement('br'));
+                        var icon = customImg[type] || {};
 
-                var text = document.createElement('text');
-                text.textContent = address;
-
-                infowincontent.appendChild(text);
-
-                var icon = customImg[type] || {};
-
-                var marker = new google.maps.Marker({
-                    map: map,
-                    position: point,
-                    icon : icon.image
-                    // label: icon.label
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: point,
+                            icon : icon.image
+                            // label: icon.label
+                        });
+                        marker.addListener('click', function() {
+                            infoWindow.setContent(infowincontent);
+                            infoWindow.open(map, marker);
+                        });
+                    });
                 });
-                marker.addListener('click', function() {
-                    infoWindow.setContent(infowincontent);
-                    infoWindow.open(map, marker);
-                });
-            });
-        });
-    }
-
-
-
-    function downloadUrl(url, callback) {
-    var request = window.ActiveXObject ?
-        new ActiveXObject('Microsoft.XMLHTTP') :
-        new XMLHttpRequest;
-
-    request.onreadystatechange = function() {
-        if (request.readyState == 4) {
-        request.onreadystatechange = doNothing;
-        callback(request, request.status);
+            }
+            function downloadUrl(url, callback) {
+                var request = window.ActiveXObject ?
+                    new ActiveXObject('Microsoft.XMLHTTP') :
+                    new XMLHttpRequest;
+                request.onreadystatechange = function() {
+                    if (request.readyState == 4) {
+                    request.onreadystatechange = doNothing;
+                    callback(request, request.status);
+                }
+            };
+            request.open('GET', url, true);
+            request.send(null);
         }
-    };
-
-    request.open('GET', url, true);
-    request.send(null);
-    }
-    function doNothing() {}
+        function doNothing() {}
+        initMap();
+    });
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2nGDxgbOEzdU-cS6FHGYUtwGKUAx0B5s&callback=initMap">
-</script>
+{{-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2nGDxgbOEzdU-cS6FHGYUtwGKUAx0B5s&callback=initMap">
+</script> --}}
 
 {{-- <div id="map"></div> --}}
