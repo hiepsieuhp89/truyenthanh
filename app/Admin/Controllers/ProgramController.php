@@ -41,8 +41,14 @@ class ProgramController extends AdminController
         10 => '1 lần',
         20 => '2 lần',
         30 => '3 lần',
-        40 => '4 lần',
+        40 => '4 lần (Vỡ âm)',
     ];
+    public $digichannel = [
+            'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
+            'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+            Admin::user()->stream_url => 'Phát trực tiếp',
+    ];
+    public $programtype = [1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm'];
 
     function __construct()
     {
@@ -170,8 +176,7 @@ class ProgramController extends AdminController
             ->switch($states)->sortable();
 
         $grid->column('type', __('Loại phát sóng'))
-            ->using([1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm'])
-            ->label(' label-primary')
+            ->using($this->programtype)
             ->style('font-size:16px;')
             ->sortable();
 
@@ -184,11 +189,7 @@ class ProgramController extends AdminController
                 return '<a>'.$this->radioChannel.'</a>';
             }
             if($this->type == 2){
-                $scope = [
-                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
-                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
-                    Admin::user()->stream_url => 'Phát trực tiếp',
-                ];
+                $scope = $this->digichannels;
                 
                 if(isset($scope[$this->digiChannel]))
                     $d = '<a href="'.env('APP_URL').'/admin/streams?url='.$this->digiChannel.'">' . $scope[$this->digiChannel] . '</a>';
@@ -338,13 +339,7 @@ class ProgramController extends AdminController
             ->rules('required', ['required' => "Cần nhập giá trị"]);
 
         $form->radio('type', trans('Loại phát sóng'))
-            ->options([
-                1 => 'Bản tin',
-                2 => 'Tiếp sóng',
-                3 => 'Thu phát FM', 
-                4 => 'Bản tin văn bản',
-                5 => 'Bản ghi âm',
-            ])->when(1, function (Form $form){
+            ->options($this->programtype)->when(1, function (Form $form){
             // $form->file('fileVoice', 'Chọn file')->options([
             // 'previewFileType'=>'audio',
             // 'initialPreviewFileType'=>'audio',

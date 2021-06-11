@@ -1,9 +1,7 @@
 Homestead.json
 Homestead.yaml
-public/
 storage/
-/public
-/storage
+public/uploads/
 npm-debug.log
 yarn-error.log
 .env
