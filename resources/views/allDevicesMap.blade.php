@@ -49,9 +49,69 @@
         backgroundColor:"#eeeeee",
         mapTypeId: 'roadmap',
     };
-    var style = [{ "elementType": "geometry", "stylers": [{ "saturation": -100 }]}];
-    var mapType = new google.maps.StyledMapType(style, {name:"Grayscale"});
+    var style = [
+  {
+    "featureType": "poi",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  }
+];
 
+    var mapType = new google.maps.StyledMapType(style, {name:"Grayscale"});
     var map = new google.maps.Map(document.getElementById('map'), mapOptions);
     map.mapTypes.set('grey', mapType);
     map.setMapTypeId('grey');
