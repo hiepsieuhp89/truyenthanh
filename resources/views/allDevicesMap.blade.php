@@ -52,7 +52,6 @@
 
             var mapType = new google.maps.StyledMapType(style, {name:"Grayscale"});
             var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-            console.log(map);
             map.mapTypes.set('grey', mapType);
             map.setMapTypeId('grey');
 
