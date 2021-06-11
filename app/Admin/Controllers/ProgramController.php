@@ -36,6 +36,14 @@ class ProgramController extends AdminController
 
     public $path = '/admin/programs';
 
+    public $volume_step = [
+        5 => '0.5 lần (Giảm volume)',
+        10 => '1 lần',
+        20 => '2 lần',
+        30 => '3 lần',
+        40 => '4 lần',
+    ];
+
     function __construct()
     {
         $this->title = trans('admin.program');
@@ -192,7 +200,7 @@ class ProgramController extends AdminController
         });
         $grid->column('volumeBooster', __('Volume'))->display(function ($value)
         {
-            return (double)$value / 10;
+            return ((double)$value / 10) . ' lần';
         })->hide();
         $grid->column('replay', 'Phát liên tiếp')->display(function($value){
             return $value . ' lần';
@@ -353,7 +361,7 @@ class ProgramController extends AdminController
                     });
 
                     $form->select('volumeBooster', 'Tăng giảm Volume')
-                        ->options([5 => '0.5 lần (Giảm volume)', 10 => '1 lần', 20 => '2 lần', ])
+                        ->options($this->volume_step)
                         ->rules('required', ['required' => "Cần nhập giá trị"])
                         ->default(10);
 
