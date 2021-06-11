@@ -43,11 +43,6 @@ class ProgramController extends AdminController
         30 => '3 lần',
         40 => '4 lần (Vỡ âm)',
     ];
-    public $digichannel = [
-            'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
-            'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
-            Admin::user()->stream_url => 'Phát trực tiếp',
-    ];
     public $programtype = [1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm'];
 
     function __construct()
@@ -189,7 +184,11 @@ class ProgramController extends AdminController
                 return '<a>'.$this->radioChannel.'</a>';
             }
             if($this->type == 2){
-                $scope = $this->digichannels;
+                $scope = [
+                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
+                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+                    Admin::user()->stream_url => 'Phát trực tiếp',
+                ];
                 
                 if(isset($scope[$this->digiChannel]))
                     $d = '<a href="'.env('APP_URL').'/admin/streams?url='.$this->digiChannel.'">' . $scope[$this->digiChannel] . '</a>';
