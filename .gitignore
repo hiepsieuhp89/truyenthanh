@@ -1,7 +1,11 @@
 Homestead.json
 Homestead.yaml
+
 storage/
 public/uploads/
+
 npm-debug.log
 yarn-error.log
+
+.gitignore
 .env
