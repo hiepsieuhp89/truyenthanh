@@ -47,6 +47,16 @@ class Program extends Model
     {
         $this->attributes['fileVoice'] = trim(trim($fileVoice,'["'),'"]');
     }
+    // public function setVolumeBoosterAttribute($pictures)
+    // {
+    //     if (is_array($pictures)) {
+    //         $this->attributes['pictures'] = json_encode($pictures);
+    //     }
+    // }
+    public function getVolumeBoosterAttribute($bo)
+    {
+        return (float)$bo/10;
+    }
 
     // public function getFileVoiceAttribute($fileVoice)
     // {
