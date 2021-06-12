@@ -498,34 +498,34 @@ class ProgramController extends AdminController
                 $booster = (float)$form->model()->volumeBooster / 10;
 
                 $outputFile = 'files/' . md5($form->model()->fileVoice.$booster) . '.mp3';
+                if($form->model()->fileVoice != $outputFile){
+                    if (!file_exists(config('filesystems.disks.upload.path') . $outputFile) && file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice)) {
 
-                if (!file_exists(config('filesystems.disks.upload.path') . $outputFile) && file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice)){
+                        $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
 
-                    $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
+                        exec($exec_to_convert_to_mp3);
 
-                    exec($exec_to_convert_to_mp3);
+                        if (file_exists(config('filesystems.disks.upload.path') . $outputFile)) {
 
-                    if (file_exists(config('filesystems.disks.upload.path') . $outputFile)) {
+                            if (file_exists(config('filesystems.disks.upload.path') . $form->model()
+                                ->fileVoice))
+                                unlink(config('filesystems.disks.upload.path') . $form->model()
+                                    ->fileVoice);
 
+                            $form->model()->fileVoice = $outputFile;
+
+                            $form->model()->save();
+                        }
+                    } else {
                         if (file_exists(config('filesystems.disks.upload.path') . $form->model()
-                        ->fileVoice))
-                            unlink(config('filesystems.disks.upload.path') . $form->model()
-                            ->fileVoice);
+                            ->fileVoice))
+                            unlink(config('filesystems.disks.upload.path') . $form->model()->fileVoice);
 
                         $form->model()->fileVoice = $outputFile;
 
                         $form->model()->save();
-                    }
-                }
-                else{
-                    if (file_exists(config('filesystems.disks.upload.path') . $form->model()
-                        ->fileVoice))
-                        unlink(config('filesystems.disks.upload.path') . $form->model()->fileVoice);
-
-                    $form->model()->fileVoice = $outputFile;
-
-                    $form->model()->save();
-                }             
+                    }   
+                }               
             }
             if ($form->model()->type == 4) {
                 $d = Document::where('id', $form->model()
