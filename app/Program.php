@@ -43,24 +43,12 @@ class Program extends Model
     {
         return $this->belongsTo(Admin::class,'approvedId');
     }
-    public function setFileVoiceAttribute($fileVoice)
-    {
-        $this->attributes['fileVoice'] = trim(trim($fileVoice,'["'),'"]');
-    }
-    // public function setVolumeBoosterAttribute($pictures)
-    // {
-    //     if (is_array($pictures)) {
-    //         $this->attributes['pictures'] = json_encode($pictures);
-    //     }
-    // }
-    public function getVolumeBoosterAttribute($bo)
-    {
-        return (float)$bo/10;
-    }
-
     // public function getFileVoiceAttribute($fileVoice)
     // {
-    //     return json_decode($fileVoice, true)
-    //     return explode(',',trim(trim(json_decode($fileVoice, true),'['),']'));
+    //     return config('filesystems.disks.upload.url').$fileVoice;
+    // }
+    // public function getVolumeBoosterAttribute($bo)
+    // {
+    //     return (float)$bo/10;
     // }
 }
