@@ -201,7 +201,7 @@ class ProgramController extends AdminController
         });
         $grid->column('volumeBooster', __('Volume'))->display(function ($value)
         {
-            return ((double)$value / 10) . ' lần';
+            return $value . ' lần';
         })->hide();
         $grid->column('replay', 'Phát liên tiếp')->display(function($value){
             return $value . ' lần';
