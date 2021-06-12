@@ -9,6 +9,8 @@ class Schedule extends Model
 {
     public function get_schedule_of_device(){
         $today = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
+        if($today > $this->endDate)
+            return '';
         if($today > $this->startDate && $today <= $this->endDate)
             $this->startDate = $today;
 
