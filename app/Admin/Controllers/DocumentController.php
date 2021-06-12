@@ -144,6 +144,7 @@ class DocumentController extends AdminController
           10 => '1 lần',
           20 => '2 lần',
           30 => '3 lần',
+          40 => '4 lần',
         ])->default(10);
 
         $form->select('voice', 'Chọn giọng nói')->options([
