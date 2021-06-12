@@ -495,8 +495,8 @@ class ProgramController extends AdminController
             if ($form->model()->type == 1)
             {
                 //convert to mp3
-                $booster = (float)$form->model()->volumeBooster;
-
+                $booster = (float)$form->model()->volumeBooster / 10;
+ 
                 $outputFile = 'files/' . md5($form->model()->fileVoice.$booster) . '.mp3';
 
                 if($form->model()->fileVoice != $outputFile){
