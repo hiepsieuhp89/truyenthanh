@@ -193,7 +193,7 @@ class ProgramController extends AdminController
                 
                 if(isset($scope[$this->digiChannel])){
                     if(strpos($this->digiChannel, 'hls/') > 0)
-                        $url = 'https://truyenthanh.org.vn/uploads/streams/hls/' . substr($this->digiChannel, strpos($this->digiChannel,'hls/') + 4);
+                        $url = env('STREAM_WATCHING_URL') . substr($this->digiChannel, strpos($this->digiChannel,'hls/') + 4);
                     else
                         $url = $this->digiChannel;
                     $d = '<a href="' . env('APP_URL') . '/admin/streams?url=' . $url . '">' . $scope[$this->digiChannel] . '</a>';
