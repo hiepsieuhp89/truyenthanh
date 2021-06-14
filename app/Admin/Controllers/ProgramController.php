@@ -191,8 +191,13 @@ class ProgramController extends AdminController
                     Admin::user()->stream_url => 'Phát trực tiếp',
                 ];
                 
-                if(isset($scope[$this->digiChannel]))
-                    $d = '<a href="'.env('APP_URL').'/admin/streams?url='.$this->digiChannel.'">' . $scope[$this->digiChannel] . '</a>';
+                if(isset($scope[$this->digiChannel])){
+                    if(strpos($this->digiChannel, 'hls/') > 0)
+                        $url = 'https://truyenthanh.org.vn/uploads/streams/hls/' . substr($this->digiChannel, strpos($this->digiChannel,'hls/') + 4);
+                    else
+                        $url = $this->digiChannel;
+                    $d = '<a href="' . env('APP_URL') . '/admin/streams?url=' . $url . '">' . $scope[$this->digiChannel] . '</a>';
+                }
                 else {
                     $d = '<a href="'.env('APP_URL').'/admin/streams?url='.$this->digiChannel.'">Phát trực tiếp</a>';
                 }
@@ -496,7 +501,7 @@ class ProgramController extends AdminController
             {
                 //convert to mp3
                 $booster = (float)$form->model()->volumeBooster / 10;
- 
+                
                 $outputFile = 'files/' . md5($form->model()->fileVoice.$booster) . '.mp3';
 
                 if($form->model()->fileVoice != $outputFile){
