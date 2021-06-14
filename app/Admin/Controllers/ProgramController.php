@@ -200,7 +200,13 @@ class ProgramController extends AdminController
                     $d = '<a href="' . env('APP_URL') . '/admin/streams?url=' . $url . '">' . $scope[$this->digiChannel] . '</a>';
                 }
                 else {
-                    $d = '<a href="'.env('APP_URL').'/admin/streams?url='.$this->digiChannel.'">Phát trực tiếp</a>';
+                    if (strpos($this->digiChannel, 'hls/') > 0)
+                        $url = env('STREAM_WATCHING_URL') . substr($this->digiChannel, strpos($this->digiChannel, 'hls/') + 4);
+
+                    else
+                        $url = $this->digiChannel;
+
+                    $d = '<a href="'.env('APP_URL').'/admin/streams?url='. $url.'">Phát trực tiếp</a>';
                 }
                 return $d;
             }
