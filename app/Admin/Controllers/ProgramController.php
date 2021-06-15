@@ -493,7 +493,7 @@ class ProgramController extends AdminController
 
         $form->saving(function ($form)
         {
-            $form->radioChannel = (double) $form->radioChannel;
+            $form->model()->radioChannel = $form->radioChannel ? (float) $form->radioChannel : $form->model()->radioChannel;
 
             $form->model()->creatorId = $form->model()->creatorId ? $form->model()->creatorId : Admin::user()->id;
 
@@ -620,12 +620,12 @@ class ProgramController extends AdminController
             if ($form->model()->type == 3)
             {
 
-                if ($form->model()->status == 1) // nếu không duyệt
-                $songPath = "";
-                if ($form->model()->status == 2) // nếu duyệt
-                $songPath = $form->model()->radioChannel;
-                
-                $this->setPlayFM($form->model()->type, implode(',', $form->model()->devices), $songPath);
+                // if ($form->model()->status == 1) // nếu không duyệt
+                //     $songPath = "";
+                if ($form->model()->status == 2){ // nếu duyệt
+                    $songPath = $form->model()->radioChannel;
+                    $this->setPlayFM($form->model()->type, implode(',', $form->model()->devices), $songPath);
+                }
                 // if ($form->model()->mode == 4)
                 // {
 
