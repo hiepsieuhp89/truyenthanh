@@ -25,7 +25,6 @@ class HomeController extends Controller
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => "http://103.130.213.161:906/" . $dataRequest,
-            CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
