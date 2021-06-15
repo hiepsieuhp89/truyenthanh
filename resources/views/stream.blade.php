@@ -9,7 +9,8 @@
   .video-js{
     width:80%;
   }
-</style>z
+</style>
+<script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
 <div class="container-fluid">
   <div class="row d-flex videos-js">
     <div class="video" style="margin: 1em;">
