@@ -161,7 +161,7 @@ class DeviceInfoController extends AdminController
                             'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
                             Admin::user()->stream_url => 'Phát trực tiếp',
                         ];
-                        $fv = isset($scope[$this->digiChannel]) ? $scope[$this->digiChannel] : 'Phát trực tiếp';
+                        $fv = isset($scope[$schedule->fileVoice]) ? $scope[$schedule->fileVoice] : 'Phát trực tiếp';
                     }                  
                     else
                         $fv = '<audio controls=""><source src="' . $schedule->fileVoice . '" type="audio/wav"></audio>';
