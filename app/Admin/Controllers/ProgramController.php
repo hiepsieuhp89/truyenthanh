@@ -191,23 +191,8 @@ class ProgramController extends AdminController
                     Admin::user()->stream_url => 'Phát trực tiếp',
                 ];
                 
-                if(isset($scope[$this->digiChannel])){
-                    if(strpos($this->digiChannel, 'hls/') > 0)
-                        $url = env('STREAM_WATCHING_URL') . substr($this->digiChannel, strpos($this->digiChannel,'hls/') + 4);
-            
-                    else
-                        $url = $this->digiChannel;
-                    $d = '<a href="' . env('APP_URL') . '/admin/streams?url=' . $url . '">' . $scope[$this->digiChannel] . '</a>';
-                }
-                else {
-                    if (strpos($this->digiChannel, 'hls/') > 0)
-                        $url = env('STREAM_WATCHING_URL') . substr($this->digiChannel, strpos($this->digiChannel, 'hls/') + 4);
-
-                    else
-                        $url = $this->digiChannel;
-
-                    $d = '<a href="'.env('APP_URL').'/admin/streams?url='. $url.'">Phát trực tiếp</a>';
-                }
+                $title = isset($scope[$this->digiChannel])? $scope[$this->digiChannel] : 'Phát trực tiếp';
+                $d = '<a href="' . env('APP_URL') . '/admin/streams?url=' . $this->digiChannel . '">' . $title . '</a>';
                 return $d;
             }
         });
@@ -437,11 +422,19 @@ class ProgramController extends AdminController
 
                 $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required',['required'=>"Cần nhập giá trị"]);
 
+                $form->divider(trans('Phát liên tiếp'));
+
                 $form->number('replay', 'Số lần phát liên tiếp')
                     ->max(10)
                     ->min(1)
                     ->default(1)
-                    ->rules('required',['required'=>"Cần nhập giá trị"]);
+                    ->rules('required', ['required' => "Cần nhập giá trị"]);
+                // $form->number('interval', 'Thời gian mỗi lần phát liên tiếp (giây)')
+                //     ->max(7200)
+                //     ->min(1)
+                //     ->default(30)
+                //     ->rules('required', ['required' => "Cần nhập giá trị"]);
+
 
             })->when(2, function (Form $form){
 
@@ -450,11 +443,18 @@ class ProgramController extends AdminController
                 $form->time('time', __('khung giờ phát'))
                     ->format('HH:mm:ss')->rules('required',['required'=>"Cần nhập giá trị"]);
 
+                $form->divider(trans('Phát liên tiếp'));
+
                 $form->number('replay', 'Số lần phát liên tiếp')
                     ->max(10)
                     ->min(1)
                     ->default(1)
                     ->rules('required',['required'=>"Cần nhập giá trị"]);
+                // $form->number('interval', 'Thời gian mỗi lần phát liên tiếp (giây)')
+                // ->max(7200)
+                // ->min(1)
+                // ->default(30)
+                // ->rules('required', ['required' => "Cần nhập giá trị"]);
 
                     // })->when(3, function (Form $form) {
                     //     $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
