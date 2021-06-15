@@ -152,17 +152,30 @@ class DeviceInfoController extends AdminController
         $grid->column('id', trans('Xem lịch phát'))->display(function () {
             return "Nhấn để xem";
         })->expand(function ($model) {
-            $schedules = Schedule::select('fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->orderby('startDate','ASC')->orderby('time', 'ASC')->get();
-                $schedules = $schedules->map(function($schedule){
+            $schedules = Schedule::select('type','fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->orderby('startDate','ASC')->orderby('time', 'ASC')->get();
+            $programtype = [1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm'];
+
+                $schedules = $schedules->map(function($schedule) use ($programtype){
+                    if($schedule->type == 2){
+                        $scope = [
+                            'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
+                            'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+                            Admin::user()->stream_url => 'Phát trực tiếp',
+                        ];
+                        $fv = isset($scope[$this->digiChannel]) ? $scope[$this->digiChannel] : 'Phát trực tiếp';
+                    }                  
+                    else
+                        $fv = '<audio controls=""><source src="' . $schedule->fileVoice . '" type="audio/wav"></audio>';
                     return [
-                        'fileVoice' => '<audio controls=""><source src="'. $schedule->fileVoice.'" type="audio/wav"></audio>',
+                        'type' => $programtype[$schedule->type],
+                        'fileVoice' => $fv,
                         'startDate' => $schedule->startDate,
                         'time' => $schedule->time,
                         'endDate' => $schedule->endDate,
                     ];
                 });
 
-            return new Table(['Nội dung', 'Ngày bắt đầu', 'Thời gian', 'Ngày kết thúc'], $schedules->toArray());
+            return new Table(['Loại phát sóng','Nội dung', 'Ngày bắt đầu', 'Thời gian', 'Ngày kết thúc'], $schedules->toArray());
         });
         $grid->column('created_at', __('Created at'))->hide();
 
