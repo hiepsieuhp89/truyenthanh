@@ -163,7 +163,7 @@ trait Api
                     $dataRequest .= ',';
             }
         }
-        if ($type == 2){
+        if ($type == 2){// phát tiếp sóng
             foreach ($devices as $device) { //set từng thiết bị
 
                 $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
@@ -206,7 +206,7 @@ trait Api
 
         $devices = explode(',', $deviceCode);
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
-        if ($type == 1 || $type == 4 || $type == 5) { // nếu là phát phương tiện
+        if ($type == 1 || $type == 4 || $type == 5 || $type == 2) { // nếu là phát phương tiện
 
             foreach ($devices as $device) { //set từng thiết bị
 
