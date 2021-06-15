@@ -96,8 +96,7 @@ class DeviceInfoController extends AdminController
                 $filter->equal('device.areaId', trans('Cụm loa'))->select((new Area())::selectOptions());
         });
 
-        $grid->model()->orderBy('id', 'DESC');
-
+        $grid->model()->orderBy('status', 'DESC')->orderBy('id', 'DESC');
         //$grid->column('id', __('Id'));
 
         $grid->column('device.name', trans('admin.deviceName'))->display(function () {
