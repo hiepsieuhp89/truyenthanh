@@ -112,7 +112,7 @@ trait Api
 
         $startT = new Carbon($startDate . ' ' . $startTime); //tạo định dạng ngày tháng
 
-        if ($type != 3) {
+        if ($type != 3 && $type != 2) {//ko tiep song, ko fm
             $file_duration = $this->getFileDuration(config('filesystems.disks.upload.path') . $songName, $replay_delay);
         }
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
@@ -151,6 +151,40 @@ trait Api
                     $schedule->endDate = $end_date_of_the_loop_play;
                     $schedule->time = $start_time_of_the_loop_play;
                     $schedule->endtime = $end_time_of_the_loop_play;
+                    $schedule->save();
+                }
+                $schedule = $this->getSchedule($device);
+
+                $dataRequest .= $schedule;
+
+                $dataRequest .= ']}\\\\\"}\"}';
+
+                if ($device != $devices[count($devices) - 1])
+                    $dataRequest .= ',';
+            }
+        }
+        if ($type == 2){
+            foreach ($devices as $device) { //set từng thiết bị
+
+                $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
+
+                for ($i = 0; $i < $replay_times; $i++) {
+
+                    //insert new in schedule_table
+                    Schedule::where('deviceCode', $device)
+                    ->where('startDate', $startDate)
+                        ->where('time', $startTime)
+                        ->delete();
+
+                    $schedule = new Schedule();
+                    $schedule->program_id = $program_id;
+                    $schedule->deviceCode = $device;
+                    $schedule->type = $type;
+                    $schedule->fileVoice = $songName;
+                    $schedule->startDate = $startDate;
+                    $schedule->endDate = $endDate;
+                    $schedule->time = $startTime;
+                    $schedule->endtime = '23:59:00';
                     $schedule->save();
                 }
                 $schedule = $this->getSchedule($device);
