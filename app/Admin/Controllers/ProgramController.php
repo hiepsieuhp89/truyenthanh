@@ -37,11 +37,15 @@ class ProgramController extends AdminController
     public $path = '/admin/programs';
 
     public $volume_step = [
-        5 => '0.5 lần (Giảm volume)',
-        10 => '1 lần',
-        20 => '2 lần',
-        30 => '3 lần',
-        40 => '4 lần (Vỡ âm)',
+        0 => '0 dB',
+        1 => '1 dB',
+        2 => '2 dB',
+        3 => '3 dB',
+        4 => '4 dB',
+        5 => '5 dB',
+        6 => '6 dB',
+        8 => '8 dB',
+        10 => '10 dB',
     ];
     public $programtype = [1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm'];
 
@@ -196,10 +200,10 @@ class ProgramController extends AdminController
                 return $d;
             }
         });
-        $grid->column('volumeBooster', __('Volume'))->display(function ($value)
-        {
-            return ((double)$value / 10) . ' lần';
-        })->hide();
+        // $grid->column('volumeBooster', __('Volume'))->display(function ($value)
+        // {
+        //     return ((double)$value) . ' dB';
+        // })->hide();
         $grid->column('replay', 'Phát liên tiếp')->display(function($value){
             return $value . ' lần';
         });
@@ -355,7 +359,7 @@ class ProgramController extends AdminController
                     $form->select('volumeBooster', 'Tăng giảm Volume')
                         ->options($this->volume_step)
                         ->rules('required', ['required' => "Cần nhập giá trị"])
-                        ->default(10);
+                        ->default(0);
 
                 })
                     ->rules('required', ['required' => "Cần nhập giá trị"])
@@ -429,11 +433,11 @@ class ProgramController extends AdminController
                     ->min(1)
                     ->default(1)
                     ->rules('required', ['required' => "Cần nhập giá trị"]);
-                // $form->number('interval', 'Thời gian mỗi lần phát liên tiếp (giây)')
-                //     ->max(7200)
-                //     ->min(1)
-                //     ->default(30)
-                //     ->rules('required', ['required' => "Cần nhập giá trị"]);
+                $form->number('interval', 'Thời gian mỗi lần phát liên tiếp (giây)')
+                    ->max(7200)
+                    ->min(1)
+                    ->default(30)
+                    ->rules('required', ['required' => "Cần nhập giá trị"]);
 
 
             })->when(2, function (Form $form){
@@ -450,11 +454,11 @@ class ProgramController extends AdminController
                     ->min(1)
                     ->default(1)
                     ->rules('required',['required'=>"Cần nhập giá trị"]);
-                // $form->number('interval', 'Thời gian mỗi lần phát liên tiếp (giây)')
-                // ->max(7200)
-                // ->min(1)
-                // ->default(30)
-                // ->rules('required', ['required' => "Cần nhập giá trị"]);
+                $form->number('interval', 'Thời gian mỗi lần phát liên tiếp (giây)')
+                ->max(7200)
+                ->min(1)
+                ->default(30)
+                ->rules('required', ['required' => "Cần nhập giá trị"]);
 
                     // })->when(3, function (Form $form) {
                     //     $form->dateRange('startDate', 'endDate',__('Thời gian phát'));
@@ -507,39 +511,57 @@ class ProgramController extends AdminController
             if ($form->model()->type == 1)
             {
                 //convert to mp3
-                $booster = (float)$form->model()->volumeBooster / 10;
-                
-                $outputFile = 'files/' . md5($form->model()->fileVoice.$booster) . '.mp3';
+                if($form->_method != "PUT"){
 
-                if($form->model()->fileVoice != $outputFile){
+                    $booster = (float)$form->model()->volumeBooster . 'dB';
 
-                    if (!file_exists(config('filesystems.disks.upload.path') . $outputFile) && file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice)) {
+                    $outputFile = 'files/' . md5($form->model()->fileVoice . $booster) . '.mp3';
 
-                        $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
+                    if ($form->model()->fileVoice != $outputFile) {
 
-                        exec($exec_to_convert_to_mp3);
+                        if (!file_exists(config('filesystems.disks.upload.path') . $outputFile) && file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice)) {
 
-                        if (file_exists(config('filesystems.disks.upload.path') . $outputFile)) {
+                            $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
 
+                            exec($exec_to_convert_to_mp3);
+
+                            if (file_exists(config('filesystems.disks.upload.path') . $outputFile)) {
+
+                                if (file_exists(config('filesystems.disks.upload.path') . $form->model()
+                                    ->fileVoice))
+                                    unlink(config('filesystems.disks.upload.path') . $form->model()
+                                        ->fileVoice);
+                            }
+                        } else {
                             if (file_exists(config('filesystems.disks.upload.path') . $form->model()
                                 ->fileVoice))
-                                unlink(config('filesystems.disks.upload.path') . $form->model()
-                                    ->fileVoice);
-
-                            $form->model()->fileVoice = $outputFile;
-
-                            $form->model()->save();
+                                unlink(config('filesystems.disks.upload.path') . $form->model()->fileVoice);
                         }
-                    } else {
-                        if (file_exists(config('filesystems.disks.upload.path') . $form->model()
-                            ->fileVoice))
-                            unlink(config('filesystems.disks.upload.path') . $form->model()->fileVoice);
+                    }
+                    $form->model()->fileVoice = $outputFile;
+                    $form->model()->volumeBooster = 0;
+                    $form->model()->save();
+                } 
+                else if ($form->model()->volumeBooster != 0) {
 
+                        $booster = (float)$form->model()->volumeBooster . 'dB';
+
+                        $outputFile = 'files/' . md5($form->model()->fileVoice . $booster) . '.mp3';
+
+                        if ($form->model()->fileVoice != $outputFile) {
+
+                            if (!file_exists(config('filesystems.disks.upload.path') . $outputFile) && file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice)) {
+
+                                $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
+
+                                exec($exec_to_convert_to_mp3);
+                            }
+                        }
                         $form->model()->fileVoice = $outputFile;
-
+                        $form->model()->volumeBooster = 0;
                         $form->model()->save();
-                    }   
-                }               
+                    
+                }    
             }
             if ($form->model()->type == 4) {
                 $d = Document::where('id', $form->model()
@@ -591,7 +613,7 @@ class ProgramController extends AdminController
                 else{ // nếu phát theo lịch
                     $devices = implode(',', $form->model()->devices);
                     if ($form->model()->status == 2)
-                        $this->setPlaySchedule($form->model()->id, $form->model()->type, $devices , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                        $this->setPlaySchedule($form->model()->id, $form->model()->type, $devices , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
                     else 
                         $this->resetSchedule($devices,$form->model()->type);
                     
@@ -611,7 +633,7 @@ class ProgramController extends AdminController
 
                     if ($form->model()->status == 2)
                         $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
-                        ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                        ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
                     else
                         $this->resetSchedule($devices, $form->model()->type);
                 }
@@ -656,7 +678,7 @@ class ProgramController extends AdminController
                 {
                     if ($form->model()->status == 2)
                         $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
-                        ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                        ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
                     else
                         $this->resetSchedule($devices, $form->model()->type);
                 }
@@ -675,7 +697,7 @@ class ProgramController extends AdminController
                 } else {
                     if ($form->model()->status == 2)
                         $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
-                        ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
+                        ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
                     else
                         $this->resetSchedule($devices, $form->model()->type);
                 }

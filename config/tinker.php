@@ -15,6 +15,7 @@ return [
 
     'commands' => [
         App\Console\Commands\ExportDevices::class,
+        App\Console\Commands\RemoveUnnecessaryFiles::class,
     ],
 
     /*
