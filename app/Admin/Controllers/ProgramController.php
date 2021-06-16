@@ -38,14 +38,13 @@ class ProgramController extends AdminController
 
     public $volume_step = [
         0 => '0 dB',
-        1 => '1 dB',
         2 => '2 dB',
-        3 => '3 dB',
         4 => '4 dB',
-        5 => '5 dB',
         6 => '6 dB',
         8 => '8 dB',
         10 => '10 dB',
+        12 => '12 dB',
+        14 => '14 dB',
     ];
     public $programtype = [1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm'];
 
