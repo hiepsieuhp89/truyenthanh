@@ -356,7 +356,7 @@ class ProgramController extends AdminController
                         return md5($file->getClientOriginalName()) . $file->guessExtension();
                     });
 
-                    $form->select('volumeBooster', 'Tăng giảm Volume')
+                    $form->select('volumeBooster', 'Tăng Volume (dB)')
                         ->options($this->volume_step)
                         ->rules('required', ['required' => "Cần nhập giá trị"])
                         ->default(0);
