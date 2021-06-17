@@ -13,11 +13,11 @@ class Schedule extends Model
             return '';
         if($today > $this->startDate)
             $this->startDate = $today;
-        $playtype = 2;
-        // if($this->type == 2)
-        //     $playtype = 2;
-        // else
-        //     $playtype = 1;
+        //$playtype = 2;
+        if($this->type == 2)
+            $playtype = 2;
+        else
+            $playtype = 1;
         return '{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $this->fileVoice . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $this->time . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $this->endTime . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $this->startDate . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $this->endDate . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":'.$playtype.',\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}';
     }
 }

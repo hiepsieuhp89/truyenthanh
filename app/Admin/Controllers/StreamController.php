@@ -44,7 +44,6 @@ class StreamController extends AdminController
     {
         if (strpos((Request::all())['url'], 'hls/') > 0)
             $url = env('STREAM_WATCHING_URL') . substr((Request::all())['url'], strpos((Request::all())['url'], 'hls/') + 4);
-
         else
             $url = (Request::all())['url'];
             
