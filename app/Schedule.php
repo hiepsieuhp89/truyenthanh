@@ -10,7 +10,7 @@ class Schedule extends Model
     public function get_schedule_of_device(){
         $today = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
         if($today > $this->endDate)
-            return false;
+            return '';
         if($today > $this->startDate)
             $this->startDate = $today;
         //$playtype = 2;

@@ -32,8 +32,10 @@ trait Api
         $schedules = Schedule::where('deviceCode', $deviceCode)->get();
         $return = '';
         foreach ($schedules as $schedule) {
-            $return .= $schedule->get_schedule_of_device();
-            if ($schedule && $schedule != $schedules[count($schedules) - 1])
+            $sch = $schedule->get_schedule_of_device();
+     
+            $return .= $sch;
+            if ($sch != '' && $schedule != $schedules[count($schedules) - 1])
                 $return .= ',';
         }
         return $return;
