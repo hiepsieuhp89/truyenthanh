@@ -33,7 +33,7 @@ trait Api
         $return = '';
         foreach ($schedules as $schedule) {
             $return .= $schedule->get_schedule_of_device();
-            if ($schedule != $schedules[count($schedules) - 1])
+            if ($schedule && $schedule != $schedules[count($schedules) - 1])
                 $return .= ',';
         }
         return $return;
