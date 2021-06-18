@@ -4,10 +4,9 @@ namespace App\Admin\Actions\Program;
 
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
-use Encore\Admin\Actions\Response;
 use Illuminate\Support\Facades\DB;
+use App\Program;
 use App\Api;
-use App\Schedule;
 
 class BatchDelete extends BatchAction
 {

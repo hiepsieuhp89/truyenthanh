@@ -147,7 +147,6 @@ class ProgramController extends AdminController
         {
             $d = Device::select("deviceCode")->where('name', 'like', '%' . $query . '%')->get();
             $model->where('name', 'like', '%' . $query . '%')->orwhere('devices', 'like', '%' . $query . '%')->orwherein('devices', $d->toArray());
-
         })
             ->placeholder('Tên Chương trình / Thiết bị cần tìm');
 
@@ -540,6 +539,7 @@ class ProgramController extends AdminController
                                 unlink($inputPath);
                         }
                     }
+
                     $form->model()->fileVoice = $outputFile;
                     $form->model()->volumeBooster = 0;
                     $form->model()->save();
@@ -553,7 +553,7 @@ class ProgramController extends AdminController
                         if ($form->model()->fileVoice != $outputFile) {
 
                             if (!file_exists(config('filesystems.disks.upload.path') . $outputFile) && file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice)) {
-                                
+
                                 $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
 
                                 exec($exec_to_convert_to_mp3);
