@@ -145,8 +145,15 @@ class ProgramController extends AdminController
 
         $grid->quickSearch(function ($model, $query)
         {
-            $d = Device::select("deviceCode")->where('name', 'like', '%' . $query . '%')->get();
-            $model->where('name', 'like', '%' . $query . '%')->orwhere('devices', 'like', '%' . $query . '%')->orwherein('devices', $d->toArray());
+            $d = Device::select("deviceCode")->where('name', 'like', '%' . $query . '%')->get()->toArray();
+            $d = array_map(function($value){
+                return $value["deviceCode"];
+            } ,$d);
+            $model
+            ->where('name', 'like', '%' . $query . '%')
+            ->orwhere('devices', 'like', '%' . $query . '%')
+            ->orwhere('devices', 'like', '%' . implode(',',$d) . '%')
+            ->orwherein('devices', $d);
         })
             ->placeholder('Tên Chương trình / Thiết bị cần tìm');
 
