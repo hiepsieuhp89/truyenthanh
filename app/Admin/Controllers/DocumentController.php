@@ -26,6 +26,16 @@ class DocumentController extends AdminController
      */
     protected $title = 'Phát văn bản';
     public $path = '/admin/docs';
+    public $volume_step = [
+      0 => '0 dB',
+      2 => '2 dB',
+      4 => '4 dB',
+      6 => '6 dB',
+      8 => '8 dB',
+      10 => '10 dB',
+      12 => '12 dB',
+      14 => '14 dB',
+    ];
 
     public function index(Content $content)
     {
@@ -139,13 +149,7 @@ class DocumentController extends AdminController
         $form->text('name', trans('Tên bài'))->rules('required')->autofocus();
         $form->textarea('content', 'Nội dung')->rows(15)->rules('required');
 
-        $form->select('volumeBooster', 'Tăng giảm âm lượng')->options([
-          5 => '0.5 lần (Giảm volume)',
-          10 => '1 lần',
-          20 => '2 lần',
-          30 => '3 lần',
-          40 => '4 lần',
-        ])->default(10);
+        $form->select('volumeBooster', 'Tăng giảm âm lượng')->options($this->volume_step)->default(0);
 
         $form->select('voice', 'Chọn giọng nói')->options([
           'hn_female_ngochuyen_news_48k-d' => 'HN - Ngọc Huyền - Đọc báo nâng cao',
@@ -255,7 +259,7 @@ class DocumentController extends AdminController
 
           file_put_contents('uploads/'.$fileVoice , $response);
 
-          $booster = $volumeBooster / 10;
+          $booster = (float)$volumeBooster . 'dB';
 
           $fileInputPath = $fileVoice;
 

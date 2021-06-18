@@ -8,18 +8,17 @@ use App\Device;
 use App\DeviceInfo;
 use App\Document;
 use App\VoiceRecord;
-use App\Schedule;
-
 use App\Api;
 
 use App\Admin\Actions\Program\Delete;
 use App\Admin\Actions\Program\BatchDelete;
 
+use App\Http\Controllers\AudioController;
+
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
@@ -512,29 +511,33 @@ class ProgramController extends AdminController
                 //convert to mp3
                 if($form->_method != "PUT"){
 
-                    $booster = (float)$form->model()->volumeBooster . 'dB';
+                    $booster = (float)$form->model()->volumeBooster;
+
+                    $inputFile = $form->model()->fileVoice;
+                    $inputPath = config('filesystems.disks.upload.path') . $form->model()->fileVoice;
+
+                    $tempFile = sprintf('%s.mp3',
+                        config('filesystems.disks.upload.path') . 'files/'. md5($form->model()->fileVoice . 'temp')
+                    );
 
                     $outputFile = 'files/' . md5($form->model()->fileVoice . $booster) . '.mp3';
 
-                    if ($form->model()->fileVoice != $outputFile) {
+                    $outputPath = config('filesystems.disks.upload.path') . 'files/' . md5($form->model()->fileVoice . $booster) . '.mp3';
 
-                        if (!file_exists(config('filesystems.disks.upload.path') . $outputFile) && file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice)) {
+                    if ($inputFile != $outputFile) {
 
-                            $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
+                        if (!file_exists($outputPath) && file_exists($inputPath)) {
 
-                            exec($exec_to_convert_to_mp3);
+                            $audioController = new AudioController();
 
-                            if (file_exists(config('filesystems.disks.upload.path') . $outputFile)) {
+                            $audioController->IncreaseVolume($inputPath, $booster, $outputPath);
 
-                                if (file_exists(config('filesystems.disks.upload.path') . $form->model()
-                                    ->fileVoice))
-                                    unlink(config('filesystems.disks.upload.path') . $form->model()
-                                        ->fileVoice);
-                            }
+                            // $audioController->Convert($inputPath, $tempFile);
+                            // $audioController->IncreaseVolume($tempFile, $booster, $outputPath);
+
                         } else {
-                            if (file_exists(config('filesystems.disks.upload.path') . $form->model()
-                                ->fileVoice))
-                                unlink(config('filesystems.disks.upload.path') . $form->model()->fileVoice);
+                            if (file_exists($inputPath))
+                                unlink($inputPath);
                         }
                     }
                     $form->model()->fileVoice = $outputFile;
@@ -550,7 +553,7 @@ class ProgramController extends AdminController
                         if ($form->model()->fileVoice != $outputFile) {
 
                             if (!file_exists(config('filesystems.disks.upload.path') . $outputFile) && file_exists(config('filesystems.disks.upload.path') . $form->model()->fileVoice)) {
-
+                                
                                 $exec_to_convert_to_mp3 = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $form->model()->fileVoice . ' -filter:a "volume=' . $booster . '" ' . config('filesystems.disks.upload.path') . $outputFile;
 
                                 exec($exec_to_convert_to_mp3);
@@ -559,7 +562,6 @@ class ProgramController extends AdminController
                         $form->model()->fileVoice = $outputFile;
                         $form->model()->volumeBooster = 0;
                         $form->model()->save();
-                    
                 }    
             }
             if ($form->model()->type == 4) {
