@@ -149,11 +149,17 @@ class ProgramController extends AdminController
             $d = array_map(function($value){
                 return $value["deviceCode"];
             } ,$d);
-            $model
-            ->where('name', 'like', '%' . $query . '%')
-            ->orwhere('devices', 'like', '%' . $query . '%')
-            ->orwhere('devices', 'like', '%' . implode(',',$d) . '%')
-            ->orwherein('devices', $d);
+            if(count($d) == 0)
+                $model
+                ->where('name', 'like', '%' . $query . '%')
+                ->orwhere('devices', 'like', '%' . $query . '%')
+                ->orwherein('devices', $d);
+            else
+                $model
+                ->where('name', 'like', '%' . $query . '%')
+                ->orwhere('devices', 'like', '%' . $query . '%')
+                ->orwhere('devices', 'like', '%' . implode(',',$d) . '%')
+                ->orwherein('devices', $d);
         })
             ->placeholder('Tên Chương trình / Thiết bị cần tìm');
 
