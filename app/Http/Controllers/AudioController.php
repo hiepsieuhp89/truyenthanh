@@ -23,7 +23,7 @@ class AudioController extends Controller
         return true;
     }
     public function IncreaseVolume($fileInput, $increaseDb, $fileOutput){
-        $exec = sprintf('ffmpeg -y -i %s -filter:a "volume=%f" %s', $fileInput, $increaseDb, $fileOutput);
+        $exec = sprintf('ffmpeg -y -i %s -filter:a "volume=%fdB" %s', $fileInput, $increaseDb, $fileOutput);
         exec($exec);
         unlink($fileInput);
         return true;
