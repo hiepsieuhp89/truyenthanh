@@ -268,7 +268,7 @@ class DocumentController extends AdminController
 
           $fileOutputPath = 'voices/'.md5($fileInputPath).'.mp3';
 
-          $cmd = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $fileInputPath.' -filter:a "volume='.$booster.'dB" ' . config('filesystems.disks.upload.path') . $fileOutputPath;
+          $cmd = 'ffmpeg -y -i ' . config('filesystems.disks.upload.path') . $fileInputPath.' -filter:a "volume='.$booster.'" ' . config('filesystems.disks.upload.path') . $fileOutputPath;
 
           exec($cmd);
 
