@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Program;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 class ProgramController extends Controller
@@ -15,7 +16,10 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        return Program::all();
+        return response()->json([
+            'data' => Program::all(), 
+            'status' => Response::HTTP_OK
+        ]);
     }
 
     /**
