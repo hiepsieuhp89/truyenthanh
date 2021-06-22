@@ -22,6 +22,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
+use Illuminate\Support\MessageBag;
 
 class ProgramController extends AdminController
 {
@@ -351,11 +352,6 @@ class ProgramController extends AdminController
 
         $form->radio('type', trans('Loại phát sóng'))
             ->options($this->programtype)->when(1, function (Form $form){
-            // $form->file('fileVoice', 'Chọn file')->options([
-            // 'previewFileType'=>'audio',
-            // 'initialPreviewFileType'=>'audio',
-            // ])->uniqueName();
-            //$form->media('fileVoice', 'Chọn file')->path('files');
                 $form->radio('file_mode', 'Chọn nguồn file')
                     ->options([
                 // 1 => 'Chọn file có sẵn',
@@ -374,13 +370,6 @@ class ProgramController extends AdminController
                 })
                     ->rules('required', ['required' => "Cần nhập giá trị"])
                     ->default(2);
-
-        
-                //$form->number('replay', 'Số lần lặp')->max(20)->min(1)->default(1);
-                //$form->multipleFile('fileVoice', 'Chọn file');
-                //$form->file('fileVoice', 'Chọn file')->uniqueName();
-                //$form->multipleFile('fileVoice', 'Chọn file')->removable();
-                
             })->when(2, function (Form $form) {
 
                 if(Admin::user()->stream_key == '')
@@ -395,7 +384,7 @@ class ProgramController extends AdminController
                         Admin::user()->stream_url => 'Phát trực tiếp (' . Admin::user()->stream_key . ')',
                     ];
 
-                $form->radio('digiChannel', trans('Chọn kênh tiếp sóng'))->options($kenh)->rules('required', ['required' => "Cần nhập giá trị"]);
+                $form->select('digiChannel', trans('Chọn kênh tiếp sóng'))->options($kenh)->rules('required', ['required' => "Cần nhập giá trị"]);
                 
             })->when(3, function (Form $form){
 
@@ -507,6 +496,15 @@ class ProgramController extends AdminController
 
         $form->saving(function ($form)
         {
+            
+            if ($form->type == 1 && $form->fileVoice == null){
+                $error = new MessageBag([
+                    'title'   => 'Lỗi nhập liệu',
+                    'message' => 'Cần chọn file phương tiện',
+                ]);
+                return back()->with(compact('error'));
+            }
+
             $form->model()->radioChannel = $form->radioChannel ? (float) $form->radioChannel : $form->model()->radioChannel;
 
             $form->model()->creatorId = $form->model()->creatorId ? $form->model()->creatorId : Admin::user()->id;

@@ -152,9 +152,12 @@ class DocumentController extends AdminController
         $form->select('volumeBooster', 'Tăng giảm âm lượng')->options($this->volume_step)->default(0);
 
         $form->select('voice', 'Chọn giọng nói')->options([
+          'hn_female_maiphuong_news_48k-d' => 'HN - Mai Phương - Đọc báo nâng cao',
+          'sg_female_thaotrinh_news_48k-d' => 'SG - Thảo Trinh - Đọc báo nâng cao',
           'hn_female_ngochuyen_news_48k-d' => 'HN - Ngọc Huyền - Đọc báo nâng cao',
           'hn_male_manhdung_news_48k-d' => 'HN - Mạnh Dũng - Đọc báo nâng cao',
-        ])->default('hn_female_ngochuyen_news_48k-d');
+
+        ])->default('hn_female_maiphuong_news_48k-d');
 
         $form->select('rate', 'Tốc độ đọc')->options([
           '0.6' => '0,6 lần',
