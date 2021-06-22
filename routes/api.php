@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
+//Lấy danh sách program
+Route::get('programs', 'Api\ProgramController@index')->name('programs.index');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
