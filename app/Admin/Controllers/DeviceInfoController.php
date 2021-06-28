@@ -56,7 +56,6 @@ class DeviceInfoController extends AdminController
         $grid = new Grid(new DeviceInfo);
         
         $grid->disableCreateButton(); 
-        $grid->disableBatchActions();
         $grid->disableActions();
         
         // lấy thông tin thiết bị
@@ -123,13 +122,6 @@ class DeviceInfoController extends AdminController
             'off' => ['value' => 0, 'text' => 'Không hoạt động', 'color' => 'danger'],
             'on' => ['value' => 1, 'text' => 'Hoạt động', 'color' => 'primary'],
         ];
-        // $grid->column('is_playing', 'Đang phát')->display(function($value){
-
-        //     if(trim($value) != '') return "<b class=\"text-success\"><a href=\"". $value ."\" class=\"text-success\">Có</a></b>";
-
-        //     return "<b class=\"text-danger\">Không</b>";
-            
-        // })->hide();
 
         $grid->column('turn_off_time','Tắt lúc')->display(function($value){
             if($value !== NULL){

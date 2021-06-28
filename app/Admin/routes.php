@@ -10,6 +10,7 @@ Route::group([
     'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
 
+    
     $router->get('/', 'HomeController@index')->name('admin.home');
     $router->get('/devices-status', 'HomeController@getDevicesStatus');
     $router->get('/export/deviceinfo', 'FeatureController@exportDeviceInfo');
