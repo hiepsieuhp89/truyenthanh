@@ -9,7 +9,7 @@ e = setInterval(function() {
     if (window.location.href.indexOf("/devicedata") > -1 || window.location.href.indexOf("/devices") > -1) {
         $.ajax({
             type: 'get',
-            url: 'https://truyenthanh.org.vn/admin/devices-status',
+            url: 'https://truyenthanh.org.vn/devices-status',
             success: function(res) {
 
                 $.each(res.Data, function(i, n) {
