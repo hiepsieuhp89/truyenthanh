@@ -10,12 +10,10 @@ use App\DeviceInfo;
 use App\Area;
 use App\Schedule;
 
-use Illuminate\Support\Collection;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Widgets\Table;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use Illuminate\Support\Facades\Log;
 use App\Admin\Actions\DeviceInfo\StopPlay;

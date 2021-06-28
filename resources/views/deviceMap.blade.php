@@ -78,6 +78,4 @@
     }
     function doNothing() {}
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2nGDxgbOEzdU-cS6FHGYUtwGKUAx0B5s&callback=initMap">
-</script>
 <div class="w-100 h-100" id="map"></div>

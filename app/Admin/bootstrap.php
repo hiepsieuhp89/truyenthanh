@@ -44,17 +44,4 @@ body{
 ');
 Admin::js(env('APP_URL').'/js/custom.js');
 Admin::js("https://kit.fontawesome.com/12065bbb1f.js");
-
-// Admin::script('
-// 	if(document.URL.indexOf("#")==-1){
-//         // Set the URL to whatever it was plus "#".
-//         url = document.URL+"#";
-//         location = "#";
-
-//         //Reload the page
-//         location.reload(true);
-//     }'
-// );
-
-//Encore\Admin\Form::forget(['map', 'editor']);
-
+//Admin::js('https://maps.googleapis.com/maps/api/js?key='. env('GOOGLE_API_KEY') .'&callback=initMap');

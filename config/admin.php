@@ -437,7 +437,7 @@ return [
             'providers' => [
 
                 'google' => [
-                    'api_key' => 'AIzaSyC2nGDxgbOEzdU-cS6FHGYUtwGKUAx0B5s',
+                    'api_key' => env('GOOGLE_API_KEY'),
                 ],
                 
                 'yandex' => [
