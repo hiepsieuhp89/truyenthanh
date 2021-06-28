@@ -17,6 +17,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Illuminate\Support\Facades\Log;
 use App\Admin\Actions\DeviceInfo\StopPlay;
+use App\Admin\Actions\DeviceInfo\BatchStopPlay;
 use App\Admin\Actions\DeviceInfo\RelayFirst;
 use Encore\Admin\Facades\Admin;
 
@@ -61,7 +62,10 @@ class DeviceInfoController extends AdminController
         // lấy thông tin thiết bị
         // $deviceStatus = $this->getDeviceStatus();
         // Log::info("device list " . $deviceStatus);
-
+        $grid->batchActions(function($action){
+            $action->disableDelete();
+            $action->add(new BatchStopPlay());
+        });
         $grid->filter(function($filter){
 
             $filter->scope('auth',trans('admin.deviceManager'))->whereHas('device', function ($query) {

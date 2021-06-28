@@ -261,6 +261,39 @@ trait Api
 
         $this->curl_to_server($dataRequest);
     }
+    public function stopPlay($deviceCode)
+    {
+        $curl = curl_init();
+
+        $dataRequest =
+
+            '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"' . $deviceCode . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"Stop play music\\\\\\",\\\\\"PacketType\\\\\":7}\"}]}"}';
+
+        $request = base64_encode($dataRequest);
+
+        $urlRequest = "http://103.130.213.161:906/" . $request;
+
+        Log::info($urlRequest);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $urlRequest,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        //return $dataRequest;
+    }  
     public function curl_to_server($dataRequest)
     {
         if (env('APP_ENV') == 'local')
