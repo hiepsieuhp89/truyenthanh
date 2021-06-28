@@ -12,10 +12,6 @@ e = setInterval(function() {
             url: 'https://truyenthanh.org.vn/admin/devices-status',
             success: function(res) {
 
-                // $('tbody tr').find('.column-device-name').find('span').removeClass('label-success').addClass('label-danger');
-                // $('tbody tr').find('.column-device-name').find('i').addClass('hidden');
-                // $('tbody tr').find('.column-status').html('<b class="text-danger">Không hoạt động</b>');
-
                 $.each(res.Data, function(i, n) {
 
                     let device_row = $('[data-content="' + n.DeviceID + '"]').parent().parent();

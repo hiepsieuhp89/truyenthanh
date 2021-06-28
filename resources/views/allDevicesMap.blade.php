@@ -70,7 +70,7 @@
             var infoWindow = new google.maps.InfoWindow;
 
                 // Change this depending on the name of your PHP or XML file
-                downloadUrl('{{env('APP_URL').'/admin/xml/map'}}', function(data) {
+                downloadUrl('{{ route("admin.map") }}', function(data) {
 
                     var xml = data.responseXML;
                     var markers = xml.documentElement.getElementsByTagName('marker');

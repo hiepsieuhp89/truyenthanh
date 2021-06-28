@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/admin', function () {
+    return redirect()->route('admin.home');
 });
 Route::get('/video', 'VideoController@link')->name('playVideo');

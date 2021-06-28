@@ -376,11 +376,13 @@ class ProgramController extends AdminController
                     $kenh = [
                         'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
                         'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+                        'http://stream2.mobiradio.vn/vovradio/vovgthcm.stream/playlist.m3u8'=>'VOV GT Sài Gòn',
                     ];
                 else
                     $kenh = [
                         'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
                         'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
+                        'http://stream2.mobiradio.vn/vovradio/vovgthcm.stream/playlist.m3u8' => 'VOV GT Sài Gòn',
                         Admin::user()->stream_url => 'Phát trực tiếp (' . Admin::user()->stream_key . ')',
                     ];
 

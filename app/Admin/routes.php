@@ -12,7 +12,7 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('admin.home');
     $router->get('/devices-status', 'HomeController@getDevicesStatus');
-    $router->get('/export/deviceinfo', 'FeatureController@exportDeviceInfo')->name('admin.home');
+    $router->get('/export/deviceinfo', 'FeatureController@exportDeviceInfo');
 
     $router->post('/language-change','HomeController@changeLanguage')->middleware('localization')->name('admin-change-language');
 
@@ -24,6 +24,5 @@ Route::group([
     $router->resource('streams', StreamController::class);
     $router->resource('devicedata', DeviceInfoController::class, ['except' => ['create']]);
     
-
     $router->get('/xml/map', 'DeviceController@map')->name('admin.map');
 });
