@@ -13,12 +13,16 @@ class BatchStopPlay extends BatchAction
 
     public function handle(Collection $collection)
     {
-        foreach ($collection as $model) {
+        $deviceCode = array_map(function($model){
+            return $model['deviceCode'];
+        }, $collection->toArray());
 
-            $this->stopPlay($model->deviceCode);
+        $this->stopPlay($deviceCode);
+        // foreach ($collection as $model) {
 
-            
-        }
+        //     $this->stopPlay($model->deviceCode);
+
+        // }
         return $this->response()->success('Dừng phát thành công')->refresh();
     }
 

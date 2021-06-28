@@ -9,14 +9,14 @@ use App\Api;
 
 class StopPlay extends RowAction
 {
-    
+
     use Api;
 
     public $name = 'Dừng phát';
 
     public function handle(Model $model)
     {
-        $this->stopPlay($model->deviceCode);
+        $this->stopPlay([$model->deviceCode]);
 
         return $this->response()->success('Dừng phát thành công')->refresh();
     }

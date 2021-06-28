@@ -203,7 +203,7 @@ trait Api
 
         $this->curl_to_server($dataRequest);
     }
-    
+
     public function resetSchedule($deviceCode, $type)
     {
 
@@ -266,9 +266,11 @@ trait Api
     {
         $curl = curl_init();
 
-        $dataRequest =
+        $deviceCode = implode(",", array_map(function($value){
+            return '{\"DeviceID\":\"' . $value . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"Stop play music\\\\\\",\\\\\"PacketType\\\\\":7}\"}';
+        },$deviceCode));
 
-            '{"DataType":4,"Data":"{\"CommandItem_Ts\":[{\"DeviceID\":\"' . $deviceCode . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"Stop play music\\\\\\",\\\\\"PacketType\\\\\":7}\"}]}"}';
+        $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":['.$deviceCode.']}"}';
 
         $request = base64_encode($dataRequest);
 
