@@ -34,7 +34,7 @@ class ProgramController extends AdminController
      */
     public $title = '';
 
-    public $path = '/admin/programs';
+    public $path = '/programs';
 
     public $volume_step = [
         0 => '0 dB',

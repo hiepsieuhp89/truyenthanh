@@ -25,7 +25,7 @@ class DocumentController extends AdminController
      * @var string
      */
     protected $title = 'Phát văn bản';
-    public $path = '/admin/docs';
+    public $path = '/docs';
     public $volume_step = [
       0 => '0 dB',
       2 => '2 dB',

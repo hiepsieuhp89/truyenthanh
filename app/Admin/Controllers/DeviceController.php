@@ -25,7 +25,7 @@ class DeviceController extends AdminController
      * @var string
      */
     protected $title = 'Thiết bị';
-    public $path = '/admin/devices';
+    public $path = '/devices';
 
     /**
      * Make a grid builder.

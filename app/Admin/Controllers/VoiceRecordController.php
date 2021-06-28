@@ -27,7 +27,7 @@ class VoiceRecordController extends AdminController
      * @var string
      */
     protected $title = 'Bản ghi âm';
-    public $path = '/admin/voice-records';
+    public $path = '/voice-records';
 
     public function index(Content $content)
     {

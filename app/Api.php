@@ -56,6 +56,7 @@ trait Api
             $file_duration += $replay_delay; //đợi 30 giây mỗi lần lặp
 
             return $file_duration;
+
         } catch (Exception $e) {
 
             return $this->getFileDuration($songName, $replay_delay);
@@ -66,10 +67,8 @@ trait Api
 
         $curl = curl_init();
 
-        $dataRequest = "eyJEYXRhVHlwZSI6MjAsIkRhdGEiOiJHRVRfQUxMX0RFVklDRV9TVEFUVVMifQ==";
-
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "http://103.130.213.161:906/" . $dataRequest,
+            CURLOPT_URL => "http://103.130.213.161:906/eyJEYXRhVHlwZSI6MjAsIkRhdGEiOiJHRVRfQUxMX0RFVklDRV9TVEFUVVMifQ==",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -99,10 +98,10 @@ trait Api
 
         $dataRequest = '{"DataType":4,"Data":"{\"CommandItem_Ts\":[';
 
-        foreach ($deviceCode as $device) {
-            $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"' . $data . '\\\\\",\\\\\"PacketType\\\\\":11}\"},';
-        }
-
+        $dataRequest .= implode(',', array_map(function ($device) use ($data) {
+            return '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"' . $data . '\\\\\",\\\\\"PacketType\\\\\":11}\"}';
+        }, $deviceCode));
+        
         $dataRequest .= ']}"}';
 
         $this->curl_to_server($dataRequest);

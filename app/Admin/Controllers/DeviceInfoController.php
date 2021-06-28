@@ -30,7 +30,7 @@ class DeviceInfoController extends AdminController
      * @var string
      */
     protected $title = 'Giám sát thiết bị';
-    public $path = '/admin/devicedata';
+    public $path = '/devicedata';
 
     public function index(Content $content)
     {
