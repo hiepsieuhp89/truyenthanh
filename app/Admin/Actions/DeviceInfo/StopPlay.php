@@ -9,6 +9,7 @@ use App\Api;
 
 class StopPlay extends RowAction
 {
+    
     use Api;
 
     public $name = 'Dừng phát';

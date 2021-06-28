@@ -203,6 +203,7 @@ trait Api
 
         $this->curl_to_server($dataRequest);
     }
+    
     public function resetSchedule($deviceCode, $type)
     {
 

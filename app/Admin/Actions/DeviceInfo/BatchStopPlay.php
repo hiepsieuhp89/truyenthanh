@@ -17,6 +17,7 @@ class BatchStopPlay extends BatchAction
 
             $this->stopPlay($model->deviceCode);
 
+            
         }
         return $this->response()->success('Dừng phát thành công')->refresh();
     }

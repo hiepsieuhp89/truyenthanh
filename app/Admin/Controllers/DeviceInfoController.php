@@ -23,6 +23,7 @@ use Encore\Admin\Facades\Admin;
 
 class DeviceInfoController extends AdminController
 {
+    
     /**
      * Title for current resource.
      *
