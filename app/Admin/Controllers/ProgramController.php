@@ -498,8 +498,7 @@ class ProgramController extends AdminController
 
         $form->saving(function ($form)
         {
-            
-            if ($form->type == 1 && $form->fileVoice == null){
+            if (($form->_method == "PUT" && $form->type == 1 && $form->model()->fileVoice == null) || ($form->_method != "PUT" && $form->type == 1 && $form->fileVoice == null)){
                 $error = new MessageBag([
                     'title'   => 'Lỗi nhập liệu',
                     'message' => 'Cần chọn file phương tiện',
