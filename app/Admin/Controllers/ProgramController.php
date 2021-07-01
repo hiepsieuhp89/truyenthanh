@@ -23,6 +23,7 @@ use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
 use Illuminate\Support\MessageBag;
+use Encore\Admin\Actions\RowAction;
 
 class ProgramController extends AdminController
 {
@@ -71,19 +72,6 @@ class ProgramController extends AdminController
         return redirect()->intended($this->path . '?_scope_=auth');
 
     }
-
-    // public function show($id, Content $content)
-    // {
-    //     $program = Program::where('id', $id)->first();
-
-    //     if (Admin::user()
-    //         ->can('*') || Request::get('_scope_') == 'auth' || !isset($program->creatorId) || $program->creatorId == Admin::user()->id || $program->approvedId == Admin::user()
-    //         ->id) return $content->title($this->title())
-    //         ->description($this->description['show']??trans('admin.show'))
-    //         ->body($this->detail($id));
-
-    //     return redirect()->intended($this->path);
-    // }
 
     public function edit($id, Content $content)
     {
@@ -257,87 +245,6 @@ class ProgramController extends AdminController
         return $grid;
     }
 
-    // /**
-    //  * Make a show builder.
-    //  *
-    //  * @param mixed $id
-    //  * @return Show
-    //  */
-    // protected function detail($id)
-    // {
-    //     $model = Program::findOrFail($id);
-    //     $show = new Show($model);
-
-    //     //$show->field('id', __('Id'));
-    //     $show->field('name', __('Tên chương trình'));
-    //     $show->field('type', __('Loại phát sóng'))
-    //         ->using(['1' => 'Bản tin', '2' => 'Tiếp sóng', '3' => 'Thu phát FM', '4' => 'Bản tin văn bản']);
-    //     // $show->fileVoice()->as(function ($fileVoice) {
-    //     //     if ($fileVoice != "")
-    //     //     return "<{$fileVoice}>";
-    //     // })->link();
-    //     // $show->field('fileVoice', __('FileVoice'))->as(function($fileVoices){
-    //     //     $html = '';
-    //     //     foreach($fileVoices as $file){
-    //     //         $html .= '<audio controls=""><source src="'.config('filesystems.disks.upload.url').trim($file,'"').'"></audio>';
-    //     //     }
-    //     //     return $html;
-    //     // })->badge();
-    //     $show->field('fileVoice', __('FileVoice'))->as(function () use ($model)
-    //     {
-    //         if ($model->type == 4) return $model
-    //             ->document->fileVoice;
-    //         if ($model->type == 1) return $model->fileVoice;
-    //     })
-    //         ->audio();
-
-    //     // $show->field('priority', __('Priority'));
-    //     $show->field('mode', __('Chế độ phát'))
-    //         ->using(['1' => 'Trong ngày', '2' => 'Hàng ngày', '3' => 'Hàng tuần', '4' => 'Phát ngay']);
-
-    //     $show->field('startDate', __('Ngày bắt đầu'));
-
-    //     $show->field('endDate', __('Ngày kết thúc'));
-
-    //     $show->field('time', __('Khung giờ phát'));
-
-    //     $show->field('replay', 'Số lần lặp');
-
-    //     $show->devices('Danh sách thiết bị phát')->as(function ($devices)
-    //     {
-    //         $html = '';
-    //         foreach ($devices as $b)
-    //         {
-    //             $deviceinfo = DeviceInfo::where('deviceCode', $b)->first();
-    //             $html .= isset($deviceinfo->device) ? "<pre style=\"margin:10px;\">{$deviceinfo
-    //                 ->device->name}</pre>" : "NULL";
-    //         }
-    //         return $html;
-    //     })->badge(' w-100 p-0 d-initial')
-    //         ->style('font-size:16px;');
-
-    //     // $show->field('days', __('Ngày phát'))->using(['2' => 'Thứ 2', '3' => ' Thứ 3', '4' => 'Thứ 4', '5' => 'Thứ 5', '6' => 'Thứ 6', '7' => 'Thứ 7', '8' => 'Chủ nhật']);
-    //     // $show->field('devices', __('Danh sách loa'));
-    //     $show->field('creatorId', __('Người tạo'))->as(function ($creator_id) use ($id)
-    //     {
-    //         $n = Program::find($id)
-    //             ->creator->name ? Program::find($id)
-    //             ->creator->name : "";
-    //         return $n;
-    //     });
-    //     $show->field('approvedId', __('Người phê duyệt'))->as(function ($approver_id) use ($id)
-    //     {
-    //         $n = Program::find($id)
-    //             ->approver->name ? Program::find($id)
-    //             ->approver->name : "";
-    //         return $n;
-    //     });
-    //     $show->field('created_at', __('Ngày tạo'));
-    //     $show->field('updated_at', __('Ngày cập nhật'));
-
-    //     return $show;
-    // }
-
     /**
      * Make a form builder.
      *
@@ -387,6 +294,8 @@ class ProgramController extends AdminController
                     ];
 
                 $form->select('digiChannel', trans('Chọn kênh tiếp sóng'))->options($kenh)->rules('required', ['required' => "Cần nhập giá trị"]);
+
+                $form->number('duration','Thời lượng (phút)')->max(1440);
                 
             })->when(3, function (Form $form){
 
@@ -496,8 +405,30 @@ class ProgramController extends AdminController
 
         $form->model()->creatorId = Admin::user()->id;
 
+        $form->submitted(function (Form $form) {
+        });
         $form->saving(function ($form)
         {
+            // if ($form->mode != 4) {
+            //     $songPath = $form->fileVoice;
+            //     $devices = implode(',', $form->devices);
+
+            //     $checkSchedule = $this->checkPlaySchedule($form->model()->id, $form->model()->type, $devices, $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
+
+            //     if (isset($checkSchedule['program'])) {
+            //         $error = new MessageBag([
+            //             'title'   => 'Xung đột chương trình',
+            //             'message' => sprintf(
+            //                 'Bị trùng thời gian phát trên chương trình: <b>%s</b><br>- Tên thiết bị: <b>%s</b><br>- Lúc: <b>%s</b> ngày <b>%s</b>',
+            //                 $checkSchedule['program']->program->name,
+            //                 $checkSchedule['program']->device->name,
+            //                 $checkSchedule['program']->time,
+            //                 $checkSchedule['program']->startDate
+            //             )
+            //         ]);
+            //         return back()->with(compact('error'));
+            //     }
+            // }
             if (($form->_method == "PUT" && $form->type == 1 && $form->model()->fileVoice == null) || ($form->_method != "PUT" && $form->type == 1 && $form->fileVoice == null)){
                 $error = new MessageBag([
                     'title'   => 'Lỗi nhập liệu',
@@ -525,11 +456,8 @@ class ProgramController extends AdminController
                     $booster = (float)$form->model()->volumeBooster;
 
                     $inputFile = $form->model()->fileVoice;
-                    $inputPath = config('filesystems.disks.upload.path') . $form->model()->fileVoice;
 
-                    $tempFile = sprintf('%s.mp3',
-                        config('filesystems.disks.upload.path') . 'files/'. md5($form->model()->fileVoice . 'temp')
-                    );
+                    $inputPath = config('filesystems.disks.upload.path') . $form->model()->fileVoice;
 
                     $outputFile = 'files/' . md5($form->model()->fileVoice . $booster) . '.mp3';
 
@@ -589,10 +517,8 @@ class ProgramController extends AdminController
                     $form->model()
                         ->save();
                 }
-
             }
             if ($form->model()->type == 5) {
-
                 $d =VoiceRecord::where('id', $form->model()
                     ->record_Id)
                     ->first();
@@ -625,8 +551,20 @@ class ProgramController extends AdminController
                 }
                 else{ // nếu phát theo lịch
                     $devices = implode(',', $form->model()->devices);
-                    if ($form->model()->status == 2)
-                        $this->setPlaySchedule($form->model()->id, $form->model()->type, $devices , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
+                    if ($form->model()->status == 2){
+
+                        $this->setPlaySchedule(
+                            $form->model()->id, 
+                            $form->model()->type, 
+                            $devices, 
+                            $form->model()->startDate, 
+                            $form->model()->endDate, 
+                            $form->model()->time, 
+                            $songPath, 
+                            $form->model()->replay, 
+                            $form->model()->interval
+                        );
+                    }
                     else 
                         $this->resetSchedule($devices,$form->model()->type);
                     
@@ -643,10 +581,20 @@ class ProgramController extends AdminController
                         $this->playOnline($form->model()->type, implode(',', $form->model()
                             ->devices), $songPath);
                 } else { // nếu phát theo lịch
-
+                    $devices = implode(',', $form->model()->devices);
                     if ($form->model()->status == 2)
-                        $this->setPlaySchedule($form->model()->id, $form->model()->type, implode(',', $form->model()
-                        ->devices), $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
+                        $this->setPlaySchedule(
+                            $form->model()->id, 
+                            $form->model()->type,
+                            $devices, 
+                            $form->model()->startDate, 
+                            $form->model()->endDate, 
+                            $form->model()->time, 
+                            $songPath, 
+                            $form->model()->replay, 
+                            $form->model()->interval,
+                            $form->model()->duration,
+                        );
                     else
                         $this->resetSchedule($devices, $form->model()->type);
                 }
@@ -654,25 +602,10 @@ class ProgramController extends AdminController
             // nếu phát đài FM
             if ($form->model()->type == 3)
             {
-
-                // if ($form->model()->status == 1) // nếu không duyệt
-                //     $songPath = "";
                 if ($form->model()->status == 2){ // nếu duyệt
                     $songPath = $form->model()->radioChannel;
                     $this->setPlayFM($form->model()->type, implode(',', $form->model()->devices), $songPath);
                 }
-                // if ($form->model()->mode == 4)
-                // {
-
-                //     (new Api())
-                //         ->setPlayFM($form->model()->type, implode(',', $form->model()
-                //         ->devices) , $songPath);
-                // }
-                // else
-                // {
-                //     (new Api())->setPlaySchedule($form->model()->type, implode(',', $form->model()
-                //         ->devices) , $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, 30);
-                // }
             }
             // nếu phát file văn bản
             if ($form->model()->type == 4)
@@ -726,16 +659,5 @@ class ProgramController extends AdminController
         $form->disableCreatingCheck();
 
         return $form;
-    }
-    public function setFileVoiceAttribute($fileVoice)
-    {
-        if (is_array($fileVoice))
-        {
-            $this->attributes['fileVoice'] = json_encode($fileVoice);
-        }
-    }
-    public function getFileVoiceAttribute($fileVoice)
-    {
-        return json_decode($fileVoice, true);
     }
 }

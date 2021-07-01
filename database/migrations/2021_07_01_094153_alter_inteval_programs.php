@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLivestreaming extends Migration
+class AlterIntevalPrograms extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateLivestreaming extends Migration
      */
     public function up()
     {
-        Schema::create('livestreaming', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->text('name');
-            $table->text('url');
-            $table->timestamps();
+        Schema::table('programs', function (Blueprint $table) {
+            $table->renameColumn('inteval', 'duration');
         });
     }
 
@@ -28,6 +25,6 @@ class CreateLivestreaming extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('livestreaming');
+        //
     }
 }

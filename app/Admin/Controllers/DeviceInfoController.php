@@ -9,6 +9,7 @@ use App\Device;
 use App\DeviceInfo;
 use App\Area;
 use App\Schedule;
+use App \Program;
 
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Widgets\Table;
@@ -113,7 +114,7 @@ class DeviceInfoController extends AdminController
                 return '<span class="label label-danger">' . $name . '</span><i style="float:right;color: cornflowerblue;animation: scale-1-3 0.5s ease infinite;" class="fas fa-volume-up hidden"></i>';
         })->style('font-size:16px;');
 
-        $grid->column('deviceCode', trans('admin.deviceCode'))->copyable();
+        $grid->column('deviceCode', trans('admin.deviceCode'))->display(function(){return 'Sao chép';})->copyable();
 
         $grid->column('Dừng phát')->action(StopPlay::class);
 
@@ -121,32 +122,45 @@ class DeviceInfoController extends AdminController
 
         $grid->column('volume', trans('admin.volume'))->editable('select', [1 => 'Mức 1', 2 => 'Mức 2', 3 => 'Mức 3', 4 => 'Mức 4', 5 => 'Mức 5', 6 => 'Mức 6', 7 => 'Mức 7', 8 => 'Mức 8', 9 => 'Mức 9', 10 => 'Mức 10', 11 => 'Mức 11', 12 => 'Mức 12', 13 => 'Mức 13', 14 => 'Mức 14', 15 => 'Mức 15']);
         
-        $grid->column('ip', __('IP'))->editable();
+        //$grid->column('ip', __('IP'))->editable()->hide();
 
         $states = [
             'off' => ['value' => 0, 'text' => 'Không hoạt động', 'color' => 'danger'],
             'on' => ['value' => 1, 'text' => 'Hoạt động', 'color' => 'primary'],
         ];
 
-        $grid->column('turn_off_time','Tắt lúc')->display(function($value){
-            if($value !== NULL){
-                $diff = Carbon::create($value)->diff(Carbon::now());
-                $year = $diff->y == 0 ? '': $diff->y.' năm ';
-                $month = $diff->m == 0 ? '' : $diff->m . ' tháng ';
-                $day = $diff->d == 0 ? '' : $diff->d . ' ngày ';
-                $hour = $diff->h == 0 ? '' : $diff->h . ' giờ ';
-                $minute= $diff->i == 0 ? '' : $diff->i . ' phút ';
-                $f_time = $year . $month . $day . $hour . $minute;
-                $f_time = trim($f_time)==''? 'Vài giây trước': $f_time . ' trước';
-                return $f_time;
-            }    
-            return '';   
+        $grid->column('turn_off_time','Thời gian bật tắt')->display(function () {
+            return "Nhấn để xem";
+        })->expand(function ($model) {
+            return new Table(
+                ['Thời gian bật gần nhất','Thời gian tắt gần nhất'], 
+                [[$model->turn_on_time, $model->turn_off_time]]
+            );
         });
+        
+        // ->display(function($value){
+        //     if($value !== NULL){
+        //         $diff = Carbon::create($value)->diff(Carbon::now());
+        //         $year = $diff->y == 0 ? '': $diff->y.' năm ';
+        //         $month = $diff->m == 0 ? '' : $diff->m . ' tháng ';
+        //         $day = $diff->d == 0 ? '' : $diff->d . ' ngày ';
+        //         $hour = $diff->h == 0 ? '' : $diff->h . ' giờ ';
+        //         $minute= $diff->i == 0 ? '' : $diff->i . ' phút ';
+        //         $f_time = $year . $month . $day . $hour . $minute;
+        //         $f_time = trim($f_time)==''? 'Vài giây trước': $f_time . ' trước';
+        //         return $f_time;
+        //     }    
+        //     return '';   
+        // });
 
         $grid->column('id', trans('Xem lịch phát'))->display(function () {
             return "Nhấn để xem";
         })->expand(function ($model) {
-            $schedules = Schedule::select('type','fileVoice', 'startDate', 'time', 'endDate')->where('deviceCode', $model->deviceCode)->orderby('startDate','ASC')->orderby('time', 'ASC')->get();
+
+            $schedules = Schedule::select('program_id','type','fileVoice','time','startDate', 'endDate','endTime')->where('deviceCode', $model->deviceCode)
+            ->orderby('startDate','DESC')
+            ->orderby('time', 'DESC')->get();
+
             $programtype = [1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm'];
 
                 $schedules = $schedules->map(function($schedule) use ($programtype){
@@ -160,16 +174,22 @@ class DeviceInfoController extends AdminController
                     }                  
                     else
                         $fv = '<audio controls=""><source src="' . $schedule->fileVoice . '" type="audio/wav"></audio>';
+                    
+                    $program = Program::find($schedule->program_id)->name;
+
+                    $program = (new Carbon($schedule->endDate . ' ' . $schedule->endTime)) > Carbon::now() ? '<span title="Chương trình hoạt động" class="label label-info fs-12">'.$program.'</span>' : '<span title="Chương trình hết hoạt động" class="label label-warning fs-12">'.$program.'</span>';
+
                     return [
+                        'program' => $program,
                         'type' => $programtype[$schedule->type],
                         'fileVoice' => $fv,
+                        'time' => $schedule->time.' - '.$schedule->endTime,
                         'startDate' => $schedule->startDate,
-                        'time' => $schedule->time,
                         'endDate' => $schedule->endDate,
                     ];
                 });
 
-            return new Table(['Loại phát sóng','Nội dung', 'Ngày bắt đầu', 'Thời gian', 'Ngày kết thúc'], $schedules->toArray());
+            return new Table(['Chương trình','Loại phát sóng','Nội dung', 'Thời gian', 'Ngày bắt đầu', 'Ngày kết thúc'], $schedules->toArray());
         });
         $grid->column('created_at', __('Created at'))->hide();
 

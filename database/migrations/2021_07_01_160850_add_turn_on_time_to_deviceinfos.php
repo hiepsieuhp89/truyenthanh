@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLivestreaming extends Migration
+class AddTurnOnTimeToDeviceinfos extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateLivestreaming extends Migration
      */
     public function up()
     {
-        Schema::create('livestreaming', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->text('name');
-            $table->text('url');
-            $table->timestamps();
+        Schema::table('device_infos', function (Blueprint $table) {
+            $table->dateTime('turn_on_time')->nullable()->before('turn_off_time');
         });
     }
 
@@ -28,6 +25,8 @@ class CreateLivestreaming extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('livestreaming');
+        Schema::table('deviceinfos', function (Blueprint $table) {
+            //
+        });
     }
 }

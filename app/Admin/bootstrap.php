@@ -28,6 +28,12 @@ Admin::style('
 .w-100{width:100%;} 
 .h-100{height:100%;} 
 .h-400px{height:400px;} 
+.fs-12{
+  font-size:12px;
+}
+.fs-16{
+  font-size:16px;
+}
 .p-0{padding:0;} 
 .d-flex{display:flex;} 
 .d-initial{display:initial;} 

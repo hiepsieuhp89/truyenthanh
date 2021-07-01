@@ -7,6 +7,13 @@ use Carbon\Carbon;
 
 class Schedule extends Model
 {
+    public function device()
+    {
+        return $this->belongsTo(\App\Device::class, 'deviceCode', 'deviceCode');
+    }
+    public function program(){
+        return $this->belongsTo(\App\Program::class, 'program_id');
+    }
     public function get_schedule_of_device(){
         $today = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
         if($today > $this->endDate)
