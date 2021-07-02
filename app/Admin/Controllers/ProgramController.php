@@ -161,7 +161,7 @@ class ProgramController extends AdminController
         //$grid->column('id', __('Id'))->sortable();
         $grid->column('name', __('Tên'))->display(function($name){
 
-            return (new Carbon($this->endDate . ' 23:59:59')) > Carbon::now() ? '<span title="Chương trình hoạt động" class="label label-info fs-12">'.$name.'</span>' : '<span title="Chương trình hết hoạt động" class="label label-warning fs-12">'.$name.'</span>';
+            return (new Carbon($this->endDate . ' 23:59:59')) > Carbon::now() ? '<span title="Chương trình hoạt động" class="label label-warning fs-12">'.$name.'</span>' : '<span title="Chương trình hết hoạt động" class="label label-default fs-12">'.$name.'</span>';
 
         })->style("min-width:100px;")->sortable();
 

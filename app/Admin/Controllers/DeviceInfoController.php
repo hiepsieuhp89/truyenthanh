@@ -177,15 +177,15 @@ class DeviceInfoController extends AdminController
                     
                     $program = Program::find($schedule->program_id)->name;
 
-                    $program = (new Carbon($schedule->endDate . ' ' . $schedule->endTime)) > Carbon::now() ? '<span title="Chương trình hoạt động" class="label label-info fs-12">'.$program.'</span>' : '<span title="Chương trình hết hoạt động" class="label label-warning fs-12">'.$program.'</span>';
+                    $program = (new Carbon($schedule->endDate . ' ' . $schedule->endTime)) > Carbon::now() ? '<span title="Chương trình hoạt động" class="label label-warning fs-12">'.$program.'</span>' : '<span title="Chương trình hết hoạt động" class="label label-default fs-12">'.$program.'</span>';
 
                     return [
                         'program' => $program,
-                        'type' => $programtype[$schedule->type],
+                        'type' => '<span class="label label-primary fs-12">'.$programtype[$schedule->type].'</span>',
                         'fileVoice' => $fv,
                         'time' => $schedule->time.' - '.$schedule->endTime,
-                        'startDate' => $schedule->startDate,
-                        'endDate' => $schedule->endDate,
+                        'startDate' => (new Carbon($schedule->startDate))->format('d-m-Y'),
+                        'endDate' => (new Carbon($schedule->endDate))->format('d-m-Y'),
                     ];
                 });
 
