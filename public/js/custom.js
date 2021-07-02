@@ -17,7 +17,7 @@ e = setInterval(function() {
                     let device_row = $('[data-content="' + n.DeviceID + '"]').parent().parent();
 
                     device_row.find('.column-device-name span.label-danger').removeClass('label-danger').addClass('label-success');
-                    device_row.find('.column-turn_off_time').html('');
+                    //device_row.find('.column-turn_off_time').html('');
 
                     if (n.DeviceData.Data.AudioOutState != 0)
                         device_row.find('.column-device-name').find('i').removeClass('hidden');
