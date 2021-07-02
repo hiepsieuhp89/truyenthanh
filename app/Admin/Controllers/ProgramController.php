@@ -417,7 +417,7 @@ class ProgramController extends AdminController
         });
         $form->saving(function ($form)
         {
-            if ($form->mode != 4) {
+            if ($form->model()->status == 2 && $form->mode != 4) {
                 $songPath = $form->fileVoice ? $form->fileVoice->getPathName() : config('filesystems.disks.upload.path') . $form->model()->fileVoice;
                 $devices = implode(',', $form->devices);
 
