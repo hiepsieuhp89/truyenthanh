@@ -116,7 +116,7 @@ class ProgramController extends AdminController
         });
         $grid->filter(function ($filter)
         {
-            //$filter->expand();
+            $filter->expand();
             $filter->disableIdFilter();
 
             $filter->scope('auth', trans('Chương trình'))
@@ -129,6 +129,8 @@ class ProgramController extends AdminController
                 ->select([1 => 'Bản tin', 2 => 'Tiếp sóng', 3 => 'Thu phát FM', 4 => 'Bản tin văn bản', 5 => 'File ghi âm']);
 
             $filter->like('name', 'Tên chương trình');
+
+            $filter->between('endDate','Lịch phát')->date();
 
         });
 
@@ -409,26 +411,39 @@ class ProgramController extends AdminController
         });
         $form->saving(function ($form)
         {
-            // if ($form->mode != 4) {
-            //     $songPath = $form->fileVoice;
-            //     $devices = implode(',', $form->devices);
+            if ($form->mode != 4) {
+                $songPath = $form->fileVoice ? $form->fileVoice->getPathName() : config('filesystems.disks.upload.path') . $form->model()->fileVoice;
+                $devices = implode(',', $form->devices);
 
-            //     $checkSchedule = $this->checkPlaySchedule($form->model()->id, $form->model()->type, $devices, $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
+                $checkSchedule = $this->checkPlaySchedule(
+                    $form->id ? $form->id : $form->model()->id, 
+                    $form->type ? $form->type : $form->model()->type, 
+                    $devices, 
+                    $form->startDate ? $form->startDate : $form->model()->startDate, 
+                    $form->endDate ? $form->endDate : $form->model()->endDate, 
+                    $form->time ? $form->time : $form->model()->time, 
+                    $songPath, 
+                    $form->replay ? $form->replay : $form->model()->replay, 
+                    $form->interval ? $form->interval : $form->model()->interval,
+                    $form->duration ? $form->duration : $form->model()->duration
+                );
 
-            //     if (isset($checkSchedule['program'])) {
-            //         $error = new MessageBag([
-            //             'title'   => 'Xung đột chương trình',
-            //             'message' => sprintf(
-            //                 'Bị trùng thời gian phát trên chương trình: <b>%s</b><br>- Tên thiết bị: <b>%s</b><br>- Lúc: <b>%s</b> ngày <b>%s</b>',
-            //                 $checkSchedule['program']->program->name,
-            //                 $checkSchedule['program']->device->name,
-            //                 $checkSchedule['program']->time,
-            //                 $checkSchedule['program']->startDate
-            //             )
-            //         ]);
-            //         return back()->with(compact('error'));
-            //     }
-            // }
+                if (isset($checkSchedule['program'])) {
+                    $error = new MessageBag([
+                        'title'   => 'Xung đột chương trình',
+                        'message' => sprintf(
+                            'Bị trùng thời gian phát trên chương trình: <b>%s</b><br>- Tên thiết bị: <b>%s</b><br>- Lúc: <b>%s</b> ngày <b>%s</b> đến <b>%s</b><br><button class="btn btn-warning">Ghi đè chương trình</button>',
+                            $checkSchedule['program']->program->name,
+                            $checkSchedule['program']->device->name,
+                            $checkSchedule['program']->time,
+                            $checkSchedule['program']->startDate,
+                            $checkSchedule['program']->endDate
+                        )
+                    ]);
+                    return back()->with(compact('error'));
+                }
+            }
+
             if (($form->_method == "PUT" && $form->type == 1 && $form->model()->fileVoice == null) || ($form->_method != "PUT" && $form->type == 1 && $form->fileVoice == null)){
                 $error = new MessageBag([
                     'title'   => 'Lỗi nhập liệu',
@@ -470,9 +485,6 @@ class ProgramController extends AdminController
                             $audioController = new AudioController();
 
                             $audioController->IncreaseVolume($inputPath, $booster, $outputPath);
-
-                            // $audioController->Convert($inputPath, $tempFile);
-                            // $audioController->IncreaseVolume($tempFile, $booster, $outputPath);
 
                         } else {
                             if (file_exists($inputPath))

@@ -64,21 +64,25 @@ class UpdateDevicesStatus implements ShouldQueue
 
             foreach ($device_data as $active_device) {
                 DeviceInfo::where('deviceCode', $active_device[0])->update([
-                    'status' => 1,
-                    'turn_on_time' => Carbon::now('Asia/Ho_Chi_Minh'),
-                    'turn_off_time' => null,
                     'is_playing' => $active_device[1],
                     'volume' => $active_device[2],
                 ]);
             }
-            DeviceInfo::whereNotIn('deviceCode', array_column($device_data, 0))->update([
+
+            //Thiết bị mới bật
+            DeviceInfo::whereIn('deviceCode', array_column($device_data, 0))->where('status',0)->update([
+                'status' => 1,
+                'turn_on_time' => Carbon::now('Asia/Ho_Chi_Minh'),
+            ]);
+            //Thiết bị mới tắt
+            DeviceInfo::whereNotIn('deviceCode', array_column($device_data, 0))->where('status',1)->update([
                 'status' => 0,
+                'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
                 'is_playing' => ''
             ]);
-            DeviceInfo::whereNotIn('deviceCode', array_column($device_data, 0))->where('turn_off_time', null)->update([
-                'turn_on_time' => null,
-                'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
-            ]);
+            // DeviceInfo::whereNotIn('deviceCode', array_column($device_data, 0))->where('turn_off_time', null)->update([
+            //     'turn_off_time' => Carbon::now('Asia/Ho_Chi_Minh'),
+            // ]);
         }
     }
 }
