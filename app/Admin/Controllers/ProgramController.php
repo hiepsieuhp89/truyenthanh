@@ -2,6 +2,7 @@
 namespace App\Admin\Controllers;
 
 use Request;
+use Carbon\Carbon;
 
 use App\Program;
 use App\Device;
@@ -158,18 +159,11 @@ class ProgramController extends AdminController
             ->orderBy('id', 'DESC');
 
         //$grid->column('id', __('Id'))->sortable();
-        $grid->column('name', __('Tên'))
-            ->style("min-width:100px;")->expand(function ($model)
-        {
-            return new Table(['Người tạo', 'Người duyệt', 'Khung giờ phát', 'Ngày bắt đầu', 'Ngày kết thúc', 'Ngày tạo', 'Ngày cập nhật'], [[isset($model->creator) ? $model
-                ->creator->name : "", isset($model->approver) ? $model
-                ->approver->name : "", $model->time, $model->startDate, $model->endDate, $model
-                ->created_at
-                ->format('H:i:s -- d-m-Y') , $model
-                ->updated_at
-                ->format('H:i:s -- d-m-Y') , ]]);
-        })
-            ->sortable();
+        $grid->column('name', __('Tên'))->display(function($name){
+
+            return (new Carbon($this->endDate . ' 23:59:59')) > Carbon::now() ? '<span title="Chương trình hoạt động" class="label label-info fs-12">'.$name.'</span>' : '<span title="Chương trình hết hoạt động" class="label label-warning fs-12">'.$name.'</span>';
+
+        })->style("min-width:100px;")->sortable();
 
         $states = ['off' => ['value' => 1, 'text' => 'Chưa duyệt', 'color' => 'danger'], 'on' => ['value' => 2, 'text' => 'Đã duyệt', 'color' => 'success'], ];
         $grid->column('status', __('Trạng thái'))
@@ -205,9 +199,6 @@ class ProgramController extends AdminController
         // {
         //     return ((double)$value) . ' dB';
         // })->hide();
-        $grid->column('replay', 'Phát liên tiếp')->display(function($value){
-            return $value . ' lần';
-        });
         $grid->column('mode', __('Kiểu phát'))
             ->using([1 => 'Trong ngày', 2 => 'Hàng ngày', 3 => 'Hàng tuần', 4 => 'Phát ngay'])
             ->label('default')
@@ -230,6 +221,21 @@ class ProgramController extends AdminController
                     ->device->name . '</span>';
             }
             return $html . '</div>';
+        });
+        $grid->column('id', __('Xem thêm'))->display(function(){
+            return 'Xem thêm';
+        })->expand(function ($model){
+            return new Table(['Người tạo', 'Người duyệt', 'Phát liên tiếp', 'Khung giờ phát', 'Ngày bắt đầu', 'Ngày kết thúc', 'Ngày tạo', 'Ngày cập nhật'], [
+                [
+                    isset($model->creator) ? '<b>'.$model->creator->name.'</b>' : "", 
+                    isset($model->approver) ? '<b>'.$model->approver->name.'</b>' : "", 
+                    $model->replay, 
+                    $model->time, 
+                    $model->startDate, 
+                    $model->endDate, 
+                    $model->created_at->format('H:i:s -- d-m-Y'),
+                    $model->updated_at->format('H:i:s -- d-m-Y'),
+                ]]);
         });
         $grid->column('time', __('Khung giờ phát'))
             ->hide();
