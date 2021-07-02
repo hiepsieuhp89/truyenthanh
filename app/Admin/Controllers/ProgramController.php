@@ -223,7 +223,7 @@ class ProgramController extends AdminController
             return $html . '</div>';
         });
         $grid->column('id', __('Xem thêm'))->display(function(){
-            return 'Xem thêm';
+            return '';
         })->expand(function ($model){
             return new Table(['Người tạo', 'Người duyệt', 'Phát liên tiếp', 'Khung giờ phát', 'Ngày bắt đầu', 'Ngày kết thúc', 'Ngày tạo', 'Ngày cập nhật'], [
                 [
