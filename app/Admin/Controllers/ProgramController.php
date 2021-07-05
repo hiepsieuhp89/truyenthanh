@@ -417,9 +417,11 @@ class ProgramController extends AdminController
         });
         $form->saving(function ($form)
         {
-            if ($form->status == 2 && $form->mode != 4) {
+        
+            if (($form->status == "on" || $form->status == 1) && $form->mode != 4) {
+
                 $songPath = $form->fileVoice ? $form->fileVoice->getPathName() : config('filesystems.disks.upload.path') . $form->model()->fileVoice;
-                $devices = implode(',', $form->devices);
+                $devices = is_array($form->devices) ? implode(',', $form->devices) : ($form->devices ? $form->devices : implode(',',$form->model()->devices)); 
 
                 $checkSchedule = $this->checkPlaySchedule(
                     $form->id ? $form->id : $form->model()->id, 
@@ -433,7 +435,6 @@ class ProgramController extends AdminController
                     $form->interval ? $form->interval : $form->model()->interval,
                     $form->duration ? $form->duration : $form->model()->duration
                 );
-
                 if (isset($checkSchedule['program'])) {
                     $error = new MessageBag([
                         'title'   => 'Xung đột chương trình',
@@ -446,6 +447,7 @@ class ProgramController extends AdminController
                             $checkSchedule['program']->endDate
                         )
                     ]);
+                    admin_toastr('Message...', 'success', ['timeOut' => 5000]);
                     return back()->with(compact('error'));
                 }
             }
