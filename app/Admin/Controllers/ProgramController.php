@@ -165,9 +165,9 @@ class ProgramController extends AdminController
 
         })->style("min-width:100px;")->sortable();
 
-        $states = ['off' => ['value' => 1, 'text' => 'Chưa duyệt', 'color' => 'danger'], 'on' => ['value' => 2, 'text' => 'Đã duyệt', 'color' => 'success'], ];
-        $grid->column('status', __('Trạng thái'))
-            ->switch($states)->sortable();
+        $states = [1 => false, 2 => true];
+
+        $grid->column('status', __('Trạng thái'))->bool($states)->sortable();
 
         $grid->column('type', __('Loại phát sóng'))
             ->using($this->programtype)
@@ -447,7 +447,7 @@ class ProgramController extends AdminController
                             $checkSchedule['program']->endDate
                         )
                     ]);
-                    admin_toastr('Message...', 'success', ['timeOut' => 5000]);
+                    //admin_toastr('Message...', 'success', ['timeOut' => 5000]);
                     return back()->with(compact('error'));
                 }
             }
