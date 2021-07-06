@@ -18,6 +18,7 @@
  *
  */
 Use Encore\Admin\Admin;
+use Encore\Admin\Form;
 
 Encore\Admin\Form::extend('media', \Encore\FileBrowser\FileBrowserField::class);
 Encore\Admin\Form::extend('record', App\Admin\Extensions\RecordVoice::class);
@@ -50,4 +51,19 @@ body{
 ');
 Admin::js(env('APP_URL').'/js/custom.js');
 Admin::js("https://kit.fontawesome.com/12065bbb1f.js");
+
+Form::init(function (Form $form) {
+
+    $form->disableEditingCheck();
+
+    $form->disableCreatingCheck();
+
+    $form->disableViewCheck();
+
+    $form->tools(function (Form\Tools $tools) {
+        $tools->disableDelete();
+        $tools->disableView();
+        $tools->disableList();
+    });
+});
 //Admin::js('https://maps.googleapis.com/maps/api/js?key='. env('GOOGLE_API_KEY') .'&callback=initMap');

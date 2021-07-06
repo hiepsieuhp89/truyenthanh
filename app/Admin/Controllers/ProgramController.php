@@ -5,6 +5,7 @@ use Request;
 use Carbon\Carbon;
 
 use App\Program;
+use App\LiveStreaming;
 use App\Device;
 use App\DeviceInfo;
 use App\Document;
@@ -25,10 +26,11 @@ use Illuminate\Support\Facades\Log;
 use Encore\Admin\Facades\Admin;
 use Illuminate\Support\MessageBag;
 use Encore\Admin\Actions\RowAction;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProgramController extends AdminController
 {
-    use Api;
+    use Api, SoftDeletes;
     /**
      * Title for current resource.
      *
@@ -86,6 +88,10 @@ class ProgramController extends AdminController
             ->edit($id));
 
         return redirect()->intended($this->path);
+    }
+    public function cancelProgram($id){
+        Program::find($id)->update(['status'=>1]);
+        Schedule::where('program_id',$id)->delete();
     }
 
     /**
@@ -184,13 +190,13 @@ class ProgramController extends AdminController
                 return '<a>'.$this->radioChannel.'</a>';
             }
             if($this->type == 2){
-                $scope = [
-                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
-                    'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
-                    Admin::user()->stream_url => 'Phát trực tiếp',
-                ];
+
+                $livestreams = LiveStreaming::all()->pluck('name','url');
+
+                $livestreams[Admin::user()->stream_url] = 'Phát trực tiếp (' . Admin::user()->stream_key . ')';
                 
-                $title = isset($scope[$this->digiChannel])? $scope[$this->digiChannel] : 'Phát trực tiếp';
+                $title = isset($livestreams[$this->digiChannel]) ? $livestreams[$this->digiChannel] : 'Phát trực tiếp';
+
                 $d = '<a href="' . env('APP_URL') . '/admin/streams?url=' . $this->digiChannel . '">' . $title . '</a>';
                 return $d;
             }
@@ -287,23 +293,14 @@ class ProgramController extends AdminController
                     ->default(2);
             })->when(2, function (Form $form) {
 
-                if(Admin::user()->stream_key == '')
-                    $kenh = [
-                        'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
-                        'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
-                        'http://stream2.mobiradio.vn/vovradio/vovgthcm.stream/playlist.m3u8'=>'VOV GT Sài Gòn',
-                    ];
-                else
-                    $kenh = [
-                        'https://streaming1.vov.vn:8443/audio/vovvn1_vov1.stream_aac/playlist.m3u8' => 'VOV 1',
-                        'https://streaming1.vov.vn:8443/audio/vovvn1_vov2.stream_aac/playlist.m3u8' => 'VOV 2',
-                        'http://stream2.mobiradio.vn/vovradio/vovgthcm.stream/playlist.m3u8' => 'VOV GT Sài Gòn',
-                        Admin::user()->stream_url => 'Phát trực tiếp (' . Admin::user()->stream_key . ')',
-                    ];
+                $livestreams = LiveStreaming::all()->pluck('name','url');
 
-                $form->select('digiChannel', trans('Chọn kênh tiếp sóng'))->options($kenh)->rules('required', ['required' => "Cần nhập giá trị"]);
+                if(Admin::user()->stream_key != '')
+                    $livestreams[Admin::user()->stream_url] = 'Phát trực tiếp (' . Admin::user()->stream_key . ')';
+                
+                $form->select('digiChannel', trans('Chọn kênh tiếp sóng'))->options($livestreams)->rules('required', ['required' => "Cần nhập giá trị"]);
 
-                $form->number('duration','Thời lượng (phút)')->max(1440);
+                $form->number('duration','Thời lượng (phút)')->max(720);
                 
             })->when(3, function (Form $form){
 
@@ -436,13 +433,23 @@ class ProgramController extends AdminController
                     $form->duration ? $form->duration : $form->model()->duration
                 );
                 if (isset($checkSchedule['program'])) {
+                    // .'<hr/>
+                    //         <form class="merge-program">
+                    //             <input name="ProgramMerge" class="hidden" type="text" value="'.$checkSchedule['program']->id.'">
+                    //             <input type="button" class="btn btn-warning" value="Ghi đè chương trình (Bỏ duyệt chương trình cũ)">
+                    //         </form>
+                    //         <form class="combine-program">
+                    //             <input name="ProgramCombine" class="hidden" type="text" value="'.$checkSchedule['program']->id.'">
+                    //             <input type="button" class="btn btn-success" value="Tiếp nối chương trình (Xếp sau chương trình cũ)">
+                    //         </form>'
                     $error = new MessageBag([
                         'title'   => 'Xung đột chương trình',
                         'message' => sprintf(
-                            'Bị trùng thời gian phát trên chương trình: <b>%s</b><br>- Tên thiết bị: <b>%s</b><br>- Lúc: <b>%s</b> ngày <b>%s</b> đến <b>%s</b><br><button class="btn btn-warning">Ghi đè chương trình</button>',
-                            $checkSchedule['program']->program->name,
-                            $checkSchedule['program']->device->name,
+                            'Bị trùng thời gian phát trên chương trình: <b>%s</b><br>- Lúc: <b>%s</b> đến <b>%s</b><br>- Từ ngày <b>%s</b> đến <b>%s</b><br>
+                            ',
+                            $checkSchedule['program']->name,
                             $checkSchedule['program']->time,
+                            $checkSchedule['program']->endTime,
                             $checkSchedule['program']->startDate,
                             $checkSchedule['program']->endDate
                         )

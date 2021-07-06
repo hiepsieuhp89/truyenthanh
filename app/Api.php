@@ -27,6 +27,51 @@ use Encore\Admin\Facades\Admin;
 
 trait Api
 {
+    public function caculateEndTime($startDate, $startTime, $replay_times, $replay_delay, $duration){
+
+            $startT = new Carbon($startDate . ' ' . $startTime);
+
+            $timerange = $replay_times * ($duration + $replay_delay) - $replay_delay;
+
+            $endT = $startT->addSeconds($timerange);
+
+            if($startT->toDateString() < $endT->toDateString())
+                $endT = new Carbon($startT->toDateString().' '.'23:59:59');
+
+            return $endT;
+    }
+    public function findDuplicateSchedule($program_id, $devices,$startDate,$endDate,$startTime,$endTime){
+
+        return Program::where('id','<>', $program_id)->where('status',2)->where(function($query) use ($devices){ 
+                foreach($devices as $device){
+                    $query->orwhere('devices','like','%'.$device.'%');
+                };
+            })->where(function($query) use ($startDate, $endDate){
+
+                        $query->where(function ($query2) use ($startDate) {
+
+                            $query2->where('startDate', '<=', $startDate)
+                            ->where('endDate', '>=', $startDate);
+                        })
+
+                        ->orwhere(function ($query3) use ($startDate, $endDate) {
+
+                            $query3->where('startDate', '>=', $startDate)
+                            ->where('startDate', '<=', $endDate);
+                        });
+
+                })->where(function ($query) use ($startTime, $endTime) {
+                        $query->where('time', $startTime)
+                        ->orwhere(function ($query1) use ($startTime) {
+                            $query1->where('time', '<', $startTime)
+                            ->where('endTime', '>', $startTime);
+                        })
+                        ->orwhere(function ($query2) use ($startTime, $endTime) {
+                                $query2->where('time', '>', $startTime)
+                                ->where('time', '<', $endTime);
+                        });
+                })->first();
+    }
     /**
      * A call api to set schedule of one or more device
      * @var program_id is index of program record that contain the schedule
@@ -50,108 +95,134 @@ trait Api
         if ($type == 1 || $type == 4 || $type == 5) { // nếu là phát phương tiện
 
             //Get duration of media file
-            $file_duration = $this->getFileDuration($songName);
+
+            $endTime = $this->caculateEndTime(
+                $startDate, 
+                $startTime, 
+                $replay_times,
+                $replay_delay, 
+                $this->getFileDuration($songName)
+            )->toTimeString();
+
+            $findDuplicateSchedule = $this->findDuplicateSchedule($program_id, $devices,$startDate,$endDate,$startTime,$endTime);
+
+            if ($findDuplicateSchedule)
+                return ['program'=> $findDuplicateSchedule];
 
             //get each device
-            foreach ($devices as $device) {
+            // foreach ($devices as $device) {
 
-                $startT = new Carbon($startDate . ' ' . $startTime);
+            //     $startT = new Carbon($startDate . ' ' . $startTime);
                 
-                for ($i = 0; $i < $replay_times; $i++) {
+            //     for ($i = 0; $i < $replay_times; $i++) {
 
-                    $start_time_of_the_loop_play = $startT->toTimeString();
+            //         $start_time_of_the_loop_play = $startT->toTimeString();
 
-                    $start_date_of_the_loop_play = $startDate;
+            //         $start_date_of_the_loop_play = $startDate;
 
-                    $startT->addSeconds($file_duration + $replay_delay);
+            //         $startT->addSeconds($file_duration + $replay_delay);
 
-                    $end_time_of_the_loop_play = $startT->toTimeString();
+            //         $end_time_of_the_loop_play = $startT->toTimeString();
 
-                    $end_date_of_the_loop_play = $endDate;
+            //         $end_date_of_the_loop_play = $endDate;
 
-                    $findDuplicateSchedule = Schedule::where('deviceCode', $device)
+            //         $findDuplicateSchedule = Schedule::where('deviceCode', $device)
 
-                    ->where('program_id','<>', $program_id)
+            //         ->where('program_id','<>', $program_id)
 
-                    ->where(function($query) use ($start_date_of_the_loop_play, $end_date_of_the_loop_play){
-                        $query->where('startDate', $start_date_of_the_loop_play)
+            //         ->where(function($query) use ($start_date_of_the_loop_play, $end_date_of_the_loop_play){
+            //             $query->where('startDate', $start_date_of_the_loop_play)
 
-                        ->orwhere(function ($query2) use ($start_date_of_the_loop_play) {
-                            $query2->where('startDate', '<', $start_date_of_the_loop_play)
-                            ->where('endDate', '>', $start_date_of_the_loop_play);
-                        })
+            //             ->orwhere(function ($query2) use ($start_date_of_the_loop_play) {
+            //                 $query2->where('startDate', '<', $start_date_of_the_loop_play)
+            //                 ->where('endDate', '>', $start_date_of_the_loop_play);
+            //             })
 
-                        ->orwhere(function ($query3) use ($start_date_of_the_loop_play, $end_date_of_the_loop_play) {
-                            $query3->where('startDate', '>', $start_date_of_the_loop_play)
-                            ->where('startDate', '<', $end_date_of_the_loop_play);
-                        });
+            //             ->orwhere(function ($query3) use ($start_date_of_the_loop_play, $end_date_of_the_loop_play) {
+            //                 $query3->where('startDate', '>', $start_date_of_the_loop_play)
+            //                 ->where('startDate', '<', $end_date_of_the_loop_play);
+            //             });
 
-                    })->where(function ($query) use ($start_time_of_the_loop_play, $end_time_of_the_loop_play) {
-                        $query->where('time', $start_time_of_the_loop_play)
-                        ->orwhere(function ($query1) use ($start_time_of_the_loop_play) {
-                            $query1->where('time', '<', $start_time_of_the_loop_play)
-                            ->where('endTime', '>', $start_time_of_the_loop_play);
-                        })
-                        ->orwhere(function ($query2) use ($start_time_of_the_loop_play, $end_time_of_the_loop_play) {
-                                $query2->where('time', '>', $start_time_of_the_loop_play)
-                                ->where('time', '<', $end_time_of_the_loop_play);
-                        });
-                    })
-                    ->first();
+            //         })->where(function ($query) use ($start_time_of_the_loop_play, $end_time_of_the_loop_play) {
+            //             $query->where('time', $start_time_of_the_loop_play)
+            //             ->orwhere(function ($query1) use ($start_time_of_the_loop_play) {
+            //                 $query1->where('time', '<', $start_time_of_the_loop_play)
+            //                 ->where('endTime', '>', $start_time_of_the_loop_play);
+            //             })
+            //             ->orwhere(function ($query2) use ($start_time_of_the_loop_play, $end_time_of_the_loop_play) {
+            //                     $query2->where('time', '>', $start_time_of_the_loop_play)
+            //                     ->where('time', '<', $end_time_of_the_loop_play);
+            //             });
+            //         })
+            //         ->first();
 
-                    if ($findDuplicateSchedule)
-                        return ['program'=> $findDuplicateSchedule];
-                }
-            }
+            //         if ($findDuplicateSchedule)
+            //             return ['program'=> $findDuplicateSchedule];
+            //     }
+            // }
         }
         if ($type == 2){// phát tiếp sóng
-            foreach ($devices as $device) { //set từng thiết bị
-                for ($i = 0; $i < $replay_times; $i++) {
 
-                    $start_time_of_the_loop_play = $startT->toTimeString();
+            $endTime = $this->caculateEndTime(
+                $startDate, 
+                $startTime, 
+                $replay_times,
+                $replay_delay, 
+                $duration * 60
+            )->toTimeString();
 
-                    $start_date_of_the_loop_play = $startDate;
+            $findDuplicateSchedule = $this->findDuplicateSchedule($program_id, $devices,$startDate,$endDate,$startTime,$endTime);
 
-                    $startT->addMinutes($duration);
+            if ($findDuplicateSchedule)
+                return ['program'=> $findDuplicateSchedule];
 
-                    $end_time_of_the_loop_play = $startT->toTimeString();
+            // foreach ($devices as $device) { //set từng thiết bị
+            //     for ($i = 0; $i < $replay_times; $i++) {
 
-                    $end_date_of_the_loop_play = $endDate;
+            //         $start_time_of_the_loop_play = $startT->toTimeString();
 
-                    $findDuplicateSchedule = Schedule::where('deviceCode', $device)
+            //         $start_date_of_the_loop_play = $startDate;
 
-                    ->where('program_id','<>', $program_id)
+            //         $startT->addMinutes($duration);
 
-                    ->where(function($query) use ($start_date_of_the_loop_play, $end_date_of_the_loop_play){
-                        $query->where('startDate', $start_date_of_the_loop_play)
+            //         $end_time_of_the_loop_play = $startT->toTimeString();
 
-                        ->orwhere(function ($query2) use ($start_date_of_the_loop_play) {
-                            $query2->where('startDate', '<', $start_date_of_the_loop_play)
-                            ->where('endDate', '>', $start_date_of_the_loop_play);
-                        })
+            //         $end_date_of_the_loop_play = $endDate;
 
-                        ->orwhere(function ($query3) use ($start_date_of_the_loop_play, $end_date_of_the_loop_play) {
-                            $query3->where('startDate', '>', $start_date_of_the_loop_play)
-                            ->where('startDate', '<', $end_date_of_the_loop_play);
-                        });
+            //         $findDuplicateSchedule = Schedule::where('deviceCode', $device)
 
-                    })->where(function ($query) use ($start_time_of_the_loop_play, $end_time_of_the_loop_play) {
-                        $query->where('time', $start_time_of_the_loop_play)
-                        ->orwhere(function ($query1) use ($start_time_of_the_loop_play) {
-                            $query1->where('time', '<', $start_time_of_the_loop_play)
-                            ->where('endTime', '>', $start_time_of_the_loop_play);
-                        })
-                        ->orwhere(function ($query2) use ($start_time_of_the_loop_play, $end_time_of_the_loop_play) {
-                                $query2->where('time', '>', $start_time_of_the_loop_play)
-                                ->where('time', '<', $end_time_of_the_loop_play);
-                        });
-                    })
-                    ->first();
+            //         ->where('program_id','<>', $program_id)
 
-                    if ($findDuplicateSchedule)
-                        return ['program'=> $findDuplicateSchedule];
-                }
-            }
+            //         ->where(function($query) use ($start_date_of_the_loop_play, $end_date_of_the_loop_play){
+            //             $query->where('startDate', $start_date_of_the_loop_play)
+
+            //             ->orwhere(function ($query2) use ($start_date_of_the_loop_play) {
+            //                 $query2->where('startDate', '<', $start_date_of_the_loop_play)
+            //                 ->where('endDate', '>', $start_date_of_the_loop_play);
+            //             })
+
+            //             ->orwhere(function ($query3) use ($start_date_of_the_loop_play, $end_date_of_the_loop_play) {
+            //                 $query3->where('startDate', '>', $start_date_of_the_loop_play)
+            //                 ->where('startDate', '<', $end_date_of_the_loop_play);
+            //             });
+
+            //         })->where(function ($query) use ($start_time_of_the_loop_play, $end_time_of_the_loop_play) {
+            //             $query->where('time', $start_time_of_the_loop_play)
+            //             ->orwhere(function ($query1) use ($start_time_of_the_loop_play) {
+            //                 $query1->where('time', '<', $start_time_of_the_loop_play)
+            //                 ->where('endTime', '>', $start_time_of_the_loop_play);
+            //             })
+            //             ->orwhere(function ($query2) use ($start_time_of_the_loop_play, $end_time_of_the_loop_play) {
+            //                     $query2->where('time', '>', $start_time_of_the_loop_play)
+            //                     ->where('time', '<', $end_time_of_the_loop_play);
+            //             });
+            //         })
+            //         ->first();
+
+            //         if ($findDuplicateSchedule)
+            //             return ['program'=> $findDuplicateSchedule];
+            //     }
+            // }
         }
     }
     /**
@@ -292,11 +363,16 @@ trait Api
 
                     $start_date_of_the_loop_play = $startDate;
 
-                    $startT->addSeconds($file_duration + $replay_delay);
+                    $endT = $startT->addSeconds($file_duration);
 
-                    $end_time_of_the_loop_play = $startT->toTimeString();
+                    if($startT->toDateString() < $endT->toDateString())
+                        $endT = new Carbon($startT->toDateString().' '.'23:59:59');
+
+                    $end_time_of_the_loop_play = $endT->toTimeString();
 
                     $end_date_of_the_loop_play = $endDate;
+
+                    $startT->addSeconds($replay_delay);
 
                     $schedule = new Schedule();
                     $schedule->program_id = $program_id;
@@ -309,6 +385,7 @@ trait Api
                     $schedule->endtime = $end_time_of_the_loop_play;
                     $schedule->save();
                 }
+                Program::find($program_id)->update(['endTime' => $end_time_of_the_loop_play]);
                 $schedule = $this->getSchedule($device);
 
                 $dataRequest .= $schedule;
@@ -322,6 +399,8 @@ trait Api
         if ($type == 2){// phát tiếp sóng
             foreach ($devices as $device) { //set từng thiết bị
 
+                $startT = new Carbon($startDate . ' ' . $startTime);
+
                 $dataRequest .= '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[';
 
                 for ($i = 0; $i < $replay_times; $i++) {
@@ -330,11 +409,20 @@ trait Api
 
                     $start_date_of_the_loop_play = $startDate;
 
-                    $startT->addMinutes($duration);
+                    $endT = $startT->addMinutes($duration);
 
-                    $end_time_of_the_loop_play = $startT->toTimeString();
+                    if($startDate< $endT->toDateString()){
+
+                        $endT = new Carbon($startT->toDateString().' '.'23:59:59');
+
+                        $startT = new Carbon($startDate . ' ' . '23:59:59');
+                    }
+
+                    $end_time_of_the_loop_play = $endT->toTimeString();
 
                     $end_date_of_the_loop_play = $endDate;
+
+                    $startT->addSeconds($replay_delay);
 
                     $schedule = new Schedule();
                     $schedule->program_id = $program_id;
@@ -346,6 +434,9 @@ trait Api
                     $schedule->time = $start_time_of_the_loop_play;
                     $schedule->endTime = $end_time_of_the_loop_play;
                     $schedule->save();
+
+                    if($end_time_of_the_loop_play == '23:59:59')
+                        break;
                 }
                 $schedule = $this->getSchedule($device);
 
@@ -391,7 +482,7 @@ trait Api
      * A call api to play now a program
      * 
      * @var type is integer to know type play, play file, stream, documents,...
-     * @var deviceCode is array of devices that are needed to stop play
+     * @var deviceCode is string of devices array that are needed to stop play
      * @var songName is url of media play
      * @return curl_response
      */
@@ -427,6 +518,8 @@ trait Api
         }
 
         $dataRequest .= ']}"}';
+
+        $this->stopPlay($deviceCode);
 
         return $this->curl_to_server($dataRequest);
     }

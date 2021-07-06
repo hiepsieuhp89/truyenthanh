@@ -48,6 +48,7 @@ return array(
     'App\\Admin\\Controllers\\ExampleController' => $baseDir . '/app/Admin/Controllers/ExampleController.php',
     'App\\Admin\\Controllers\\FeatureController' => $baseDir . '/app/Admin/Controllers/FeatureController.php',
     'App\\Admin\\Controllers\\HomeController' => $baseDir . '/app/Admin/Controllers/HomeController.php',
+    'App\\Admin\\Controllers\\LiveStreamController' => $baseDir . '/app/Admin/Controllers/LiveStreamController.php',
     'App\\Admin\\Controllers\\ProgramController' => $baseDir . '/app/Admin/Controllers/ProgramController.php',
     'App\\Admin\\Controllers\\StreamController' => $baseDir . '/app/Admin/Controllers/StreamController.php',
     'App\\Admin\\Controllers\\VoiceRecordController' => $baseDir . '/app/Admin/Controllers/VoiceRecordController.php',

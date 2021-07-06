@@ -24,6 +24,7 @@ Route::group([
     $router->resource('programs', ProgramController::class);
     $router->resource('streams', StreamController::class);
     $router->resource('devicedata', DeviceInfoController::class, ['except' => ['create']]);
+    $router->resource('live-streamings', LiveStreamController::class);
     
     $router->get('/xml/map', 'DeviceController@map')->name('admin.map');
 });

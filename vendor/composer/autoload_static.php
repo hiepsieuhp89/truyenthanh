@@ -677,6 +677,7 @@ class ComposerStaticInita432412586e436814bf8f5d731393b6b
         'App\\Admin\\Controllers\\ExampleController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ExampleController.php',
         'App\\Admin\\Controllers\\FeatureController' => __DIR__ . '/../..' . '/app/Admin/Controllers/FeatureController.php',
         'App\\Admin\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Admin/Controllers/HomeController.php',
+        'App\\Admin\\Controllers\\LiveStreamController' => __DIR__ . '/../..' . '/app/Admin/Controllers/LiveStreamController.php',
         'App\\Admin\\Controllers\\ProgramController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ProgramController.php',
         'App\\Admin\\Controllers\\StreamController' => __DIR__ . '/../..' . '/app/Admin/Controllers/StreamController.php',
         'App\\Admin\\Controllers\\VoiceRecordController' => __DIR__ . '/../..' . '/app/Admin/Controllers/VoiceRecordController.php',

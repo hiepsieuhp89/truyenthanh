@@ -7,6 +7,8 @@ use App\VoiceRecord;
 
 class Program extends Model
 {
+    protected $fillable = ['endTime'];
+
     public function getDaysAttribute($value)
     {
         return explode(',', $value);
