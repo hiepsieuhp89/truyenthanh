@@ -411,7 +411,7 @@ trait Api
 
                     $endT = $startT->addMinutes($duration);
 
-                    if($startDate< $endT->toDateString()){
+                    if($startDate < $endT->toDateString()){
 
                         $endT = new Carbon($startT->toDateString().' '.'23:59:59');
 
