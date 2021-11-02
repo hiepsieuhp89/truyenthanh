@@ -1,0 +1,18 @@
+{
+    "css": [
+        "vendor/laravel-admin/laravel-admin.min.css?id=fcd7a6563173abeea6bb93e3e9f1d488",
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css",
+        "https://cdn.jsdelivr.net/npm/shortcut-buttons-flatpickr@0.3.0/dist/themes/light.min.css"
+    ],
+    "js": [
+        "vendor/laravel-admin/laravel-admin.min.js?id=20816741f89518335374cf602ee8cc2e",
+        "js/custom.js",
+        "https://kit.fontawesome.com/12065bbb1f.js",
+        "https://cdn.jsdelivr.net/npm/flatpickr",
+        "https://cdn.jsdelivr.net/npm/shortcut-buttons-flatpickr@0.1.0/dist/shortcut-buttons-flatpickr.min.js",
+        "https://npmcdn.com/flatpickr@4.6.6/dist/l10n/zh.js",
+        "//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyBe89zKFll16U6miA-f2PJXAJn356sPhl8&libraries=places",
+        "https://unpkg.com/mic-recorder-to-mp3@2.2.1/dist/index.js",
+        "https://momentjs.com/downloads/moment-with-locales.js"
+    ]
+}

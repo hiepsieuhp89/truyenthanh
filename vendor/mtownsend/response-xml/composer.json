@@ -1,0 +1,48 @@
+{
+    "name": "mtownsend/response-xml",
+    "description": "The missing XML support for Laravel's Response class.",
+    "keywords": [
+        "response",
+        "laravel",
+        "api",
+        "xml"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mark Townsend",
+            "email": "mtownsend5512@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Mtownsend\\ResponseXml\\": "src"
+        }
+    },
+    "require": {
+        "php": "~7.0|~8.0",
+        "illuminate/http": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+        "illuminate/routing":  "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+        "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+        "illuminate/container": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+        "spatie/array-to-xml": "^2.16"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.4|^8.5",
+        "laravel/framework": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mtownsend\\ResponseXml\\Test\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mtownsend\\ResponseXml\\Providers\\ResponseXmlServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable"
+}
