@@ -78,10 +78,14 @@ class AreaController extends AdminController
                     $form->text('title', trans('Cụm loa'))->rules('required');
                     $form->text('address', trans('admin.address'))->rules('required');
                     $form->latlong('lat', 'lon', 'Vị trí')->height(300)->default(['lat' => 21.0277644, 'lng' => 105.8341598]);
+                    $form->select('api_status','Bật api')->options([
+                        1 => "Có",
+                        0 => "Không"
+                    ])->default(0);
                     // $form->hidden('_token')->default(csrf_token());
 
                     $form->hidden('order')->default(0);
-                    $form->hidden('status')->default(0);
+                    
                     
                     // $form->disableReset();
                     // $form->disableViewCheck();
@@ -99,11 +103,13 @@ class AreaController extends AdminController
         // $menuModel = config('admin.database.menu_model');
         // $menuModel = config('admin.database.menu_model');
         $dataModel = new Area();
+
         return $dataModel::tree(function (Tree $tree) {
+
             $tree->disableCreate();
-            // $tree->selectOptions(function(){},'Khu vực');
+            
             $tree->branch(function ($branch) {
-                $payload = "<i class='fa-home'></i>&nbsp;<strong>{$branch['title']}</strong>";
+                $payload = "<i class='fa-home'></i>&nbsp;<strong>{$branch['id']} - {$branch['title']}</strong>";
 
                 // if (!isset($branch['children'])) {
                 //     if (url()->isValidUrl($branch['uri'])) {
@@ -168,7 +174,11 @@ class AreaController extends AdminController
         $form->text('address', trans('Địa chỉ'));
         $form->latlong('lat', 'lon', 'Vị trí')->height(400)->default(['lat' => 21.0277644, 'lng' => 105.8341598]);
         $form->hidden('order', trans('order'));   
-        $form->hidden('status', trans('status'));
+        $form->select('api_status','Bật api')
+        ->options([
+            1 => "Có",
+            0 => "Không"
+        ])->default(0);
 
         $form->disableReset();
         $form->disableViewCheck();

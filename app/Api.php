@@ -707,7 +707,6 @@ trait Api
 
         $request = base64_encode($dataRequest);
 
-        // echo "request " . $request;
         $urlRequest = "http://103.130.213.161:906/" . $request;
 
         // admin_toastr('$urlRequest', 'info');
