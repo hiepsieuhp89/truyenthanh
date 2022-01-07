@@ -775,8 +775,7 @@ class ProgramController extends AdminController
 
                 if ($form->model()->mode == 4) {
                     if ($form->model()->status == 2)
-                        $this->playOnline($form->model()->type, implode(',', $form->model()
-                            ->devices), $songPath);
+                        $this->playOnline($form->model()->type, $form->model()->devices, $songPath);
                 } 
                 if ($form->model()->mode == 3){ // phát theo tuần
                     if ($form->model()->status == 2)

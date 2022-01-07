@@ -616,36 +616,12 @@ trait Api
             //send file to devices before playing
             //$this->sendFileToDevice($deviceCode, $songName);
         }
+
         //if play stream
         else{
             $timeStop = Carbon::now()->addMinutes($duration)->toTimeString();
         }
-        // if ($type == 1 || $type == 4 || $type == 5){
-
-        //     $dataRequest .= implode(',',array_map(function($device) use ($songName){
-        //         return
-        //         '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"}';
-        //     },$deviceCode));
-        // }
-        // if ($type == 2) {
-        //     $time = Carbon::now()->addSeconds(30);
-
-        //     $timeStart = $time->toTimeString();
-        //     $dateStart = $time->toDateString();
-
-        //     $dataRequest .= implode(',',array_map(function($device) use ($songName){
-        //         return
-        //         '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"}';
-        //     },$deviceCode));
-
-        //     // $dataRequest .= implode(',',array_map(function($device) use ($songName, $timeStop, $timeStart, $dateStart){
-
-        //     //     return
-        //     //     '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"PacketType\\\\\":2,\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayList\\\\\\\\\\\\\":[{\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$timeStart.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"TimeStop\\\\\\\\\\\\\":\\\\\\\\\\\\\\"'.$timeStop.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStart\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$dateStart.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"DateStop\\\\\\\\\\\\\":\\\\\\\\\\\\\"'.$dateStart.'\\\\\\\\\\\\\",\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1}]}\\\\\"}\"}';
-
-        //     // },$deviceCode));
-
-        // }
+        //generate string
         $dataRequest .= implode(',',array_map(function($device) use ($songName){
             return
             '{\"DeviceID\":\"' . trim($device) . '\",\"CommandSend\":\"{\\\\\"Data\\\\\":\\\\\"{\\\\\\\\\\\\\"PlayRepeatType\\\\\\\\\\\\\":1,\\\\\\\\\\\\\"PlayType\\\\\\\\\\\\\":2,\\\\\\\\\\\\\"SongName\\\\\\\\\\\\\":\\\\\\\\\\\\\"' . $songName . '\\\\\\\\\\\\\"}\\\\\",\\\\\"PacketType\\\\\":5}\"}';
@@ -653,7 +629,8 @@ trait Api
 
         $dataRequest .= ']}"}';
 
-        //$this->stopPlay($deviceCode);
+        //Stop the current play before play this program
+        $this->stopPlay($deviceCode);
 
         return $this->curl_to_server($dataRequest);
     }
@@ -733,6 +710,6 @@ trait Api
 
         curl_close($curl);
 
-        return json_decode($response);
+        return $response;
     }
 }
