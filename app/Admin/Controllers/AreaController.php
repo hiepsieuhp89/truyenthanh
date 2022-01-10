@@ -84,7 +84,7 @@ class AreaController extends AdminController
                     ])->default(0);
                     // $form->hidden('_token')->default(csrf_token());
 
-                    $form->hidden('order')->default(0);
+                    $form->hidden('order', trans('order'))->default(0);  
                     
                     
                     // $form->disableReset();
@@ -173,7 +173,7 @@ class AreaController extends AdminController
         $form->text('title', trans('Cụm loa'));    
         $form->text('address', trans('Địa chỉ'));
         $form->latlong('lat', 'lon', 'Vị trí')->height(400)->default(['lat' => 21.0277644, 'lng' => 105.8341598]);
-        $form->hidden('order', trans('order'));   
+        $form->hidden('order', trans('order'))->default(0);   
         $form->select('api_status','Bật api')
         ->options([
             1 => "Có",
