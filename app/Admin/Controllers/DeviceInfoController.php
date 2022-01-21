@@ -181,7 +181,7 @@ class DeviceInfoController extends AdminController
                     else
                         $fv = '<audio controls=""><source src="' . $schedule->fileVoice . '" type="audio/wav"></audio>';
                     
-                    $program = Program::find($schedule->program_id)->name?:'';
+                    $program = Program::find($schedule->program_id)?Program::find($schedule->program_id)->name:'';
 
                     $program = (new Carbon($schedule->endDate . ' ' . $schedule->endTime)) > Carbon::now() ? '<span title="Chương trình hoạt động" class="label label-warning fs-12">'.$program.'</span>' : '<span title="Chương trình hết hoạt động" class="label label-default fs-12">'.$program.'</span>';
 
