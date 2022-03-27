@@ -418,7 +418,6 @@ class ProgramController extends AdminController
         });
         $form->saving(function ($form)
         {
-            dd($form);
             if (($form->isEditing() && $form->type == 1 && $form->fileVoice == null && $form->model()->fileVoice == null ) || ($form->isCreating() && $form->type == 1 && $form->fileVoice == null)){
                 $error = new MessageBag([
                     'title'   => 'Lỗi nhập liệu',
@@ -426,7 +425,8 @@ class ProgramController extends AdminController
                 ]);
                 return back()->with(compact('error'));
             }
-            $form->volumeBooster = $form->model()->volumeBooster ? (float)$form->model()->volumeBooster : 0;
+            if ($form->isEditing())
+                $form->volumeBooster = $form->model()->volumeBooster ? (float)$form->model()->volumeBooster : 0;
 
             $form->model()->radioChannel = $form->radioChannel ? (float) $form->radioChannel : $form->model()->radioChannel;
 
