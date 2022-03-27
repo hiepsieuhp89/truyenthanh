@@ -471,7 +471,7 @@ class ProgramController extends AdminController
             }
             $form->volumeBooster = $form->model()->volumeBooster ? (float)$form->model()->volumeBooster : 0;
 
-            dd($form->volumeBooster);
+            dd($form->model()->volumeBooster);
 
             $form->model()->radioChannel = $form->radioChannel ? (float) $form->radioChannel : $form->model()->radioChannel;
 
