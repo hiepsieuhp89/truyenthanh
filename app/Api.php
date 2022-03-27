@@ -90,35 +90,6 @@ trait Api
                             ->where('time', '<', $endTime);
                     });
             })->first();
-        // return Program::where('id','<>', $program_id)->where('status',2)->where(function($query) use ($devices){ 
-        //         foreach($devices as $device){
-        //             $query->where('devices','like','%'.$device.'%');
-        //         };
-        //     })->where(function($query) use ($startDate, $endDate){
-
-        //                 $query->where(function ($query2) use ($startDate) {
-
-        //                     $query2->where('startDate', '<=', $startDate)
-        //                     ->where('endDate', '>=', $startDate);
-        //                 })
-
-        //                 ->orwhere(function ($query3) use ($startDate, $endDate) {
-
-        //                     $query3->where('startDate', '>=', $startDate)
-        //                     ->where('startDate', '<=', $endDate);
-        //                 });
-
-        //         })->where(function ($query) use ($startTime, $endTime) {
-        //                 $query->where('time', $startTime)
-        //                 ->orwhere(function ($query1) use ($startTime) {
-        //                     $query1->where('time', '<', $startTime)
-        //                     ->where('endTime', '>', $startTime);
-        //                 })
-        //                 ->orwhere(function ($query2) use ($startTime, $endTime) {
-        //                         $query2->where('time', '>', $startTime)
-        //                         ->where('time', '<', $endTime);
-        //                 });
-        //         })->first();
     }
     /**
      * A call api to set schedule of one or more device
