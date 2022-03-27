@@ -418,50 +418,7 @@ class ProgramController extends AdminController
         });
         $form->saving(function ($form)
         {
-            // if (($form->status == "on" || $form->status == 1) && $form->mode != 4) {
-
-            //     $songPath = $form->fileVoice ? $form->fileVoice->getPathName() : config('filesystems.disks.upload.path') . $form->model()->fileVoice;
-            //     $devices = is_array($form->devices) ? $form->devices : ($form->devices ? $form->devices : $form->model()->devices); 
-
-            //     $checkSchedule = $this->checkPlaySchedule(
-            //         $form->id ? $form->id : $form->model()->id, 
-            //         $form->type ? $form->type : $form->model()->type, 
-            //         $devices, 
-            //         $form->startDate ? $form->startDate : $form->model()->startDate, 
-            //         $form->endDate ? $form->endDate : $form->model()->endDate, 
-            //         $form->time ? $form->time : $form->model()->time, 
-            //         $songPath, 
-            //         $form->replay ? $form->replay : $form->model()->replay, 
-            //         $form->interval ? $form->interval : $form->model()->interval,
-            //         $form->duration ? $form->duration : $form->model()->duration,
-            //         $form->days ? $form->days : $form->model()->days,
-            //     );
-            //     if (isset($checkSchedule['program'])) {
-            //         $form_validate = !$form->isCreating() ? '<form class="merge-program" id="merge-program">
-            //             <input name="program" class="hidden" type="text" value="'.$checkSchedule['program']->id.'">
-            //             <input type="button" class="btn btn-warning validate-schedule-submit" target="merge-program" value="Ghi đè chương trình (Bỏ duyệt chương trình cũ)">
-            //         </form>
-            //         <form class="combine-program" id="combine-program">
-            //             <input name="program" class="hidden" type="text" value="'.$checkSchedule['program']->id.'">
-            //             <input type="button" class="btn btn-success validate-schedule-submit" target="combine-program"
-            //             data-time = "'.$checkSchedule['program']->endTime.'" value="Tiếp nối chương trình (Xếp sau chương trình cũ)">
-            //         </form>' : '';
-                        
-            //         $error = new MessageBag([
-            //             'title'   => 'Xung đột chương trình',
-            //             'message' => sprintf(
-            //                 'Bị trùng thời gian phát trên chương trình: <b>%s</b><br>- Lúc: <b>%s</b> đến <b>%s</b><br>- Từ ngày <b>%s</b> đến <b>%s</b><br><hr/>
-            //                 '.$form_validate,
-            //                 $checkSchedule['program']->name,
-            //                 $checkSchedule['program']->time,
-            //                 $checkSchedule['program']->endTime,
-            //                 $checkSchedule['program']->startDate,
-            //                 $checkSchedule['program']->endDate
-            //             )
-            //         ]);
-            //         return back()->with(compact('error'));
-            //     }
-            // }
+            dd($form);
             if (($form->isEditing() && $form->type == 1 && $form->fileVoice == null && $form->model()->fileVoice == null ) || ($form->isCreating() && $form->type == 1 && $form->fileVoice == null)){
                 $error = new MessageBag([
                     'title'   => 'Lỗi nhập liệu',
@@ -470,8 +427,6 @@ class ProgramController extends AdminController
                 return back()->with(compact('error'));
             }
             $form->volumeBooster = $form->model()->volumeBooster ? (float)$form->model()->volumeBooster : 0;
-
-            dd($form->model()->volumeBooster);
 
             $form->model()->radioChannel = $form->radioChannel ? (float) $form->radioChannel : $form->model()->radioChannel;
 
