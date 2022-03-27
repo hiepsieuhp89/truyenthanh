@@ -471,6 +471,8 @@ class ProgramController extends AdminController
             }
             $form->volumeBooster = $form->model()->volumeBooster ? (float)$form->model()->volumeBooster : 0;
 
+            dd($form->volumeBooster);
+
             $form->model()->radioChannel = $form->radioChannel ? (float) $form->radioChannel : $form->model()->radioChannel;
 
             $form->model()->creatorId = $form->model()->creatorId ? $form->model()->creatorId : Admin::user()->id;
