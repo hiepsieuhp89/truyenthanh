@@ -425,8 +425,8 @@ class ProgramController extends AdminController
                 ]);
                 return back()->with(compact('error'));
             }
-            if ($form->isEditing())
-                $form->volumeBooster = $form->model()->volumeBooster ? (float)$form->model()->volumeBooster : 0;
+
+            //$form->model()->volumeBooster = $form->volumeBooster ? (float)$form->volumeBooster : 0;
 
             $form->model()->radioChannel = $form->radioChannel ? (float) $form->radioChannel : $form->model()->radioChannel;
 
