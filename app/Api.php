@@ -235,9 +235,13 @@ trait Api
     {
         try {
 
-            if (env('APP_ENV') == 'local') $ffprobe = FFProbe::create(['ffmpeg.binaries' => 'D:\ffmpeg\bin\ffmpeg.exe', 'ffprobe.binaries' => 'D:\ffmpeg\bin\ffprobe.exe']);
+            if (env('APP_ENV') == 'local') $ffprobe = FFProbe::create([
+                'ffmpeg.binaries' => '/Users/xuantung/Documents/ffmpeg/ffmpeg',
+                'ffprobe.binaries' => '/Users/xuantung/Documents/ffmpeg/ffprobe'
+            ]);
 
-            else $ffprobe = FFProbe::create();
+            else 
+                $ffprobe = FFProbe::create();
 
             $file_duration = $ffprobe->format($songName)->get('duration');
 
@@ -315,7 +319,7 @@ trait Api
      * @var replay_delay is interval each replay
      * @return curl_response
      */
-    public function setPlaySchedule($program_id, $type, $deviceCode, $startDate, $endDate, $startTime, $songName, $replay_times, $replay_delay, $duration = 60)
+    public function setPlaySchedule($program_id, $type, $deviceCode, $startDate, $endDate, $startTime, $endtime, $songName, $replay_times, $replay_delay, $duration = 60)
     {
         $endDate = $endDate ? $endDate : $startDate;
 
@@ -327,7 +331,6 @@ trait Api
 
             //Get duration of media file
             $file_duration = $this->getFileDuration(config('filesystems.disks.upload.path') . $songName);
-
             //get each device
             foreach ($devices as $device) {
 
@@ -347,6 +350,10 @@ trait Api
                         $endT = new Carbon($startT->toDateString().' '.'23:59:59');
 
                     $end_time_of_the_loop_play = $endT->toTimeString();
+
+                    //Nếu nhập endtime hoặc không cho time kết thúc là 0h
+                    if($endtime && $end_time_of_the_loop_play > $endtime)
+                        break;
 
                     $end_date_of_the_loop_play = $endDate;
 
@@ -399,6 +406,10 @@ trait Api
 
                     $end_time_of_the_loop_play = $endT->toTimeString();
 
+                    //Nếu nhập endtime hoặc không cho time kết thúc là 0h
+                    if(($endtime) && ($end_time_of_the_loop_play > $endtime))
+                    break;
+
                     $end_date_of_the_loop_play = $endDate;
 
                     $startT->addSeconds($replay_delay);
@@ -447,7 +458,7 @@ trait Api
      * @var replay_delay is interval each replay
      * @return curl_response
      */
-    public function setPlayWeekSchedule($program_id, $type, $deviceCode, $startDate, $endDate, $startTime, $days, $songName, $replay_times, $replay_delay, $duration = 60){
+    public function setPlayWeekSchedule($program_id, $type, $deviceCode, $startDate, $endDate, $startTime, $endtime, $days, $songName, $replay_times, $replay_delay, $duration = 60){
 
         $dates = $this->daysFilter($startDate, $endDate, $days);
 
@@ -469,26 +480,35 @@ trait Api
 
                 $end_time_of_the_loop_play = null;
 
+                //each day play
                 foreach($dates as $date){
 
                     $startT = new Carbon($date . ' ' . $startTime);
                     
+                    //Duyệt mỗi lần phát
                     for ($i = 0; $i < $replay_times; $i++) {
 
                         $start_time_of_the_loop_play = $startT->toTimeString();
 
                         $start_date_of_the_loop_play = $startT->toDateString();
 
+                        
                         $endT = $startT->addSeconds($file_duration);
 
                         // set the time stop is end of day
                         if($startT->toDateString() < $endT->toDateString())
-                            $endT = new Carbon($startT->toDateString().' '.'23:59:59');
+
+                        $endT = new Carbon($startT->toDateString().' '.'23:59:59');
 
                         $end_time_of_the_loop_play = $endT->toTimeString();
 
                         $end_date_of_the_loop_play = $endT->toDateString();
 
+                        //Nếu nhập endtime hoặc không cho time kết thúc là 0h
+                        if(($endtime) && ($end_time_of_the_loop_play > $endtime))
+                            break;
+
+                        //Thêm replay delay giữa mỗi lần phát
                         $startT->addSeconds($replay_delay);
 
                         $schedule = new Schedule();
@@ -531,6 +551,8 @@ trait Api
 
                         $start_date_of_the_loop_play = $startT->toDateString();
 
+                        
+
                         $endT = $startT->addMinutes($duration);
 
                         if($startT->toDateString() < $endT->toDateString())
@@ -541,6 +563,10 @@ trait Api
                         $end_date_of_the_loop_play = $endT->toDateString();
 
                         $startT->addSeconds($replay_delay);
+
+                        //Nếu nhập endtime hoặc không cho time kết thúc là 0h
+                        if(($endtime) && ($end_time_of_the_loop_play > $endtime))
+                            break;
 
                         $schedule = new Schedule();
                         $schedule->program_id = $program_id;

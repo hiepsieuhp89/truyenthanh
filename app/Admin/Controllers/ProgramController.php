@@ -357,6 +357,7 @@ class ProgramController extends AdminController
                 $form->date('startDate', __('Ngày phát'))->rules('required',['required'=>"Cần nhập giá trị"]);
 
                 $form->time('time', __('khung giờ phát'))->format('HH:mm:ss')->rules('required',['required'=>"Cần nhập giá trị"]);
+                $form->time('endtime', __('Giờ kết thúc phát'))->format('HH:mm:ss');
 
 
             })->when(2, function (Form $form){
@@ -365,6 +366,7 @@ class ProgramController extends AdminController
 
                 $form->time('time', __('khung giờ phát'))
                     ->format('HH:mm:ss')->rules('required',['required'=>"Cần nhập giá trị"]);
+                $form->time('endtime', __('Giờ kết thúc phát'))->format('HH:mm:ss');
 
             })->when(3,function(Form $form){
                 $form->dateRange('startDate', 'endDate', __('Thời gian phát'))->rules('required',['required'=>"Cần nhập giá trị"]);
@@ -372,7 +374,7 @@ class ProgramController extends AdminController
                 $form->checkbox('days', 'Chọn ngày')->options(['1' => 'Thứ 2', '2' => ' Thứ 3', '3' => 'Thứ 4', '4' => 'Thứ 5', '5' => 'Thứ 6', '6' => 'Thứ 7', '7' => 'Chủ nhật'])->canCheckAll();
                     
             })->rules('required', ['required' => "Cần nhập giá trị"]);
-
+            
         $form->divider(trans('Phát liên tiếp'));
 
         $form->number('replay', 'Số lần phát liên tiếp')
@@ -425,6 +427,9 @@ class ProgramController extends AdminController
                 ]);
                 return back()->with(compact('error'));
             }
+            if ($form->mode == 4){
+                $form->endtime = null;
+            }
 
             //$form->model()->volumeBooster = $form->volumeBooster ? (float)$form->volumeBooster : 0;
 
@@ -433,6 +438,7 @@ class ProgramController extends AdminController
             $form->model()->creatorId = $form->model()->creatorId ? $form->model()->creatorId : Admin::user()->id;
 
             $form->model()->approvedId = $form->model()->approvedId ? $form->model()->approvedId : Admin::user()->id;
+            
         });
 
         $form->saved(function ($form)
@@ -586,7 +592,7 @@ class ProgramController extends AdminController
                     if ($form->model()->status == 2)
                         $this->playOnline(
                             $form->model()->type, 
-                            $form->model()->devices, 
+                            $form->model()->devices,
                             $songPath);
                 }
                 if ($form->model()->mode == 3){ // phát theo tuần
@@ -599,6 +605,7 @@ class ProgramController extends AdminController
                             $form->model()->startDate, 
                             $form->model()->endDate, 
                             $form->model()->time, 
+                            $form->model()->endtime,
                             $form->model()->days,
                             $songPath, 
                             $form->model()->replay,
@@ -618,6 +625,7 @@ class ProgramController extends AdminController
                             $form->model()->startDate, 
                             $form->model()->endDate, 
                             $form->model()->time, 
+                            $form->model()->endtime,
                             $songPath, 
                             $form->model()->replay, 
                             $form->model()->interval
@@ -646,6 +654,7 @@ class ProgramController extends AdminController
                             $form->model()->startDate, 
                             $form->model()->endDate, 
                             $form->model()->time, 
+                            $form->model()->endtime,
                             $form->model()->days,
                             $songPath, 
                             $form->model()->replay,
@@ -665,6 +674,7 @@ class ProgramController extends AdminController
                             $form->model()->startDate, 
                             $form->model()->endDate, 
                             $form->model()->time, 
+                            $form->model()->endtime,
                             $songPath, 
                             $form->model()->replay, 
                             $form->model()->interval,
@@ -706,6 +716,7 @@ class ProgramController extends AdminController
                             $form->model()->startDate, 
                             $form->model()->endDate, 
                             $form->model()->time, 
+                            $form->model()->endtime,
                             $form->model()->days,
                             $songPath, 
                             $form->model()->replay,
@@ -718,7 +729,18 @@ class ProgramController extends AdminController
                 else
                 {
                     if ($form->model()->status == 2)
-                        $this->setPlaySchedule($form->model()->id, $form->model()->type, $form->model()->devices, $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
+                        $this->setPlaySchedule(
+                            $form->model()->id, 
+                            $form->model()->type, 
+                            $form->model()->devices, 
+                            $form->model()->startDate, 
+                            $form->model()->endDate, 
+                            $form->model()->time, 
+                            $form->model()->endtime,
+                            $songPath, 
+                            $form->model()->replay, 
+                            $form->model()->interval
+                        );
                     else
                         $this->resetSchedule($form->model()->devices, $form->model()->type);
                 }
@@ -743,6 +765,7 @@ class ProgramController extends AdminController
                             $form->model()->startDate, 
                             $form->model()->endDate, 
                             $form->model()->time, 
+                            $form->model()->endtime,
                             $form->model()->days,
                             $songPath, 
                             $form->model()->replay,
@@ -755,7 +778,18 @@ class ProgramController extends AdminController
                 else {
                     if ($form->model()->status == 2)
 
-                        $this->setPlaySchedule($form->model()->id, $form->model()->type, $form->model()->devices, $form->model()->startDate, $form->model()->endDate, $form->model()->time, $songPath, $form->model()->replay, $form->model()->interval);
+                        $this->setPlaySchedule(
+                            $form->model()->id, 
+                            $form->model()->type, 
+                            $form->model()->devices, 
+                            $form->model()->startDate, 
+                            $form->model()->endDate, 
+                            $form->model()->time, 
+                            $form->model()->endtime,
+                            $songPath, 
+                            $form->model()->replay, 
+                            $form->model()->interval
+                        );
 
                     else
                         $this->resetSchedule($form->model()->devices, $form->model()->type);
