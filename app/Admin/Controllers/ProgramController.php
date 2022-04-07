@@ -326,9 +326,9 @@ class ProgramController extends AdminController
 
             })->when(4, function (Form $form){
                 if(Admin::user()->can('*'))
-                    $docs = Document::all()->pluck('name', 'id');
+                    $docs = Document::orderBy('id', 'DESC')->all()->pluck('name', 'id');
                 else 
-                    $docs = Document::where('creatorId', Admin::user()->id)->pluck('name', 'id');
+                    $docs = Document::where('creatorId', Admin::user()->id)->orderBy('id', 'DESC')->pluck('name', 'id');
             
                 $form->select('document_Id', trans('Chọn file văn bản'))->options($docs);
                     
