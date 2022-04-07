@@ -1,3 +1,4 @@
 .env
 vendor/
 pubic/uploads/
+.gitignore
