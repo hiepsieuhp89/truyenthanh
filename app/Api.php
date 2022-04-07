@@ -212,7 +212,6 @@ trait Api
     public function getSchedule($deviceCode)
     {
         $schedules = Schedule::where('deviceCode', $deviceCode)->get();
-        dd($schedules);
         $return = '';
         foreach ($schedules as $schedule) {
             $sch = $schedule->get_schedule_of_device();  
