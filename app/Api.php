@@ -373,7 +373,9 @@ trait Api
                     $schedule->save();
                 }
                 Program::find($program_id)->update(['endTime' => $end_time_of_the_loop_play]);
+
                 $schedule = $this->getSchedule($device);
+                dd($schedule);
 
                 $dataRequest .= $schedule;
 
