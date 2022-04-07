@@ -707,7 +707,7 @@ trait Api
      */
     public function curl_to_server($dataRequest)
     {
-        if (env('APP_ENV') == 'local')
+        if (env('APP_ENV') == 'local' || env('APP_ENV') == 'local_2')
             dd($dataRequest);
 
         $request = base64_encode($dataRequest);
