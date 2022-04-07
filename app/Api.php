@@ -235,10 +235,11 @@ trait Api
     {
         try {
 
-            if (env('APP_ENV') == 'local') $ffprobe = FFProbe::create([
-                'ffmpeg.binaries' => '/Users/xuantung/Documents/ffmpeg/ffmpeg',
-                'ffprobe.binaries' => '/Users/xuantung/Documents/ffmpeg/ffprobe'
-            ]);
+            if (env('APP_ENV') == 'local') 
+                $ffprobe = FFProbe::create([
+                    'ffmpeg.binaries' => 'F:\ffmpeg\ffmpeg.exe', 
+                    'ffprobe.binaries' => 'F:\ffmpeg\ffprobe.exe'
+                ]);
 
             else 
                 $ffprobe = FFProbe::create();
@@ -492,7 +493,6 @@ trait Api
 
                         $start_date_of_the_loop_play = $startT->toDateString();
 
-                        
                         $endT = $startT->addSeconds($file_duration);
 
                         // set the time stop is end of day

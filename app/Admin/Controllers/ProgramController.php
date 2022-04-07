@@ -494,7 +494,10 @@ class ProgramController extends AdminController
                 }
             }
             // dd($form->model()->fileVoice);
+
+            
             // đoạn code xử lý file
+            // nếu phát file phương tiện
             if ($form->model()->type == 1)
             {
                 //convert to mp3
@@ -558,8 +561,7 @@ class ProgramController extends AdminController
 
                     $form->model()->fileVoice = $d->fileVoice;
 
-                    $form->model()
-                        ->save();
+                    $form->model()->save();
                 }
             }
             if ($form->model()->type == 5) {
