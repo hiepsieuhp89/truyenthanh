@@ -322,7 +322,6 @@ trait Api
      */
     public function setPlaySchedule($program_id, $type, $deviceCode, $startDate, $endDate, $startTime, $endtime, $songName, $replay_times, $replay_delay, $duration = 60)
     {
-        dd($songName);
         $endDate = $endDate ? $endDate : $startDate;
 
         $devices = $deviceCode;
