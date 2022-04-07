@@ -212,6 +212,7 @@ trait Api
     public function getSchedule($deviceCode)
     {
         $schedules = Schedule::where('deviceCode', $deviceCode)->get();
+        dd($schedules);
         $return = '';
         foreach ($schedules as $schedule) {
             $sch = $schedule->get_schedule_of_device();  
@@ -375,7 +376,6 @@ trait Api
                 Program::find($program_id)->update(['endTime' => $end_time_of_the_loop_play]);
 
                 $schedule = $this->getSchedule($device);
-                dd($schedule);
 
                 $dataRequest .= $schedule;
 
