@@ -332,6 +332,7 @@ trait Api
 
             //Get duration of media file
             $file_duration = $this->getFileDuration(config('filesystems.disks.upload.path') . $songName);
+            dd($file_duration);
             //get each device
             foreach ($devices as $device) {
 
