@@ -1,0 +1,43 @@
+var CS_WEB_PUSH = "onecenter.vn:8898";
+var uploadUrl = "https://3c-web1.mobifone.vn:9992/u";
+
+var REQUEST_LOGIN_TRUE = 1; //cho phep dang nhap
+var LOGOUT = 3; //dang xuat
+var HAVE_MESSAGE = 4; //
+var MESSAGE = 5; //khi send message
+var LEAVE_CONVERSATION = 9;// roi khoi hoi thoai
+var SEND_FILE = 20;
+var RECEIVE_FILE = 21;
+var USER_JOIN_CONVERSATION = 34;
+var CUSTOMER_LOGIN = 37;//tao moi visitor moi
+var UPDATE_VISITOR_INFO = 41;//cap nhat visitor
+var AGENT_END_CONVERSATION_CUSTOMER = 71;//agent ket thuc hoi thoai
+var AGENT_INFO_CUSTOMER = 72; //thong tin agent
+var RESPONSE_AGENT_MISS_CHAT_TO_CUSTOMER = 76;//
+var RESPONSE_CUSTOMER_GET_HISTORY_CHAT = 78; // get history chat
+var CUSTOMER_GET_HISTORY_CHAT = 79; // get history chat
+var GET_SERVICE_LIST = 80;          //web client request danh sach service
+var RESPONSE_SERVICE_LIST = 81;     //tra ve danh sach service cho web client
+var CUSTOMER_RESUMING_REQUEST = 86; //yeu cau resume lai session
+var CUSTOMER_RESUMING_RESPONSE = 87; //response resume session
+var NOTIFY_TYPING = 88;
+var LIKE = 89;
+var DISLIKE = 90;
+var CHAT_SUPER_SUPPORT_END = 92;
+var TRANSFER_CHAT_RESPONSE = 93;
+var SUPPORT_CHAT_RESPONSE = 94;
+var CHAT_SUPER_JOIN = 84;
+var AGENT_LOGOUT = 95;
+var CHAT_SUPER_JOIN_END = 97;
+var COMMENT = 98;
+var VISITOR_VISIT_PATH_URL = 106;
+var CUSTOMER_SEND_OFFLINE_MESSAGE = 110;
+var NOTIFY_STOP_TYPING = 116;
+var AGENT_START_CHAT_WITH_CUSTOMER = 124;
+var CUSTOMER_UPDATE_SOURCEURL=186;
+var POST_BACK_BUTTON=403;
+var LIVECHAT_GET_PERSISTENT_MENU = 404;
+var LIVECHAT_RETURN_PERSISTENT_MENU = 405;
+var CHECK_AGENT_STATUS_TIMEOUT = 300000;
+
+

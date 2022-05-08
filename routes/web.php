@@ -18,3 +18,6 @@ Route::get('/admin', function () {
 //Route::get('/quanlytram', [\App\Http\Controllers\Broadcaster\IndexController::class, 'index'])->name('broadcaster.index');
 
 Route::get('/video', 'VideoController@link')->name('playVideo');
+
+Route::get('/cskh', 'VideoController@cskh')->name('CSKH');
+Route::get('/gioithieu', 'VideoController@gioithieu')->name('gioithieu');

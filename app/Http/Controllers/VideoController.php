@@ -23,4 +23,10 @@ class VideoController extends Controller
         header('Content-Length:' . $size);
         readfile($file);
     }
+    public function cskh(Request $req){
+        return view('cskh');
+    }
+    public function gioithieu(Request $req){
+        return view('gioithieu');
+    }
 }

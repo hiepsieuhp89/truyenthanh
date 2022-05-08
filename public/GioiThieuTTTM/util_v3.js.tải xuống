@@ -1,0 +1,387 @@
+var showLog = null;
+var isFirstLogin = false;
+var surveyState = null;
+var webPush = new WebPush();
+
+function ChatState() {
+    this.conversation_id = "-1";
+    this.conversation_code = null;
+    this.chatting = false;
+    this.visitor_id = -1;
+    this.visitor_name = '';
+    this.visitor_email = '';
+    this.visitor_phone = '';
+    this.agent_name = null;
+    this.agent_group = null;
+    this.service_id = -1;
+    this.chat_windows_maximum = false;
+    this.isLike = false;
+    this.isDislike = false;
+    this.history = [];
+    this.enableSound = true;
+    this.triggerState = [];
+    this.replyFromTrigger = 0;
+    this.isSynced = false;
+    this.visitorAdditionField = {};
+
+    this.setBasicAttr = function (attr) {
+        this.conversation_id = attr.conversation_id;
+        this.conversation_code = attr.conversation_code;
+        this.chatting = attr.chatting;
+        this.visitor_id = attr.visitor_id;
+        this.visitor_name = attr.visitor_name;
+        this.visitor_email = attr.visitor_email;
+        this.visitor_phone = attr.visitor_phone;
+        this.agent_name = attr.agent_name;
+        this.agent_group = attr.agent_group;
+        this.service_id = attr.service_id;
+        this.chat_windows_maximum = attr.chat_windows_maximum;
+        this.isLike = attr.isLike;
+        this.isDislike = attr.isDislike;
+        this.history = attr.history;
+        this.enableSound = attr.enableSound;
+        this.triggerState = attr.triggerState;
+        this.replyFromTrigger = attr.replyFromTrigger;
+        this.isSynced = attr.isSynced;
+        this.visitorAdditionField = attr.visitorAdditionField;
+    }
+
+
+    this.setDefaultAdditionFieldsValue = function (fields) {
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i].type == 3) {
+                this.visitorAdditionField[fields[i].users_field] = -1
+            } else {
+                this.visitorAdditionField[fields[i].users_field] = "";
+            }
+        }
+    }
+    this.setAdditionFields = function (fields, values) {
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i].type == 3) {
+                this.visitorAdditionField[fields[i].users_field] = values[fields[i].users_field] ? values[fields[i].users_field] : -1;
+            } else {
+                this.visitorAdditionField[fields[i].users_field] = values[fields[i].users_field] ? values[fields[i].users_field] : "";
+            }
+        }
+    }
+
+}
+
+function VisitorInfo() {
+    this.visitorName = "";
+    this.visitorEmail = "";
+    this.visitor_phone = "";
+
+    this.setBasicInfo = function (name, email, phone) {
+        this.visitorName = name == null ? "" : name;
+        this.visitorEmail = email == null ? "" : email;
+        this.visitorPhone = phone == null ? "" : phone;
+    }
+
+    this.setAdditionFields = function (fields, values) {
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i].type == 3) {
+                if (values[fields[i].users_field] && values[fields[i].users_field] != "-1") {
+                    for (var j = 0; j < fields[i].data.length; j++) {
+                        if (fields[i].data[j].id == values[fields[i].users_field]) {
+                            this[fields[i].users_field] = fields[i].data[j];
+                        }
+                    }
+                } else {
+                    this[fields[i].users_field] = {
+                        id: -1,
+                        description: "LBL_UNKNOWN",
+                        user_field_id: fields[i].user_field_id
+                    };
+                }
+            } else if (fields[i].type == 4) {
+                this[fields[i].users_field] = [];
+                if (values[fields[i].users_field] && typeof values[fields[i].users_field] == "String") {
+                    for (var j = 0; j < fields[i].data.length; j++) {
+                        if (values[fields[i].users_field] != null && values[fields[i].users_field].indexOf(fields[i].data[j].id + ",") != -1) {
+                            this[fields[i].users_field].push(fields[i].data[j]);
+                        }
+                    }
+                } else if (values[fields[i].users_field] && typeof Array.isArray(values[fields[i].users_field])) {
+                    this[fields[i].users_field] = values[fields[i].users_field];
+                }
+            } else if (fields[i].type == 2) {
+                if (values[fields[i].users_field]) {
+                    this[fields[i].users_field] = values[fields[i].users_field];
+                } else {
+                    dateObj = new Date();
+                    this[fields[i].users_field] = dateObj.getDate() + '/' + (dateObj.getMonth() + 1) + '/' + dateObj.getFullYear();
+                }
+            } else {
+                this[fields[i].users_field] = values[fields[i].users_field];
+            }
+
+        }
+    }
+}
+
+// 1: KH; 2: Agent; 3: System
+function Message(sender_agent_id, type, content, time) {
+    this.messageType = type;
+    this.content = content;
+    this.senderAgent = sender_agent_id;
+    this.fileName = "";
+    this.url = "";
+    this.send_time = time ? new Date(time).toLocaleString() : new Date().getTime();
+}
+
+function LoginUser() {
+    this.username = "";
+    this.email = "";
+    this.phone = "";
+    this.selectedService = {};
+    this.content = "";
+
+    this.setBasicInfo = function (name, email, phone) {
+        this.username = name == null ? "" : name;
+        this.email = email == null ? "" : email;
+        this.phone = phone == null ? "" : phone;
+    }
+
+    this.setDefaultAdditionFieldsValue = function (fields) {
+        for (var i = 0; i < fields.length; i++) {
+            this[fields[i].users_field + "_err"] = null;
+            if (fields[i].type == 3) {
+                this[fields[i].users_field] = -1
+            } else {
+                this[fields[i].users_field] = "";
+            }
+        }
+    }
+
+    this.setAdditionFields = function (fields, values) {
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i].type == 3) {
+                this[fields[i].users_field] = values[fields[i].users_field] ? values[fields[i].users_field] : -1;
+            } else {
+                this[fields[i].users_field] = values[fields[i].users_field] ? values[fields[i].users_field] : "";
+            }
+        }
+    }
+
+    this.validateAdditionFields = function (fields) {
+        var valid = true;
+        for (var i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            this[field.users_field + "_err"] = null;
+            if ((field.type == 3 || field.type == 4)) {
+                if (field.required && (this[field.users_field] == null || this[field.users_field] == undefined || this[field.users_field] == -1 || this[field.users_field] == "")) {
+                    this[field.users_field + "_err"] = "LBL_REQUIRED_INFO";
+                    valid = false;
+                }
+            } else {
+                this[field.users_field] = this[field.users_field].trim();
+
+                if (field.required && (this[field.users_field] == null || this[field.users_field] == undefined || this[field.users_field] == "")) {
+                    this[field.users_field + "_err"] = "LBL_REQUIRED_INFO";
+                    valid = false;
+                } else if (field.type == 1 && isNaN(this[field.users_field])) {
+                    this[field.users_field + "_err"] = "LBL_INVALID_INFO";
+                    valid = false;
+                }
+            }
+
+        }
+        return valid;
+    }
+}
+
+function UserInfo() {
+    this.username = "";
+    this.email = "";
+    this.phone = "";
+
+    this.setBasicInfo = function (name, email, phone) {
+        this.username = name == null ? "" : name;
+        this.email = email == null ? "" : email;
+        this.phone = phone == null ? "" : phone;
+    }
+
+    this.setAdditionFields = function (fields, values) {
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i].type == 3) {
+                this[fields[i].users_field] = values[fields[i].users_field] ? values[fields[i].users_field] : -1;
+            } else {
+                this[fields[i].users_field] = values[fields[i].users_field] ? values[fields[i].users_field] : "";
+            }
+        }
+    }
+
+    this.setDefaultAdditionFieldsValue = function (fields) {
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i].type == 3) {
+                this[fields[i].users_field] = -1
+            } else {
+                this[fields[i].users_field] = "";
+            }
+        }
+    }
+
+    this.validateAdditionFields = function (fields) {
+        var valid = true;
+        for (var i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            this[field.users_field + "_err"] = null;
+            if ((field.type == 3 || field.type == 4)) {
+                if (field.required && (this[field.users_field] == null || this[field.users_field] == undefined || this[field.users_field] == -1 || this[field.users_field] == "")) {
+                    this[field.users_field + "_err"] = "LBL_REQUIRED_INFO";
+                    valid = false;
+                }
+            } else {
+                this[field.users_field] = this[field.users_field].trim();
+                if (field.required && (this[field.users_field] == null || this[field.users_field] == undefined || this[field.users_field] == "")) {
+                    this[field.users_field + "_err"] = "LBL_REQUIRED_INFO";
+                    valid = false;
+                } else if (field.type == 1 && isNaN(this[field.users_field])) {
+                    this[field.users_field + "_err"] = "LBL_INVALID_INFO";
+                    valid = false;
+                }
+            }
+
+        }
+        return valid;
+    }
+}
+
+function InfoVisitor() {
+    this.name = "";
+    this.email = "";
+    this.phone = "";
+
+    this.setBasicInfo = function (name, email, phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
+    this.setAdditionInfo = function (fields, values) {
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i].type == 3) {
+                this[fields[i].users_field] = values[fields[i].users_field] ? values[fields[i].users_field] : -1;
+            } else if(fields[i].type == 4){
+                var str =",";
+                for (var j = 0; j < values[fields[i].users_field].length; j++) {
+                    str+=values[fields[i].users_field][j].id + ",";
+                }
+                this[fields[i].users_field] = str;
+            }else{
+                this[fields[i].users_field] = values[fields[i].users_field] ? values[fields[i].users_field] : "";
+            }
+        }
+    }
+}
+
+function Comment() {
+    this.content = "";
+}
+
+
+function log(msg) {
+    if (showLog === null) {
+        var debug = localStorage.getItem("csdebug");
+        showLog = debug == '*';
+    }
+    if (showLog) {
+        var date = new Date().toLocaleString();
+        console.log('%c[' + date + '] ', 'color:blue', msg);
+    }
+}
+
+function closeDivWhenClickingElsewhere(event, callbackOnClose, divId, e) {
+
+    var clickedElement = event.target;
+    if (!clickedElement)
+        return;
+
+    var clickedOnSearchDrawer = (clickedElement.id == divId || $(clickedElement).parents('#' + divId).size()) && !$(clickedElement).parents('#botMenu').size();
+
+    if (e != null) {
+        clickedOnSearchDrawer = clickedOnSearchDrawer || clickedElement == e.target;
+    }
+
+    if (!clickedOnSearchDrawer) {
+        callbackOnClose();
+        return;
+    }
+}
+
+//function checkSupportWebSocket() {
+//    if (typeof (WebSocket) != "function") {
+//        alert("Xin lỗi! Trình duyệt bạn đang dùng không hỗ trợ HTML5 WebSocket. Hãy cập nhật phiên bản mới hơn để sử dụng tính năng chat");
+//    } else {
+//        log("Your browser ready use HTML5 Web Sockets");
+//    }
+//}
+//function checkSupportLocalStorage() {
+//    if (typeof (Storage) !== "undefined") {
+//        log("Your browser ready use localStorage/sessionStorage");
+//    } else {
+//        alert("Xin lỗi! Trình duyệt bạn đang dùng không hỗ trợ Storage. Hãy cập nhật phiên bản mới hơn để sử dụng tính năng chat");
+//    }
+//}
+
+function isValidEmailAddress(emailAddress) {
+    var pattern = new RegExp(/^[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i);
+    return pattern.test(emailAddress);
+}
+
+function isValidPhoneNumber(phone) {
+    return /^0[0-9]{6,13}$/.test(phone) && phone.length >= 3 && phone.length <= 20;
+}
+
+function getParameterByName(key, queryString) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + key + "=([^&#]*)"),
+        results = regex.exec(queryString);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function getCurrentDate() {
+    return new Date().toJSON().slice(0, 10);
+}
+
+function gatherTriggerMsg(lstMsg) {
+    var lstTriggerMsg = [];
+    for (var i = 0; i < lstMsg.length; i++) {
+        if (lstMsg[i].isTriggerMsg == 1) {
+            lstTriggerMsg.push(lstMsg[i]);
+        }
+    }
+    return lstTriggerMsg;
+}
+
+function isSafari() {
+    var jqx = new $.jqx.response();
+    var browser = jqx.browser.name;
+    if (browser.toLowerCase().includes("safari")) {
+        return true;
+    }
+    return false;
+}
+
+var isMobile = {
+    Android: function () {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function () {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function () {
+        return navigator.userAgent.match(/iPhone|iPod|iPad/i);
+    },
+    Opera: function () {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function () {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function () {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+

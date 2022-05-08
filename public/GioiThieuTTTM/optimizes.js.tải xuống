@@ -1,0 +1,677 @@
+
+var browser_lang = '';
+var site_lang = '';
+
+browser_lang =	navigator.languages && navigator.languages[0] || 
+           		navigator.language || 
+           		navigator.userLanguage;  
+
+var list_lang = document.querySelectorAll('[lang]');
+if(list_lang.length > 0){
+	list_lang.forEach(function(elem,key){
+		if(elem.getAttribute("lang") != '' && site_lang == ''){
+			site_lang = elem.getAttribute("lang");
+		}
+	});
+}
+
+(function(){
+ var current_script = document.currentScript;
+ var _click_id = current_script.getAttribute('ClickID') || '';
+ var _offer_id = current_script.getAttribute('OfferID') || '';
+ var _order_number = current_script.getAttribute('OrderNumber') || '';
+ var _amount = current_script.getAttribute('Amount') || '';
+
+ var current_url = current_script.getAttribute('webs') || '';
+ if(current_url == ''){
+ 	current_url = '';
+}
+ if(current_url == ''){
+ 	current_url = window.location.href;
+}
+
+ var iframe = document.createElement('iframe'); 
+ iframe.lang = site_lang; 
+ iframe.style.display = 'none';iframe.style.width = '1px'; 
+ iframe.style.height = '1px'; 
+ iframe.src = 'https://optimize.urekamedia.com/cookie.php?code=9062968&type=media&apnx_segment=&referrer='+ document.referrer +'&site_lang='+site_lang+'&gauid=&urk_id='+ '&clickid='+_click_id+'&offerid='+_offer_id+'&ordernumber='+_order_number+'&amount='+_amount+'&webs='+encodeURIComponent(current_url) ;
+
+setTimeout(function(){ document.body.appendChild(iframe); }, 2000);
+})();
+
+
+
+var name_opt = '46165198232126';
+var code_segment = "9062968";
+
+
+function pushData(data){
+	let dataForm = new FormData();
+	dataForm.append("name_opt", name_opt );
+	dataForm.append("code_segment", code_segment );
+	dataForm.append("status", 1 );
+	for ( var key in data ) {
+	    dataForm.append(key, data[key]);
+	}
+
+	if("9062968" != "8025192"){
+        let request = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+		request.open("POST","https://optimize.urekamedia.com/data");
+		request.send(dataForm);
+    }else{
+    	var data = encodeURI(btoa(JSON.stringify(Object.fromEntries(dataForm))));
+    	var iframe = document.createElement('iframe'); 
+		iframe.style.display = 'none';iframe.style.width = '1px'; 
+		iframe.style.height = '1px'; 
+		iframe.src = 'https://optimize.urekamedia.com/data.php?q='+data+'&t=Senddata';
+		document.body.appendChild(iframe);
+	}
+	
+	return true;
+}
+
+
+var urk_user_id = '';
+if(urk_user_id != ''){
+	window.dataLayer=window.dataLayer || [];
+	window.dataLayer.push({"userId" : urk_user_id});
+	window.dataLayer.push({"user_id" : urk_user_id});
+}
+
+window.check_load = 0;
+if(window.check_load  == 0){
+	window.addEventListener('DOMContentLoaded', triggerPage('DOMContentLoaded'), false);
+}
+if(window.check_load  == 0){
+	window.addEventListener('load', triggerPage('load'), false);
+}
+if(window.check_load  == 0){
+	window.addEventListener('loaded', triggerPage('loaded'), false);
+}
+setTimeout(function(){
+	if(window.check_load  == 0){
+		triggerPage('timeout');
+	}
+},15000);
+
+function triggerPage(e_ve) {
+	window.check_load  = 1;
+	console.log("tracking: ",e_ve);
+	//console.log("check tracking: ", checkUrl_9062968());
+		function getCookie(cname) {
+	    var name = cname + "=";
+	    var decodedCookie = decodeURIComponent(document.cookie);
+	    var ca = decodedCookie.split(';');
+	    for(var i = 0; i < ca.length; i++) {
+	        var c = ca[i];
+	        while (c.charAt(0) == ' ') {
+	            c = c.substring(1);
+	        }
+	        if (c.indexOf(name) == 0) {
+	            return c.substring(name.length, c.length);
+	        }
+	    }
+	    return "";
+	}
+
+
+	var isOnIOS = navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i);
+	var eventName = isOnIOS ? "pagehide" : "beforeunload";
+
+	window.addEventListener(eventName, (event) => {
+	    	    	getScroll();
+	    	    
+	    	    if(checkUrl_9062968()){
+	        sendDataTracking_9062968();
+	    }
+		
+			    sendIpData_9062968();
+				
+	    //return false;
+	});
+
+	function getHeight()
+	{
+	  var body = document.body;
+	  var html = document.documentElement; 
+	  var bodyH = Math.max(body.scrollHeight, body.offsetHeight, body.getBoundingClientRect().height, html.clientHeight, html.scrollHeight, html.offsetHeight);
+	  return bodyH;
+	}
+
+		var landing_height       = getHeight();
+	var page4                = Math.floor(landing_height/4);
+	var page15                = Math.floor((landing_height/100)*15);
+	var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+	var time_begin_scroll    = new Date();
+	var time_end_scroll      = new Date();
+	var scroll               = 0;
+	var current_scroll       = "0%";
+	var number_scroll        = 0;
+
+	
+	window.addEventListener("scroll", (event) => {
+	    scroll = this.scrollY;
+	    if( scroll > page15 && number_scroll==0){
+	        current_scroll = "25%";
+	        time_end_scroll      = new Date();
+	    }
+	    if( scroll > ( page4+ page15 ) && number_scroll==0){
+	        current_scroll = "50%";
+	        time_end_scroll      = new Date();
+	    }
+	    if(scroll > (page4*2 + page15 ) && number_scroll==0){
+	        current_scroll =  "75%";
+	        time_end_scroll      = new Date();
+	    }
+	    if( scroll >  page4*3  && number_scroll==0){
+	        current_scroll =  "100%";
+	        time_end_scroll      = new Date();
+	        number_scroll = number_scroll +1; 
+	    }
+	});
+	
+	function getScroll(){
+	    if(name_opt == "" ){
+	        name_opt = getCookie("OptUID");
+	    }
+	    if(name_opt != "" ){
+	        let dataForm = new FormData();
+	        dataForm.append( "webs", window.location.href  );
+	        dataForm.append( "device_pixel_ratio", window.devicePixelRatio );
+	        dataForm.append( "name", name_opt );
+
+	        dataForm.append( "browser_lang", browser_lang );
+	        dataForm.append( "site_lang", site_lang );
+
+	        dataForm.append( "code_segment", "9062968" );
+	        dataForm.append( "screen_width", screen.width );
+	        dataForm.append( "screen_height", screen.height );
+	        dataForm.append( "client_id", "" );
+	        dataForm.append( "referrer", document.referrer );
+	        dataForm.append( "time_begin_scroll", parseInt(time_begin_scroll.getTime()/1000) );
+	        dataForm.append( "time_end_scroll", parseInt(time_end_scroll.getTime()/1000) );
+	        dataForm.append( "current_scroll", current_scroll );
+	        var time_out             = new Date();
+	        var time_on = parseInt(time_out.getTime()/1000) - parseInt(time_begin_scroll.getTime()/1000);
+
+	        dataForm.append("time_out", parseInt(time_out.getTime()/1000) );
+
+	        dataForm.append("time_on", time_on );
+
+	        if("9062968" != "8025192"){
+		        let request = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+		        request.open("POST","https://optimize.urekamedia.com/getScroll");
+		        request.send(dataForm);
+		    }else{
+		    	var data = encodeURI(btoa(JSON.stringify(Object.fromEntries(dataForm))));
+		    	var iframe = document.createElement('iframe'); 
+				iframe.style.display = 'none';iframe.style.width = '1px'; 
+				iframe.style.height = '1px'; 
+				iframe.src = 'https://optimize.urekamedia.com/data.php?q='+data+'&t=getScroll';
+				document.body.appendChild(iframe);
+			}
+	    }
+	   
+	}
+
+	
+		var urk1_moving = [];
+	var clicking = [];
+	var scrolling = [];
+	var stopScreen = [];
+	var urk_site_id = '';
+	var cookies = name_opt;
+	
+	var landing_height_tr = getHeight();
+	var page4_tr = Math.floor(landing_height_tr / 4);
+	var page15_tr = Math.floor((landing_height_tr / 100) * 15);
+
+	var stop_move = true;
+	var stop_click  = true;
+	var stop_scroll = true;
+
+	var touchX;
+	var touchY;
+
+	var lastY = 0;
+	var lastTime = new Date();
+	var newTime = new Date();
+
+	var start = new Date();
+	var check = checkUrl_9062968();
+	//console.log("check tracking: ",check);
+
+	if (check){
+	    console.log("I am tracking");
+	    let moveInterval = setInterval(function(){
+	        stop_move = true;
+	    }, 200);    
+
+	    let clickInterval = setInterval(function(){
+	        stop_click = true;
+	    }, 200);    
+
+	    let scrollInterval = setInterval(function(){
+	        stop_scroll = true;
+	    }, 1250);   
+
+	    let stopScreenInterval = setInterval(function(){
+	        let newY = window.scrollY;
+	        if (Math.floor(newY/100)*100 != Math.floor(lastY/100)*100){
+	            newTime = new Date();
+	            stopScreen.push({
+	                'y':Math.floor(newY/100)*100,
+	                'value':(newTime.getTime() - lastTime.getTime())
+	            });
+	            lastY = Math.floor(newY/100)*100;
+	            lastTime = new Date();
+	        }
+	    }, 1000);
+
+	    window.addEventListener("mousemove",(e) => {
+	        if (stop_move){
+	            urk1_moving.push({'x':e.pageX,'y':e.pageY});
+	            stop_move = false;
+	        }
+	        
+	    });
+
+	    window.addEventListener("touchstart",(e) => {
+	        touchX = e.touches[0].clientX;
+	        touchY = e.touches[0].clientY;
+	    },false);
+
+	    window.addEventListener("touchend",(e) => {
+	        let deltaX, deltaY;
+	        deltaX = e.changedTouches[0].clientX - touchX;
+	        deltaY = e.changedTouches[0].clientY - touchY;
+	        let distance_move = 0;
+	        distance_move = Math.sqrt(deltaX * deltaX + deltaY * deltaY)/window.devicePixelRatio;
+
+	        if (distance_move > 20){
+	            if (stop_move){
+	                urk1_moving.push({'x':touchX,'y':touchY});
+	                stop_move = false;
+	            }
+	        }else{
+	            if (stop_click){
+	                clicking.push({'x':e.changedTouches[0].clientX,'y':e.changedTouches[0].clientY});
+	                stop_click = false;
+	            }
+	        }
+	    },false);
+
+	    window.addEventListener("click",(e) => {
+	        if (stop_click){
+	            clicking.push({'x':e.pageX,'y':e.pageY});
+	            stop_click = false;
+	        }
+	    });
+
+	    window.addEventListener("scroll", (e) => {
+	        scroll = this.scrollY;
+	        
+	        if (stop_scroll && scroll > 100){
+	            scrolling.push({ 'y': Math.floor(scroll/100)*100 , 'value': 1});
+	            stop_scroll = false;
+	        }
+	    });
+	    
+
+	    setTimeout(function(){
+	        if(checkUrl_9062968()){
+		        sendDataTracking_9062968();
+		    }
+	    },5000);
+
+	    setTimeout(function(){
+	        if(checkUrl_9062968()){
+		        sendDataTracking_9062968();
+		    }
+	    },30000);
+	}
+
+	function sendDataTracking_9062968(){
+	    if (cookies != "") {
+	        var dataForm = new FormData();
+	        var url_web = window.location.href || '';
+	        if(url_web == ''){
+				url_web = "https://it.mobifone.vn/";
+	        }
+	        if(url_web == ''){
+				url_web = window.location.href;
+	        }
+	        if(url_web != ''){
+				dataForm.append("url", url_web);
+		        dataForm.append("device_pixel_ratio", window.devicePixelRatio);
+		        dataForm.append("name", cookies);
+		        dataForm.append("site_id", urk_site_id);
+		        dataForm.append("screen_width", screen.width);
+		        dataForm.append("screen_height",screen.height);
+		        dataForm.append("moving", JSON.stringify( remapArr(urk1_moving)) );
+		        dataForm.append("clicking", JSON.stringify( remapArr(clicking)) );
+		        dataForm.append("scrolling", JSON.stringify( remapStopScreen(scrolling)) );
+		        dataForm.append("stopScreen", JSON.stringify( remapStopScreen(stopScreen)) );
+		        if("9062968" != "8025192"){
+			        var request = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+			        request.open("POST", "https://optimize.urekamedia.com/store-tracking");
+			        request.send(dataForm);
+			    }else{
+			    	var data = encodeURI(btoa(JSON.stringify(Object.fromEntries(dataForm))));
+			    	var iframe = document.createElement('iframe'); 
+					iframe.style.display = 'none';iframe.style.width = '1px'; 
+					iframe.style.height = '1px'; 
+					iframe.src = 'https://optimize.urekamedia.com/data.php?q='+data+'&t=sendDataTracking';
+					document.body.appendChild(iframe);
+				}
+		        urk1_moving = [];
+		        clicking = [];
+		        scrolling = [];
+		        stopScreen = [];
+	    	}
+	    }
+	}
+	function remapStopScreen(arr){
+	    var data = [];
+	    var tmp_data = {};
+	    arr.forEach(function(rec){
+	        var key =  rec.y;
+	        if (!tmp_data[key] && rec.y < 23300){
+	            tmp_data[key] = {
+	                'y':Math.floor(rec.y/100)*100,
+	                'value':rec.value
+	            };
+	        }else{
+	            tmp_data[key].value+=rec.value;
+	        }
+	    });
+	    for(var index in tmp_data) {
+	        data.push(tmp_data[index]);
+	    }
+	    return data;
+	}
+
+	function remapArr(arr){
+	    var data = [];
+	    var tmp_data = {};
+	    arr.forEach(function(rec){
+	        var key =  Math.floor(rec.x/40)*40 + '_' + Math.floor(rec.y/40)*40;
+	        if(key != '0_0'){
+	            if (!tmp_data[key] && rec.y < 23300){
+	                tmp_data[key] = {
+	                    'x':Math.floor(rec.x/40)*40,
+	                    'y':Math.floor(rec.y/40)*40,
+	                    'value':0
+	                };
+	            }
+	            tmp_data[key].value+=1;
+	        }
+	    });
+	    for(var index in tmp_data) {
+	        data.push(tmp_data[index]);
+	    }
+	    return data;
+	}
+	function maxArr(arr){
+	    var max = 0;
+	    arr.forEach(function(rec){
+	        if (rec.value>max){
+	            max = rec.value;
+	        }
+	    });
+	    return max;
+	}
+	function checkUrl_9062968(){
+	    var full_url = window.location.href;
+	    var last_regex = new RegExp('/$');
+	    full_url = full_url.replace(last_regex,'');
+	    var clear_url = window.location.protocol + '\/\/' + window.location.host + window.location.pathname;
+
+	    var only_url = window.location.host + window.location.pathname;
+	    only_url = only_url.replace(last_regex,'');
+	    var check = false;
+	    	    return check;
+	}
+
+	
+		var urk_ipdata_browser_hidden;
+	var urk_ipdata_name               = name_opt;
+	checkHiddenBrowser().then(function(result){
+	    urk_ipdata_browser_hidden = result;
+	    
+	});
+	var urk_ipdata_code_segment       = "9062968";
+	var urk_ipdata_client_id          = ""; 
+	var urk_ipdata_ip_local           = '';
+	var new_date                      = new Date();
+	var urk_ipdata_time_in            = 1651982864583;
+	var urk_ipdata_time_out           = 1651982864583;
+	var urk_ipdata_time_on            = 0;
+
+	var urk_ipdata_url                = window.location.href;
+	var urk_ipdata_referrer           = document.referrer;
+	var urk_ipdata_screen_width       = screen.width;
+	var urk_ipdata_screen_height      = screen.height;
+	var urk_ipdata_device_pixel_ratio = window.devicePixelRatio;
+
+	var urk_ipdata_page_height        = getHeight();
+	var urk_ipdata_scroll             = urk_ipdata_page_height<=screen.height?100:0;
+
+	var urk_ipdata_living = true;
+	var ipdata_stop_scroll = false;
+	var urp_ipdata_timeout;
+
+	var unique_id = urk_ipdata_name +'-'+urk_ipdata_time_in.toString()+'-'+ '627742108e577';
+
+	if(unique_id == 0 || unique_id=='0'){
+		unique_id = '627742108e5b5'
+	} 
+
+	// Get IP Local
+	getIpLocal(function(ip_local){
+	    urk_ipdata_ip_local = ip_local;
+	});
+
+	setTimeout(function(){
+	    sendIpData_9062968();
+	},3000);
+
+
+	var scrollIpDataInterval = setInterval(function(){
+	        ipdata_stop_scroll = true;
+	}, 1250);
+
+
+	var livingIpDataInterval = setInterval(function(){
+	        if(urk_ipdata_living){
+	            urk_ipdata_time_on+=200;
+	        }
+	}, 200);
+
+	areUdead();
+
+
+	window.addEventListener("scroll", (e) => {
+	    if (ipdata_stop_scroll){
+	        urk_ipdata_page_height        = getHeight();
+	        scroll = this.scrollY;
+	        tmp_scroll = parseInt(Math.floor((scroll+window.height)*100/urk_ipdata_page_height));
+	        if(tmp_scroll > urk_ipdata_scroll){
+	            urk_ipdata_scroll = tmp_scroll;
+	        }
+	        ipdata_stop_scroll = false;
+	    }
+	});
+
+
+	window.addEventListener("mouseout", (e) => {
+	    urk_ipdata_living = false;
+	});
+
+	window.addEventListener("mouseover", (e) => {
+	    urk_ipdata_living = true;
+	});
+
+
+	function sendIpData_9062968(){
+	    var regex = /(gclid=)|(utm_source)|(utm_medium)|(utm_campaign)|(utm_content)|(utm_term)/g;
+	    if (urk_ipdata_name != "" && regex.test(urk_ipdata_url)) {
+	        var clone_date = new Date();
+	        urk_ipdata_time_out = clone_date.getTime();
+	        var dataForm = new FormData();
+	        dataForm.append('name', urk_ipdata_name);
+	        dataForm.append('unique_id', unique_id);
+	        dataForm.append('code_segment', urk_ipdata_code_segment);
+	        dataForm.append('client_id', urk_ipdata_client_id);
+	        dataForm.append('ip_local', urk_ipdata_ip_local);
+	        dataForm.append('time_in', urk_ipdata_time_in);
+	        dataForm.append('time_out', urk_ipdata_time_out);
+	        dataForm.append('time_on', urk_ipdata_time_on);
+	        dataForm.append('browser_hidden', urk_ipdata_browser_hidden);
+	        dataForm.append('url', urk_ipdata_url);
+	        dataForm.append('referrer', urk_ipdata_referrer);
+	        dataForm.append('screen_width', urk_ipdata_screen_width);
+	        dataForm.append('screen_height', urk_ipdata_screen_height);
+	        dataForm.append('device_pixel_ratio', urk_ipdata_device_pixel_ratio);
+	        dataForm.append('scroll', urk_ipdata_scroll);
+	        dataForm.append('created', urk_ipdata_time_out);
+	        
+	        if("9062968" != "8025192"){
+		        var request = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+		        request.open("POST", "https://optimize.urekamedia.com/store-ip-data");
+		        request.send(dataForm);
+		    }else{
+		    	var data = encodeURI(btoa(JSON.stringify(Object.fromEntries(dataForm))));
+		    	var iframe = document.createElement('iframe'); 
+				iframe.style.display = 'none';iframe.style.width = '1px'; 
+				iframe.style.height = '1px'; 
+				iframe.src = 'https://optimize.urekamedia.com/data.php?q='+data+'&t=sendDataIp';
+				document.body.appendChild(iframe);
+			}
+	    }
+	}
+
+	function checkHiddenBrowser(){
+	    return new Promise((resolve) => {
+	        const yes = () => resolve(true); // is in private mode
+	        const not = () => resolve(false); // not in private mode
+	        const testLocalStorage = () => {
+	            try {
+	                if (localStorage.length) not();
+	                else {
+	                    localStorage.x = 1;
+	                    localStorage.removeItem('x');
+	                    not();
+	                }
+	            } catch (e) {
+	                // Safari only enables cookie in private mode
+	                // if cookie is disabled, then all client side storage is disabled
+	                // if all client side storage is disabled, then there is no point
+	                // in using private mode
+	                navigator.cookieEnabled ? yes() : not();
+	            }
+	        };
+	        
+	        if (window.webkitRequestFileSystem) {
+	            return void window.webkitRequestFileSystem(0, 0, not, yes);
+	        }
+	        
+	        if ('MozAppearance' in document.documentElement.style) {
+	            if (indexedDB === null) return yes();
+	            const db = indexedDB.open('test');
+	            db.onerror = yes;
+	            db.onsuccess = not;
+	            return void 0;
+	        }
+	        
+	        const isSafari = navigator.userAgent.match(/Version\/([0-9\._]+).*Safari/);
+	        if (isSafari) {
+	            const version = parseInt(isSafari[1], 10);
+	            if (version < 11) return testLocalStorage();
+	            try {
+	                window.openDatabase(null, null, null, null);
+	                return not();
+	            } catch (_) {
+	                return yes();
+	            };
+	        }
+	       
+	        if (!window.indexedDB && (window.PointerEvent || window.MSPointerEvent)) {
+	            return yes();
+	        }
+	        // default navigation mode
+	        return not();
+	    });
+	}
+
+	function getIpLocal(onNewIP){
+	   
+	    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+	    var pc = new myPeerConnection({
+	        iceServers: []
+	    }),
+	    noop = function() {},
+	    localIPs = {},
+	    ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+	    key;
+
+	    function iterateIP(ip) {
+	        if (!localIPs[ip]) onNewIP(ip);
+	        localIPs[ip] = true;
+	    }
+
+	    
+	    pc.createDataChannel("");
+
+	    // create offer and set local description
+	    pc.createOffer(function(sdp) {
+	        sdp.sdp.split('\n').forEach(function(line) {
+	            if (line.indexOf('candidate') < 0) return;
+	            line.match(ipRegex).forEach(iterateIP);
+	        });
+	        
+	        pc.setLocalDescription(sdp, noop, noop);
+	    }, noop); 
+
+	    
+	    pc.onicecandidate = function(ice) {
+	        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+	        ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+	    };
+	}
+
+
+	function areUdead() {
+	    
+	    window.onload = resetTimer;
+	    window.onmousemove = resetTimer;
+	    window.onmousedown = resetTimer;       
+	    window.ontouchstart = resetTimer;
+	    window.onclick = resetTimer;      
+	    window.onkeypress = resetTimer;   
+	    window.addEventListener('scroll', resetTimer, true);
+
+	    function youDie() {
+	        urk_ipdata_living = false;
+	    }
+
+	    function resetTimer() {
+	        clearTimeout(urp_ipdata_timeout);
+	        urk_ipdata_living = true;
+	        urp_ipdata_timeout = setTimeout(youDie, 15000); 
+	    } 
+	}
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+

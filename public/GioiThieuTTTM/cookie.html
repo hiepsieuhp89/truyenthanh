@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<!-- saved from url=(0276)https://optimize.urekamedia.com/cookie.php?code=9062968&type=media&apnx_segment=&referrer=https://www.google.com/&site_lang=en-US&gauid=&urk_id=&ck=46165198232126&clickid=&offerid=&ordernumber=&amount=&webs=https%3A%2F%2Fit.mobifone.vn%2Fgiai_phap%2Ftruyen-thanh-thong-minh%2F -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Ureka Media</title>
+</head>
+<body>
+<script>
+  var visitorId;
+  function initFingerprintJS() {
+    FingerprintJS.load().then(fp => {
+      // The FingerprintJS agent is ready.
+      // Get a visitor identifier when you'd like to.
+      fp.get().then(result => {
+        // This is the visitor identifier:
+        visitorId = result.visitorId;
+      });
+    });
+  }
+</script>
+<script src="./fp.min.js.tải xuống" onload="initFingerprintJS()"></script>
+<img src="./getuid" height="1" width="1">
+<img id="img_tapad" src="./1" height="1" width="1">
+
+
+<script src="./seg" type="text/javascript"></script>
+<script type="text/javascript" async="">
+
+var mydate = new Date();
+
+if(mydate.getTime() < (1595217788411 + (15*24*60*60*1000)) ){
+    window.localStorage.clear();
+}
+
+
+
+var check_renew = 0;
+// Clear cookies _gauads
+if(typeof(Storage) !== "undefined" && !window.localStorage.getItem("renew")){
+    var mydate = new Date();
+    mydate.setTime(mydate.getTime() - 86400);
+    document.cookie = "_gauads=; expires=" + mydate.toGMTString();
+    window.localStorage.setItem("renew", 1);
+    check_renew = 1;
+}
+
+
+
+var ureka_content='46165198232126';
+if (typeof(Storage) !== "undefined" && ureka_content == null) {
+    ureka_content = window.localStorage.getItem("OptUID");
+}
+
+var ureka_code='9062968';
+var client_id='';
+var client_referrer = 'https://www.google.com/';
+var client_type = 'media';
+var client_action = "edit";
+
+var webs    = 'https://it.mobifone.vn/giai_phap/truyen-thanh-thong-minh/';
+
+clickid     = '';
+offerid     = '';
+ordernumber = '';
+amount      = '';
+
+
+
+
+if( ureka_content == '' || ureka_content == null ){
+    ureka_content ="46165198232126";
+    client_action = "create";
+}
+var gauid = '';
+var urk_id = '';
+function browser_name(){
+     var browser_name = '';
+     isIE = /*@cc_on!@*/false || !!document.documentMode;
+     isEdge = !isIE && !!window.StyleMedia;
+     if(navigator.userAgent.indexOf("Chrome") != -1 && !isEdge)
+     {
+         return browser_name = 'chrome';
+     }
+     else if(navigator.userAgent.indexOf("Safari") != -1 && !isEdge)
+     {
+         return browser_name = 'safari';
+     }
+     else if(navigator.userAgent.indexOf("Firefox") != -1 ) 
+     {
+         return browser_name = 'firefox';
+     }
+     else if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
+     {
+         return browser_name = 'ie';
+     }
+     else if(isEdge)
+     {
+         return browser_name = 'edge';
+     }
+     else 
+     {
+         return browser_name = 'other-browser';
+     }
+}
+window.check_incognito = 1;
+async function checkIncognito(){
+    var incognito = browser_name();
+    if(incognito=='firefox'){
+        if (indexedDB === null){
+            window.check_incognito = true;
+        }else{
+            var db = indexedDB.open("test");
+            db.onerror = function(){
+                window.check_incognito = true;
+            };
+            db.onsuccess =function(){
+                GetData();
+                window.check_incognito = false;
+            };
+        }
+    }else if (incognito=='safari'){
+        var storage = window.sessionStorage;
+        try {
+            storage.setItem("someKeyHere", "ureka");
+            storage.removeItem("someKeyHere");
+            GetData();
+            window.check_incognito = false;
+        } catch (e) {
+            if (e.code === DOMException.QUOTA_EXCEEDED_ERR && storage.length === 0) {
+                window.check_incognito = true;
+            }else{
+                GetData();
+                window.check_incognito = false;
+            }
+        }
+    }else if (incognito=='ie' || incognito=='edge' ){
+        if(!window.indexedDB && (window.PointerEvent || window.MSPointerEvent)){
+            window.check_incognito = true;
+        }else{
+            GetData();
+            window.check_incognito = false;
+        }
+    }else if(incognito=='chrome'){
+        // check_chrome()
+        navigator.webkitTemporaryStorage.queryUsageAndQuota (
+            function(usedBytes, grantedBytes) {
+                // console.log("grantedBytes: ",grantedBytes);
+                if(grantedBytes < 120000000){
+                    window.check_incognito = true;
+                }else{
+                    window.check_incognito = false;
+                    GetData();
+                }
+            },
+            function(e) { 
+                console.log('Can not detect')
+                window.check_incognito = true;  
+            }
+        );
+    }
+}
+
+var gauads ="";
+var ur = 0;
+ureka_rurk = '';
+// cap nhat vao cookie 
+// if (typeof(Storage) !== "undefined") {
+//    var data1 = window.localStorage.getItem("RURK");
+//    if (data1 && ureka_rurk==""){
+//         gauads = data1.replace("A", "9");
+//         gauads = gauads.replace("G", "7");
+//         gauads = gauads.replace("I", "5");
+//         gauads = gauads.replace(/U/g, "0");
+//         gauads = gauads.replace(/;/g, "");
+      
+//         var d = new Date(); 
+//         d.setTime(d.getTime() + (365*24*60*60*1000));
+//         var expires = "expires="+d.toUTCString();
+//         (function(){document.cookie ='_gauads='+ gauads +'; ' + expires+'; domain=.urekamedia.com;path=/; SameSite=None; Secure'; })();
+//     }
+// }
+
+if(ureka_rurk == ""){
+    ureka_rurk = gauads;
+}
+if(!ureka_rurk){
+    ur =1;
+}else{
+    var str_date = parseInt(ureka_rurk.substring(6, 13));
+    var str_compare = parseInt( 202218 );
+    if ((str_compare -str_compare)==10){
+        ur =1; 
+    }
+}
+
+if(check_renew){
+    ur = 1;
+}
+
+function GetData(){
+    checkBot();
+    if(!checkBot()){
+        var browser_lang = '';
+        var site_lang = '';
+        
+        browser_lang =  navigator.languages && navigator.languages[0] || // Chrome / Firefox
+        navigator.language ||   // All browsers
+        navigator.userLanguage; // IE <= 10
+        
+        site_lang = 'en-US';
+        if(webs == ''){
+            webs = 'https://it.mobifone.vn/';
+        }
+        var dataForm = new FormData();
+        dataForm.append("cookie",ureka_content);
+        dataForm.append("action",client_action);
+        dataForm.append("webs", webs);
+        dataForm.append("code", ureka_code);
+        dataForm.append("client_id", client_id);
+        dataForm.append("ur", ur);
+        // Tri them 2 truong gauid va urk_id
+        dataForm.append("gauid", gauid);
+        dataForm.append("urk_id", urk_id);
+
+        // Tri them 2 truong browser_lang va site_lang
+        dataForm.append("browser_lang", browser_lang);
+        dataForm.append("site_lang", site_lang);
+
+        dataForm.append("fingerprint_id", visitorId);
+
+
+        dataForm.append("clickid", clickid);
+        dataForm.append("offerid", offerid);
+        dataForm.append("ordernumber", ordernumber);
+        dataForm.append("amount", amount);
+        
+        
+
+        dataForm.append("client_referrer", client_referrer);
+        dataForm.append("type", client_type);
+        dataForm.append("device_pixel_ratio", window.devicePixelRatio);
+        dataForm.append("wh", window.screen.availWidth +';'+window.screen.availHeight);
+        let request = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+        request.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+                var json_response = JSON.parse(this.responseText);
+                if (typeof(Storage) !== "undefined") {
+                    if(json_response.RURK !=""){
+                        window.localStorage.setItem("RURK", json_response.RURK);
+                        var d = new Date(); 
+                        d.setTime(d.getTime() + (365*24*60*60*1000));
+                        var expires = "expires="+d.toUTCString();
+                        (function(){
+                            document.cookie ='_gauads='+json_response.RURK+'; ' + expires+'; domain=.urekamedia.com;path=/; SameSite=None; Secure';
+                            document.cookie ='RURK='+json_response.RURK+'; ' + expires+'; domain=.urekamedia.com;path=/; SameSite=None; Secure';
+                        })();
+                    }
+                }
+            }
+        };
+        
+        request.open("POST","https://optimize.urekamedia.com/get-data");
+        request.send(dataForm);
+        
+        var d = new Date(); 
+        d.setTime(d.getTime() + (540*24*60*60*1000));
+        var expires = "expires="+d.toUTCString();
+        (function(){document.cookie ='OptUID='+ureka_content+'; ' + expires+'; domain=.urekamedia.com;path=/; SameSite=None; Secure'; })();
+        if (typeof(Storage) !== "undefined") {
+            window.localStorage.setItem("OptUID", ureka_content);
+        }
+    }
+}
+
+function checkBot(){
+    arr_bot = [  
+        'check',
+        'cloud', // cloudflare, cloudinary, etc.
+        'crawler',
+        'crawling',
+        'download',
+        'monitor', // monitor & monitoring
+        'preview', // skypeuripreview, bingpreview, yahoo link preview, etc.
+        'scan',
+        'spider', // baiduspider, 360spider, screaming frog seo spider, etc.
+        
+        // search engines
+        'google',
+        'qwantify',
+        'yahoo',
+        'ask',
+        
+        // aggregators, messengers and social networks
+        'facebookexternalhit',
+        'flipboard',
+        'tumblr',
+        'vkshare',
+        'whatsapp',
+        'Yandex',
+        'yandex',
+        'baidu',
+        'duckduckgo',
+        'DuckDuckGo',
+        'facebook',
+        'Facebook',
+        'Googlebot',
+
+        //Facebook in app Browser
+        // 'FB_IAB',
+        // 'FB[0-9A-Z]{2}',
+
+        // downloaders
+        'curl',
+        'perl',
+        'python',
+        'wget',
+        
+        // high activity scanners
+        'heritrix',
+        'ia_archiver',
+
+        //Headless browser
+        'SlimerJS',
+        'slimerjs',
+
+        //Something special
+        'Innity Bot',
+        'Darwin'
+    ];
+    var reg_string = arr_bot.join('|');
+    var regx = new RegExp('(\\w{2,}[B,b]ot(s|.htm|.html)*|'+reg_string+')','g');
+    var user_agent = navigator.userAgent;
+    if(!user_agent){
+        return false;
+    }
+    var check = user_agent.search(regx);
+    if(check > -1){
+        return true;
+    }else{
+        return false;
+    }
+}
+checkBot();
+checkIncognito();
+setTimeout(function(){
+    if(!window.check_incognito && !checkBot()){
+        var src = "https://tapestry.tapad.com/tapestry/1?ta_partner_id=3099&ta_partner_did=46165198232126&ta_format=png";
+        var img = document.getElementById("img_tapad");
+        img.src = src;
+    }
+},100)
+
+</script>
+
+            
+
+</body></html>

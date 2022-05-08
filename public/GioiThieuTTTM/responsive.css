@@ -1,0 +1,1077 @@
+@media screen and (min-width:1360px) {
+    .bannerItem-content {}
+}
+
+@media screen and (min-width:1600px) {
+    .bannerItem-content {}
+
+    .homeIntro .item {
+        max-width: 900px;
+    }
+}
+
+@media screen and (max-width: 640px) {
+
+    .m-hidden {
+        display: none !important;
+    }
+
+    .loader {}
+
+    header {
+        position: fixed;
+        top: 0;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, .1);
+        padding: 0 15px;
+        /* width: 100vw; */
+    }
+
+    .m-shown {
+        display: block !important;
+    }
+
+    #menu-toggle {
+        display: block;
+    }
+
+    #calling {
+        bottom: 40px;
+    }
+
+    #calling .tooltip {
+        display: none;
+    }
+
+    .loaderLogo {}
+
+    .headerLogo {}
+
+    .headerRight {}
+
+    .headerMenu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 340px;
+        background: #fff;
+        flex-flow: column;
+        overflow: auto;
+        z-index: 99999;
+        transform: translateX(100%);
+        transition: var(--transition-smooth);
+    }
+
+    .menu--on .headerMenu {
+        transform: none;
+    }
+
+    .headerMenuItem {
+        flex-flow: column;
+        border-radius: 0;
+        display: block;
+    }
+
+    .headerSubMenu .headerMenuItem {
+        margin-left: 16px;
+        border-left: 1px solid var(--color-blue--light);
+        padding-left: 0;
+        border-radius: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        pointer-events: auto;
+    }
+
+    .mainMenuItem {
+        background-color: var(--color-blue--light);
+    }
+
+    .headerMenuItem a,
+    .headerMenuItem>span {
+        display: block;
+        width: 100%;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--color-blue--light);
+        border-radius: 0;
+        background-color: #fff;
+    }
+
+    .headerMenuItem.menu-prd .toggler {
+        display: block;
+        width: 100%;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--color-blue--light);
+        border-radius: 0;
+        background-color: #fff;
+        color: initial;
+        font-weight: 700;
+    }
+
+    .headerSubMenu {
+        position: relative;
+        width: 100%;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        transform: none;
+        box-shadow: none;
+        padding: 0;
+        background-color: rgba(255, 255, 255, 0.5);
+        pointer-events: auto !important;
+    }
+
+    .headerSubMenu.lvl-2 {
+        transform: none !important;
+        width: 100%;
+        display: none;
+        /* height: 0; */
+    }
+
+    .menu-prd.active .headerSubMenu.lvl-2 {
+        display: block;
+        /* height: max-content; */
+    }
+
+    .headerMenuIcon {}
+
+    .headerMenuBadge {}
+
+    .submitCV {}
+
+    .modal-dialog {}
+
+    .modal-content {}
+
+    .modal .close {
+        width: 42px;
+        height: 42px;
+        right: 0;
+    }
+
+    .modal-body {}
+
+    .modalTitle {}
+
+    .modal-title {}
+
+    .modal {}
+
+    .modalJob {}
+
+    .modalJob-title {}
+
+    .modalJob-meta {}
+
+    .modalJob-metaItem {}
+
+    .deadline {}
+
+    .modalJob-content {}
+
+    .homeBanner {}
+
+    #home {
+        width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .banner {}
+
+    .homeBanner-slider {}
+
+    .slider {}
+
+    .slider .flickity-prev-next-button {
+        display: none;
+    }
+
+    .bannerItem {}
+
+    .bannerItem-content {
+        width: 100%;
+    }
+
+    .bannerItem-content>.container {
+        top: initial;
+        transform: none;
+        bottom: 36px;
+        position: absolute;
+    }
+
+    .bannerItem-desc {}
+
+    .bannerItem-link {}
+
+    .btnTheme {}
+
+    .homeIntro {
+        height: auto;
+        width: 100vw;
+        overflow-x: hidden;
+        margin-bottom: 0;
+    }
+
+    .sectionTitle {}
+
+    .m-slider {
+        display: block;
+        width: 100%;
+        margin: 0;
+    }
+
+    .listing {}
+
+    .homeIntro .listing {
+        padding: 0 15px;
+    }
+
+    .homeIntro .item {
+        height: auto;
+        margin: 0 0 24px;
+    }
+
+    .homeIntro .homeIntro--box-3 {
+        padding: 200px 15px 16px;
+        background-position: top center;
+        background-size: 100% auto;
+    }
+
+    .homeIntro .homeIntro--box-1 {
+        padding: 280px 15px 16px;
+        background-size: 80% auto;
+        background-position: top center;
+    }
+
+    .homeIntro--box-1 {}
+
+    .blk-1 {}
+
+    .homeIntro .homeIntro--box-1 .blk-1 {
+        text-align: center;
+    }
+
+    .blk-2 {}
+
+    .homeIntro--box-2 {}
+
+    .homeIntro .homeIntro--box-2 .blk {
+        border: none !important;
+        width: 100%;
+    }
+
+    .homeIntro--box-3 {}
+
+    .homePrd {}
+
+    .homePrd-item {
+        width: calc(100% - 48px);
+        padding: 16px 32px;
+        margin: 0 24px 24px;
+        box-shadow: 0 12px 24px var(--color-blue--light);
+        border-radius: 12px;
+        border: 1px solid var(--color-blue--light);
+    }
+
+    .homePrd-itemIcon {
+        width: 92px;
+        height: 92px;
+        background-color: var(--color-blue);
+        display: flex;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+    }
+
+    .homePrd-listing {
+        padding-bottom: 24px;
+    }
+
+    .homePrd-listing .flickity-viewport {
+        /* overflow: visible; */
+    }
+
+    homePrd-item {
+        width: 100%;
+    }
+
+    homePrd-listing {}
+
+    .circular-slider {
+        display: none;
+    }
+
+    .circular-slider-1 {}
+
+    .wrapper {}
+
+    .controls {}
+
+    .controls__left {}
+
+    .homePrdNav {}
+
+    .type-prev {}
+
+    .icon-wrapper {}
+
+    .controls__right {}
+
+    .type-next {}
+
+    .controls__autoplay {}
+
+    .controls__autoplay_running {}
+
+    .slides-holder {}
+
+    .slides-holder__item {}
+
+    .descriptions {}
+
+    .homePrdItem {}
+
+    .descriptions__item {}
+
+    .homePrdTitle {
+        text-align: center;
+    }
+
+    .homePrdTxt {}
+
+    .homePrdSuggestItem {}
+
+    .homePartner {}
+
+    .partnerItem {
+        height: 220px;
+    }
+
+    .homePartner .partnerItem {
+        width: 50%;
+        padding: 0;
+    }
+
+    .partnerItem img {
+        width: 100%;
+    }
+
+    .homeNews {}
+
+    .boxPost {}
+
+    .boxPostThumbnail {}
+
+    .boxPostTxt {}
+
+    .boxPostDate {}
+
+    .boxPostTitle {
+        height: auto;
+    }
+
+    .boxPostDesc {}
+
+    .boxPostBtn {
+        position: relative;
+        width: 100%;
+        bottom: 0;
+        margin: 16px 0 0 0;
+    }
+
+    .homeCareer {
+        width: 100vw;
+        overflow: hidden;
+        padding: 24px 15px 0;
+    }
+
+    .sectionMain {}
+
+    .homeCareerJob {
+        padding: 24px 15px;
+    }
+
+    .homeJobTitle {}
+
+    .boxJob {}
+
+    .boxJobImg {}
+
+    .boxJobDesc {}
+
+    .boxJobTitle {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		line-height: 25px;
+		-webkit-line-clamp: 2;
+		height: 50px !important;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+	}
+
+    .boxJobMeta {}
+
+    .jobMetaItem {}
+
+    .homeCareerWelcome {
+        height: auto;
+        padding: 300px 0 0;
+    }
+
+    .quote {}
+
+    .homeCareerWelcome .quote {
+        max-width: none;
+        padding: 72px 24px 16px;
+    }
+
+    .footer {
+        padding: 12px 0 16px;
+    }
+
+    footer .links .item {
+        padding: 15px;
+    }
+
+    .footerLink-itemIcon {}
+
+    .contactBox {
+        margin: 0 15px;
+        padding: 24px 16px;
+    }
+
+    .contactBox-title {}
+
+    .detail {}
+
+    footer .connect {}
+
+    .logo {}
+
+    .social {}
+
+    footer .connect .social {
+        margin: 32px 0 0;
+    }
+
+    footer .cpr {
+        flex-flow: column;
+    }
+
+    footer .cpr ul {
+        flex-flow: column;
+    }
+
+    footer .cpr li {
+        margin-left: 0;
+    }
+
+    footer .cpr .badge {
+        text-align: left;
+    }
+
+    .modalIntro {}
+
+    .modalTeam {}
+
+    .modalTeamInner {}
+
+    .modalTeamFigure {}
+
+    .modalTeamContent {}
+
+    .sectionTitle {}
+
+    .aboutTeam .sectionTitle {
+        margin: 0;
+    }
+
+    .aboutOrg .sectionTitle {
+        margin: 0;
+        padding: 24px 0 0 0;
+    }
+
+    .sectionMain {}
+
+    .boxScreen-1 .sectionMain {
+        padding-top: 36px;
+        height: 400px;
+    }
+
+    .modalTeamIntro {}
+
+    .fullpage {}
+
+    #about {
+        width: 100vw;
+        overflow-x: hidden;
+        padding-top: 62px;
+    }
+
+    .section {
+        height: auto;
+        position: relative;
+    }
+
+    .aboutBanner {}
+
+    .aboutBanner .listing,
+    .aboutBanner .listing .item {
+        height: 200px;
+    }
+
+    .txt {}
+
+    .aboutNav {}
+
+    .aboutNav ul {
+        justify-content: flex-start;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .aboutNav li {
+        width: max-content;
+        flex: 0 0 auto;
+    }
+
+    .aboutNav li>* {
+        padding: 0 15px;
+    }
+
+    .aboutIntro {}
+
+    .aboutIntro .featured {
+        position: relative;
+        height: 240px;
+    }
+
+    .featured {}
+
+    .aboutIntro .main {
+        margin: 24px 0;
+    }
+
+    .aboutIntroTxt {
+        margin: 12px 0 32px;
+    }
+
+    .award {}
+
+    .awardItem {}
+
+    .awardItem-inner {
+        height: 140px;
+    }
+
+    .awardItemImg {}
+
+    .awardItemDesc {}
+
+    .awardItemTitle {
+        font-size: 18px;
+        line-height: 20px;
+    }
+
+    .awardItemTxt {}
+
+    .aboutOrg {}
+
+    .aboutOrg .container {
+        padding: 0;
+    }
+
+    .orgLayer {}
+
+    .orgLayer.lv1 {
+        flex-flow: column;
+    }
+
+    .orgItemLeader {
+        width: 100%;
+        margin: 24px 0;
+    }
+
+    .item--leader {}
+
+    .leader-1 {}
+
+    .orgItemImg {}
+
+    .orgItemDesc {}
+
+    .desc {}
+
+    .orgItemTitle {}
+
+    .orgItemTxt {}
+
+    .orgLayer.lv2 .orgItem {
+        margin: 0 auto 16px;
+        max-width: none;
+    }
+
+    .orgItemIcon {}
+
+    .orgLayer.lv2 {}
+
+    .orgLayer.lv2 .col {
+        width: 80%;
+    }
+
+    .justify-content-center {}
+
+    .aboutTeam {
+        padding-bottom: 48px;
+    }
+
+    .aboutTeam .flickity-page-dots .dot {
+        background-color: #fff;
+    }
+
+    .boxStat {}
+
+    .boxStatIcon {}
+
+    .boxStatTitle {}
+
+    .boxStatTxt {}
+
+    .aboutPartner {}
+
+    .aboutPartner .reviewList {
+        margin: 0;
+        padding: 24px 0;
+    }
+
+    .aboutPartner .reviewList .item--review {}
+
+    .item--review .author {}
+
+    .item--review .author .thumbnail {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        flex: 0 0 auto;
+        margin: 0 16px 0 0;
+    }
+
+    .item--review .author span {}
+
+    .item--review .author strong {
+        display: block;
+    }
+
+    .aboutPartner .logoList {
+        margin: 42px 0 24px;
+        padding: 0;
+    }
+
+    .aboutPartner .logoList .col-md-3 {
+        width: 50%;
+    }
+
+    .aboutPartner .logoList li {
+        width: 10px;
+    }
+
+    .partnerItem {}
+
+    .aboutJoin {
+        padding: 72px 0 100px 0;
+    }
+
+    .aboutJoinTxt {
+        margin: 0;
+    }
+
+    .newsBanner {}
+
+    .pageBanner {}
+
+    .bannerItem {}
+
+    .prdBanner .bannerItem {
+        height: auto;
+        padding: 72px 0 0 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: initial;
+    }
+
+    .newsBanner .item {
+        background-color: #000;
+    }
+
+    .newsBanner .item .thumbnail {
+        height: 80%;
+    }
+
+    .newsBanner .item .thumbnail:after {
+        background: linear-gradient(0, black 0%, transparent);
+    }
+
+    .bannerItemDesc {
+        top: inherit;
+        transform: none;
+        position: absolute;
+        bottom: 48px;
+        padding: 0;
+        width: calc(100% - 30px);
+    }
+
+    .prdBanner .bannerItemDesc {
+        position: relative;
+        width: 100%;
+        bottom: 0;
+        color: initial;
+        background: linear-gradient(0, black 10%, transparent);
+        color: #fff;
+        padding: 54px 0 0 0;
+    }
+
+    .prdBanner .bannerItemTitle {
+        font-size: 32px;
+    }
+
+    .bannerItemTag {}
+
+    .tag {}
+
+    .newsBanner .bannerItemTitle {
+        font-size: 24px;
+    }
+
+    .newsCate {}
+
+    .newsCateItem {
+        margin-bottom: 12px;
+    }
+
+    .newsCateIcon {}
+
+    .newsCateTitle {}
+
+    .newsListing {}
+
+    .boxPost {}
+
+    .boxPostThumbnail {}
+
+    .boxPostTxt {}
+
+    .boxPostDate {}
+
+    .boxPostTitle {}
+
+    .boxPostDesc {}
+
+    .pageBanner {}
+
+    .pageBannerTxt {}
+
+    .singleDate {}
+
+    .singleTitle {}
+
+    .pageContent {}
+
+    .careerBanner {
+        position: relative;
+    }
+
+    .careerBanner .bannerItem {
+        height: auto;
+        padding: 280px 0 0;
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+        background-position: top center;
+    }
+
+    .careerBanner .bannerItemDesc {
+        position: relative;
+        bottom: initial;
+        width: 100%;
+    }
+
+    .careerIntro {}
+
+    .careerIntroImg {}
+
+    .careerJob {
+        padding: 0 15px;
+    }
+
+     .careerJob .item__Recruitment {
+		  width: 50% !important;
+	}
+
+    .boxJobImg {
+		background-size: 100% !important;
+	}
+
+    .boxJobDesc {
+		padding: 5px;
+	}
+
+    .boxJobTitle {}
+
+    .boxJobMeta {}
+
+    .jobMetaItem {
+        width: auto;
+        font-size: 12px;
+    }
+    .jobMetaItem strong{
+        font-size: 14px;
+    }
+    .jobMetaItem i{
+        margin: 0 !important;
+    }
+    .careerBenefit {}
+
+    .careerBenefit .col {
+        width: 100%;
+        margin: 0 0 16px 0;
+        flex-basis: auto;
+    }
+
+    .boxFeature-1 {}
+
+    .boxFeature1Icon {}
+
+    .boxFeature1Title {}
+
+    .boxFeature1Txt {}
+
+    .careerContact {}
+
+    .aboutJoin {}
+
+    .aboutJoinTxt {}
+
+    #contact {
+        width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .contactBanner {}
+
+    .contactMap {}
+
+    .contactMap img {
+        width: 120%;
+        margin: 0 0 16px 0;
+    }
+
+    .contactMapMarker {
+        top: 108px;
+        right: 50px;
+    }
+
+    .circle-ripple {}
+
+    .contactOrgTitle {}
+
+    .contactInfo {
+        flex-flow: column;
+    }
+
+    .contactInfoItem {
+        border: none !important;
+        margin: 0 0 12px 0;
+    }
+
+    .contactInfoItem:nth-child(2):after {
+        border: none;
+    }
+
+    .contactInfoIcon {}
+
+    .contactInfoLabel {}
+
+    .contactInfoTxt {}
+
+    .contactForm {
+        padding: 24px 20px;
+    }
+
+    .contactFormTitle {}
+
+    .catePrd {}
+
+    .catePrdBanner {}
+
+    .catePrd-bannerIcon {}
+
+    .catePrd-bannerTxt {}
+
+    .cateprdMain {
+        padding: 42px 24px;
+    }
+
+    .catePrdList {}
+
+    .catePrd-item {
+        width: 100%;
+        margin-bottom: 12px;
+    }
+
+    .catePrd-itemImg {}
+
+    .catePrd-itemDesc {}
+
+    .catePrd-itemTitle {}
+
+    .catePrd-itemTxt {}
+
+    .prdBanner {}
+
+    #product {
+        /* max-width: 100vw; */
+        /* height: auto; */
+        /* overflow-x: hidden; */
+        /* overflow-y: auto; */
+    }
+
+    .prdBannerGroup {}
+
+    .prdBlk {}
+
+    .prdTemp--intro-1 {
+        padding: 24px 0 32px;
+    }
+
+    .prdTemp--intro-1 .featured .thumbnail {
+        height: 240px;
+        min-height: auto;
+    }
+
+    .intro-1-logo {}
+
+    .prdTemp--feature-1 {}
+
+    .prdTemp--feature-1 .col {
+        flex-basis: auto;
+        margin-bottom: 12px;
+    }
+
+    .prdTemp--feature-1 .rơ {}
+
+    .boxFeature-1 {}
+
+    .boxFeature1Icon {}
+
+    .boxFeature1Title {}
+
+    .boxFeature1Txt {}
+
+    .prdTemp--feature-3 {}
+
+    .prdTemp--feature-3 .listing {
+        margin: 32px 0 0 0;
+    }
+
+    .prdTemp--feature-3 .item {
+        width: 100%;
+    }
+
+    .prdTemp--feature-4 {}
+
+    .boxFeature-4 {}
+
+    .boxFeature4Icon {}
+
+    .boxFeature4Desc {}
+
+    .boxFeature4Title {}
+
+    .boxFeature4Txt {}
+
+    .prdTemp--review-1 {}
+
+    .boxReview-1 {}
+
+    .item--review {}
+
+    .boxReview1Overlay {}
+
+    .boxReview1Title {}
+
+    .boxReview1Author {}
+
+    .boxReview1Logo {}
+
+    .review1Author {}
+
+    .review1AuthorName {}
+
+    .review1AuthorOrg {}
+
+    .boxScreen-1 {}
+
+    .prdTemp--screenshot-1 {
+    overflow-x: hidden;
+}
+
+    .boxScreen1Bg {
+        width: 640px;
+    }
+
+    .prdTemp--screenshot-1 .listing,
+    .boxScreen1Item {
+        height: 190px;
+    }
+
+    .prdTemp--screenshot-1 .listing {
+        width: 335px;
+        overflow: hidden;
+    }
+
+    .boxScreen1Item {}
+
+    .boxContent-1 {}
+
+    .prdTemp--content-1 {}
+
+    .boxContent-1 .col {
+        min-width: auto;
+        width: 100%;
+        flex-basis: inherit;
+    }
+
+    .boxContent-1 .row {}
+
+    .boxContent1Item {}
+
+    .boxContent1Title {}
+
+    .boxContent1Txt {}
+
+    .prdTemp--pricing-1 {}
+
+    .item--column {}
+
+    .row--intro {}
+
+    .row--feature {}
+
+    .row--action {}
+
+    .packageName {}
+
+    .packagePrice {}
+
+    .packageInfo {}
+
+    .prdTemp--pricing-2 {}
+
+    .prdTemp--feature-2 {}
+
+    .prdRegister-featured {}
+
+
+
+
+}
