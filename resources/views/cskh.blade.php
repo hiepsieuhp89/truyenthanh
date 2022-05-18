@@ -1337,7 +1337,7 @@
           <div class="_67p3 _5arv">
             <div class="_56jq"></div>
             <div id="hero-banner" style="box-shadow: 0px 2px 10px #C9CCD1;">
-              <div class="_8z4o _1z90 _5-6c" style="background-image: url(https://scontent.fhan7-1.fna.fbcdn.net/v/t39.2365-6/86797261_657714914988251_6822663160101601280_n.png?_nc_cat=1&amp;ccb=1-6&amp;_nc_sid=ad8a9d&amp;_nc_ohc=RBmwveNI-HsAX_tDTtI&amp;_nc_ht=scontent.fhan7-1.fna&amp;oh=00_AT86W3a4JSMzSnbvKKO2GH7FFpFy34guelox3SgDrrvCPQ&amp;oe=627CE2DB);background-repeat: no-repeat; background-size: cover;box-shadow: 0px 2px 10px #C9CCD1;">
+              <div class="_8z4o _1z90 _5-6c" style="background-color: currentcolor;background-repeat: no-repeat; background-size: cover;box-shadow: 0px 2px 10px #C9CCD1;">
                 <div class="_5r7f _2lki ___k _8yym">
                   <div class="_34lc"></div>
                   <div class="_2__g">
